@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="App\" />
-    <Folder Include="Resources\Images\" />
 	  <!-- App.xaml を App フォルダからビルド対象に -->
 	  <ApplicationDefinition Include="App\App.xaml" />
   </ItemGroup>

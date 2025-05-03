@@ -33,11 +33,32 @@ namespace WpfApp2.Views
             public double Weight { get; set; }
             public string UserId { get; set; }
         }
+        private void OnEditFinishButtonClick(object sender, RoutedEventArgs e)
+        {
+            ResultItemIdBox.IsReadOnly = true;
+            ResultWeightBox.IsReadOnly = true;
+            ResultUserIdBox.IsReadOnly = true;
+        }
         private void OnEditButtonClick(object sender, RoutedEventArgs e)
         {
-            ResultItemIdBox.IsReadOnly = false;
-            ResultWeightBox.IsReadOnly = false;
-            ResultUserIdBox.IsReadOnly = false;
+            if (sender is Button clickedButton)
+            {
+                switch (clickedButton.Name)
+                {
+                    case "ResultItemBTN":
+                        ResultItemIdBox.IsReadOnly = false;
+                        break;
+                    case "ResultWeightBTN":
+                        ResultWeightBox.IsReadOnly = false;
+                        break;
+                    case "ResultUserIdBTN":
+                        ResultUserIdBox.IsReadOnly = false;
+                        break;
+                    default:
+                        MessageBox.Show("Unknown button clicked");
+                        break;
+                }
+            }
         }
 
         private void ToggleSearchButton_Click(object sender, RoutedEventArgs e)
