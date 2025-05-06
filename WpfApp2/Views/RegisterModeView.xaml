@@ -30,17 +30,20 @@
         <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="White" Background="White">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock x:Name="ScanIcon" Text="&#xEC5A;" TextAlignment="Center"  FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock Text="ステップ１" TextAlignment="Center"/>
+                    <TextBlock x:Name="ScanIcon" Text="&#xEC5A;" TextAlignment="Center" FontSize="33" Margin="4 4 10 4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="ScanText" Text="バーコードスキャン" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
-                <TextBlock Text="&#xE72A;" FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
-                <StackPanel>
-                    <TextBlock x:Name="MassIcon" Text="&#xEF3F;" TextAlignment="Center"  FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="0" FontFamily="Segoe MDL2 Assets"/>
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="ステップ２" TextAlignment="Center"/>
+                    <TextBlock x:Name="MassIcon" Text="&#xEF3F;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="MassText" Text="残量測定" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
-                <TextBlock Text="&#xE72A;" FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
                 <StackPanel>
-                    <TextBlock x:Name="UserIcon" Text="&#xE716;" TextAlignment="Center"  FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock Text="ステップ３" TextAlignment="Center"/>
+                    <TextBlock x:Name="UserIcon" Text="&#xE716;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="UserText" Text="ユーザー登録" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
 
@@ -50,7 +53,7 @@
         <!-- 2ペイン：ステップの切り替え表示 -->
         <Grid Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
             <!-- ステップ1：管理番号スキャン -->
-            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Hidden">
+            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Visible">
                 <TextBlock Text="ステップ 1：管理番号のスキャン"
                            FontSize="18"
                            FontWeight="Bold"
@@ -65,7 +68,7 @@
                            Foreground="Gray"
                            FontSize="12"/>
                 
-                <Image Source="/Resources/Images/scan.png"
+                <Image Source="/Resources/Images/Slide1.jpg"
                        Height="150"
                        Margin="0 10 0 10"                       
                        Stretch="Uniform"/>
@@ -93,7 +96,7 @@
             </StackPanel>
 
             <!-- ステップ3：人物IDの登録 -->
-            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Visible">
+            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Hidden">
                 <!-- ステップタイトル -->
                 <TextBlock Text="ステップ 3：貸出・返却者のID登録"
                FontSize="18"
