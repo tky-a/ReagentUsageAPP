@@ -7,56 +7,52 @@
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
-        Title="RegisterModeView" Height="450" Width="800" x:Name="MinWindow"
+        Title="RegisterModeView" Height="450" MinHeight="450" MinWidth="800" Width="800" x:Name="MinWindow"
         FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True">
 
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height ="70"/>
+            <RowDefinition Height ="auto" MinHeight="80"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height ="85"/>
+            <RowDefinition Height ="auto" MinHeight="80"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <!-- メニュー -->
             <ColumnDefinition Width="*"/>
-            <!-- 1ペイン -->
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="90"/>
-            <!-- 2ペイン -->
+            <ColumnDefinition Width="auto" MinWidth="70" />
+            <ColumnDefinition Width="auto" MinWidth="80"/>
             <ColumnDefinition Width="200" x:Name="SearchColumn"/>
-            <!-- 3ペイン -->
         </Grid.ColumnDefinitions>
 
         <Border Grid.ColumnSpan="4" Grid.RowSpan="3" Background="White" CornerRadius="10">
             
         </Border>
 
-        
-
-
-            <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 0">
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="" TextAlignment="Center"/>
                     <TextBlock x:Name="ScanIcon" Text="&#xEC5A;" TextAlignment="Center" FontSize="33" Margin="4 4 10 4" FontFamily="Segoe MDL2 Assets"/>
-                    <TextBlock x:Name="ScanText" Text="バーコードスキャン" TextAlignment="Center"  FontSize="10"/>
+                    <TextBlock x:Name="ScanText" Text="バーコード&#x0a;スキャン" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
-                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="0" FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="20 0 20 0" FontFamily="Segoe MDL2 Assets"/>
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="" TextAlignment="Center"/>
-                    <TextBlock x:Name="MassIcon" Text="&#xEF3F;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock x:Name="MassIcon" Text="&#xEF3F;" TextAlignment="Center"  FontSize="33" Margin="4 4 4 4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="MassText" Text="残量測定" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
-                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
+                <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="20 0 10 0" FontFamily="Segoe MDL2 Assets"/>
                 <StackPanel>
                     <TextBlock Text="" TextAlignment="Center"/>
-                    <TextBlock x:Name="UserIcon" Text="&#xE716;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
+                    <TextBlock x:Name="UserIcon" Text="&#xE716;" TextAlignment="Center"  FontSize="33" Margin="0 4 4 4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="UserText" Text="ユーザー登録" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
                 
             </StackPanel>
         </Border>
+
+        
+
             
         <!-- 2ペイン：ステップの切り替え表示 -->
         <Grid Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
@@ -68,7 +64,7 @@
                         HorizontalAlignment="Left"/>
             </StackPanel>
             <!-- ステップ1：管理番号スキャン -->
-            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Hidden">
+            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Visible">
                 
                 <Image Source="/Resources/Images/Slide1.jpg"
                        Height="150"
@@ -85,8 +81,9 @@
                            Margin="0 0 0 5"/>
                 <TextBox Height="30"
                          Background="Transparent"
-                         BorderBrush="Black"
+                         BorderBrush="Transparent"
                          Margin="0 0 0 10" 
+                         FontSize="18"
                          x:Name="ScanInputBox"/>
 
                 <TextBlock Text="※ 管理番号はバーコードスキャンまたは手動入力で登録されます。"              
@@ -110,8 +107,9 @@
                            Margin="0 0 0 5"/>
                 <TextBox Height="30"
                          Background="Transparent"
-                         BorderBrush="Black"
-                         Margin="0 0 0 10" 
+                         BorderBrush="Transparent"
+                         Margin="0 0 0 10"
+                         FontSize="18"
                          x:Name="WeightInputBox"/>
 
                 <TextBlock Text="※連携したはかりから入力するか手動で入力（単位なし）"              
@@ -120,12 +118,12 @@
             </StackPanel>
 
             <!-- ステップ3：人物IDの登録 -->
-            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Visible">
+            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Hidden">
                 <Image Source="/Resources/Images/user_scan.png"
                    Height="150"
                    Margin="0 10 0 10"
                    Stretch="Uniform"/>
-                <TextBlock Text="利用者IDを入力してください"
+                <TextBlock Text="利用者IDをスキャン"
                            FontSize="26"
                            FontWeight="Bold"
                            TextAlignment="Center"
@@ -135,7 +133,8 @@
                            Margin="0 0 0 5"/>
                 <TextBox Height="30"
                          Background="Transparent"
-                         BorderBrush="Black"
+                         BorderBrush="Transparent"
+                         FontSize="18"
                          Margin="0 0 0 10" 
                          x:Name="UserIdInputBox"/>
 
@@ -156,7 +155,9 @@
         <!-- 3ペイン：最新スキャン結果の表示 -->
         <Border Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"
                 BorderBrush="Black" BorderThickness="1"
-                CornerRadius="10" Margin="5">
+                CornerRadius="10" Margin="5"
+                HorizontalAlignment="Right"
+                MinWidth="200">
             <TextBlock Text="スキャン結果"
                 FontSize="10.5"
                 FontWeight="Bold"
@@ -187,7 +188,7 @@
                         Content="&#xE70F;"
                         Background="Transparent"
                         BorderBrush="Transparent"
-                        Foreground="Transparent"
+                        Foreground="LightGray"
                         ToolTip="編集"
                         Click="OnEditButtonClick"
                         x:Name="ResultItemBTN"/>
@@ -206,7 +207,7 @@
                                 Margin="0 0 0 0"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="Transparent"
+                                Foreground="LightGray"
                                 ToolTip="編集"
                                 Click="OnEditButtonClick"
                                 x:Name="ResultWeightBTN"/>
@@ -224,7 +225,7 @@
                                 Margin="0 2 0 0"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="Transparent"
+                                Foreground="LightGray"
                                 ToolTip="編集"
                                 Click="OnEditButtonClick"
                                 x:Name="ResultUserIdBTN"/>
@@ -263,10 +264,11 @@
                     <TextBox    x:Name="SearchTextBox"
                                 Width="auto"
                                 Height="30"
-                                Margin="10"
+                                Margin="10"                                
                                 Background="Transparent"
                                 BorderBrush="Black"
-                                VerticalAlignment="Center"/>
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"/>
 
                     <!-- 検索ボタン -->
                     <Button x:Name="SearchButton"
@@ -286,7 +288,13 @@
                                 Margin="10,0,0,5"/>
 
                     <!-- 検索結果表示（仮） -->
-                    <ListView x:Name="SearchResultsListView" Height="200" Margin="10 0 10 10" Background="Transparent">
+                    <TextBlock x:Name="SearchResultsTextBlock"
+                               Text="ここに検索結果が表示されます"
+                               FontSize="12"
+                               Margin="10,0,0,10"
+                               TextWrapping="Wrap"
+                               Foreground="Gray"/>
+                    <!--<ListView x:Name="SearchResultsListView" Height="200" Margin="10 0 10 10" Background="Transparent">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="管理番号" DisplayMemberBinding="{Binding 管理番号}" Width="60"/>
@@ -296,7 +304,7 @@
                                 <GridViewColumn Header="登録日" DisplayMemberBinding="{Binding 登録日}" Width="120"/>
                             </GridView>
                         </ListView.View>
-                    </ListView>
+                    </ListView>-->
 
                 </StackPanel>
 

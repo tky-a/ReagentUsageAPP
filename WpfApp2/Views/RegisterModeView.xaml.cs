@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfApp2.Helpers;
 using WpfApp2.Models;
 
@@ -42,6 +35,7 @@ namespace WpfApp2.Views
 
             ShowStep(1);
             UpdateStepIcons();
+            ToggleSearchPanel();
 
             // テキストボックスのイベント設定
             ScanInputBox.KeyDown += OnScanInputKeyDown;
@@ -54,13 +48,9 @@ namespace WpfApp2.Views
         {
             try
             {
-                var drugItems = _databaseManager.GetAllDrugItems();
-                SearchResultsListView.ItemsSource = drugItems;
             }
             catch(Exception ex)
             {
-                MessageBox.Show($"データの読み込みに失敗しました:{ex.Message}", "エラー",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -196,7 +186,6 @@ namespace WpfApp2.Views
         {
             PerformSearch();
         }
-
         private void ToggleSearchButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleSearchPanel();
@@ -323,14 +312,19 @@ namespace WpfApp2.Views
 
                 if (string.IsNullOrEmpty(searchQuery))
                 {
-                    searchResults = _databaseManager.GetAllDrugItems();
+                    return;
                 }
                 else
                 {
                     searchResults = _databaseManager.SearchDrugItems(searchQuery);
                 }
 
-                SearchResultsListView.ItemsSource = searchResults;
+                var sb = new StringBuilder();
+                foreach(var item in searchResults)
+                {
+                    sb.AppendLine($"管理番号: {item.管理番号}, \n薬品名: {item.薬品名}, \n現在量: {item.CurrentWeight}");
+                }
+                SearchResultsTextBlock.Text = sb.ToString();
             }
             catch (Exception ex)
             {
@@ -343,7 +337,7 @@ namespace WpfApp2.Views
         {
             if (_isSearchPanelExpanded)
             {
-                SearchColumn.Width = new GridLength(30);
+                SearchColumn.Width = new GridLength(20);
                 ToggleSearchButton.Content = "<";
                 _isSearchPanelExpanded = false;
             }
