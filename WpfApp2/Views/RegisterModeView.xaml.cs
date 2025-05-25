@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WpfApp2.Helper;
+using WpfApp2.Helpers;
+using WpfApp2.Models;
 
 namespace WpfApp2.Views
 {
@@ -22,78 +23,385 @@ namespace WpfApp2.Views
     public partial class RegisterModeView : Window
     {
         private bool _isSearchOpen = true;
+        private DatabaseManager _databaseManager;
+        private int _currentStep;
+        private bool _isSearchPanelExpanded = true;
+        private DrugItem _currentDrugItem;
+        
 
         public RegisterModeView()
         {
             InitializeComponent();
+            InitializeComponents();
+            LoadData();
         }
-        public class ScanResult
+        private void InitializeComponents()
         {
-            public string ItemId { get; set; }
-            public double Weight { get; set; }
-            public string UserId { get; set; }
+            _databaseManager = new DatabaseManager();
+            _currentDrugItem = new DrugItem();
+
+            ShowStep(1);
+            UpdateStepIcons();
+
+            // テキストボックスのイベント設定
+            ScanInputBox.KeyDown += OnScanInputKeyDown;
+            WeightInputBox.KeyDown += OnWeightInputKeyDown;
+            UserIdInputBox.KeyDown += OnUserIdInputKeyDown;
+            SearchTextBox.KeyDown += OnSearchTextKeyDown;
         }
-        private void OnEditFinishButtonClick(object sender, RoutedEventArgs e)
+
+        private void LoadData()
         {
-            ResultItemIdBox.IsReadOnly = true;
-            ResultWeightBox.IsReadOnly = true;
-            ResultUserIdBox.IsReadOnly = true;
+            try
+            {
+                var drugItems = _databaseManager.GetAllDrugItems();
+                SearchResultsListView.ItemsSource = drugItems;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"データの読み込みに失敗しました:{ex.Message}", "エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #region ステップ管理
+
+        private void ShowStep(int stepNumber)
+        {
+            // すべてのステップパネルを非表示
+            Step1Panel.Visibility = Visibility.Hidden;
+            Step2Panel.Visibility = Visibility.Hidden;
+            Step3Panel.Visibility = Visibility.Hidden;
+            Step4Panel.Visibility = Visibility.Hidden;
+            // 指定されたステップのパネルを表示
+            switch (stepNumber)
+            {
+                case 1:
+                    Step1Panel.Visibility = Visibility.Visible;
+                    ScanInputBox.Focus();
+                    break;
+                case 2:
+                    Step2Panel.Visibility = Visibility.Visible;
+                    WeightInputBox.Focus();
+                    break;
+                case 3:
+                    Step3Panel.Visibility = Visibility.Visible;
+                    UserIdInputBox.Focus();
+                    break;
+                case 4:
+                    Step4Panel.Visibility = Visibility.Visible;
+                    break;
+            }
+
+            _currentStep = stepNumber;
+            UpdateStepIcons();
+        }
+
+        private void UpdateStepIcons()
+        {
+            // アイコンの色をリセット
+            ScanIcon.Foreground = System.Windows.Media.Brushes.Gray;
+            MassIcon.Foreground = System.Windows.Media.Brushes.Gray;
+            UserIcon.Foreground = System.Windows.Media.Brushes.Gray;
+
+            ScanText.Foreground = System.Windows.Media.Brushes.Gray;
+            MassText.Foreground = System.Windows.Media.Brushes.Gray;
+            UserText.Foreground = System.Windows.Media.Brushes.Gray;
+            // 現在のステップをハイライト
+            switch (_currentStep)
+            {
+                case 1:
+                    ScanIcon.Foreground = System.Windows.Media.Brushes.Blue;
+                    ScanText.Foreground = System.Windows.Media.Brushes.Blue;
+                    break;
+                case 2:
+                    MassIcon.Foreground = System.Windows.Media.Brushes.Blue;
+                    MassText.Foreground = System.Windows.Media.Brushes.Blue;
+                    break;
+                case 3:
+                    UserIcon.Foreground = System.Windows.Media.Brushes.Blue;
+                    UserText.Foreground = System.Windows.Media.Brushes.Blue;
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region イベントハンドラ
+
+        private void OnScanInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                ProcessScanInput();
+            }
+        }
+
+        private void OnWeightInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ProcessWeightInput();
+            }
+        }
+
+        private void OnUserIdInputKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ProcessUserIdInput();
+            }
+        }
+
+        private void OnSearchTextKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformSearch();
+            }
+        }
+        private void btnTEST_Click(object sender, RoutedEventArgs e)
+        {
+            // テスト用：次のステップに進む
+            if (_currentStep < 3)
+            {
+                ShowStep(_currentStep + 1);
+            }
+            else
+            {
+                CompleteLendingProcess();
+            }
         }
         private void OnEditButtonClick(object sender, RoutedEventArgs e)
         {
-            if (sender is Button clickedButton)
+            Button button = sender as Button;
+
+            if (button == ResultItemBTN)
             {
-                switch (clickedButton.Name)
-                {
-                    case "ResultItemBTN":
-                        ResultItemIdBox.IsReadOnly = false;
-                        break;
-                    case "ResultWeightBTN":
-                        ResultWeightBox.IsReadOnly = false;
-                        break;
-                    case "ResultUserIdBTN":
-                        ResultUserIdBox.IsReadOnly = false;
-                        break;
-                    default:
-                        MessageBox.Show("Unknown button clicked");
-                        break;
-                }
+                ResultItemIdBox.IsReadOnly = false;
+                ResultItemIdBox.Focus();
             }
+            else if (button == ResultWeightBTN)
+            {
+                ResultWeightBox.IsReadOnly = false;
+                ResultWeightBox.Focus();
+            }
+            else if (button == ResultUserIdBTN)
+            {
+                ResultUserIdBox.IsReadOnly = false;
+                ResultUserIdBox.Focus();
+            }
+        }
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch();
         }
 
         private void ToggleSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var parentGrid = (Grid)this.Content;
-            var searchColumn = parentGrid.ColumnDefinitions[3]; // 4ペイン目
-
-            if (_isSearchOpen)
-            {
-                // 閉じる（幅を0に）
-                searchColumn.Width = new GridLength(20);
-                ToggleSearchButton.Content = "＜";
-                _isSearchOpen = false;
-            }
-            else
-            {
-                // 開く（幅を固定値に戻す）
-                searchColumn.Width = new GridLength(200); // 好きな固定幅に
-                ToggleSearchButton.Content = "＞";
-                _isSearchOpen = true;
-            }
+            ToggleSearchPanel();
         }
+        #endregion
 
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        #region 処理メソッド
+
+        private void ProcessScanInput()
         {
-            string keyword = SearchTextBox.Text.Trim();
+            string scanInput = ScanInputBox.Text.Trim();
 
-            if (string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(scanInput))
             {
-                MessageBox.Show("検索キーワードを入力してください。", "注意", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("管理番号を入力してください。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            List<Reagent> results = DatabaseHelper.SearchReagentsByName(keyword);
-            SearchResultsListView.ItemsSource = results;
+            if (!ValidationHelper.IsValidItemId(scanInput))
+            {
+                MessageBox.Show("管理番号の形式が正しくありません。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                var drugItem = _databaseManager.GetDrugItemById(scanInput);
+                if (drugItem != null)
+                {
+                    _currentDrugItem = drugItem;
+                    ResultItemIdBox.Text = scanInput;
+                    ShowStep(2);
+                }
+                else
+                {
+                    MessageBox.Show("該当する薬品が見つかりません。", "検索エラー",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"データベースエラー: {ex.Message}", "エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
+        private void ProcessWeightInput()
+        {
+            string weightInput = WeightInputBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(weightInput))
+            {
+                MessageBox.Show("質量を入力してください。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!ValidationHelper.IsValidWeight(weightInput))
+            {
+                MessageBox.Show("質量の形式が正しくありません。数値で入力してください。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _currentDrugItem.CurrentWeight = double.Parse(weightInput);
+            ResultWeightBox.Text = weightInput;
+            ShowStep(3);
+        }
+
+        private void ProcessUserIdInput()
+        {
+            string userIdInput = UserIdInputBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(userIdInput))
+            {
+                MessageBox.Show("利用者IDを入力してください。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!ValidationHelper.IsValidUserId(userIdInput))
+            {
+                MessageBox.Show("利用者IDの形式が正しくありません。", "入力エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _currentDrugItem.UserId = userIdInput;
+            ResultUserIdBox.Text = userIdInput;
+
+            CompleteLendingProcess();
+        }
+
+        private void CompleteLendingProcess()
+        {
+            try
+            {
+                _currentDrugItem.LendingDate = DateTime.Now;
+                _currentDrugItem.IsLent = true;
+
+                _databaseManager.UpdateDrugItem(_currentDrugItem);
+
+                MessageBox.Show("貸出処理が完了しました。", "完了",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"貸出処理でエラーが発生しました: {ex.Message}", "エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void PerformSearch()
+        {
+            string searchQuery = SearchTextBox.Text.Trim();
+
+            try
+            {
+                List<DrugItem> searchResults;
+
+                if (string.IsNullOrEmpty(searchQuery))
+                {
+                    searchResults = _databaseManager.GetAllDrugItems();
+                }
+                else
+                {
+                    searchResults = _databaseManager.SearchDrugItems(searchQuery);
+                }
+
+                SearchResultsListView.ItemsSource = searchResults;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"検索でエラーが発生しました: {ex.Message}", "エラー",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ToggleSearchPanel()
+        {
+            if (_isSearchPanelExpanded)
+            {
+                SearchColumn.Width = new GridLength(30);
+                ToggleSearchButton.Content = "<";
+                _isSearchPanelExpanded = false;
+            }
+            else
+            {
+                SearchColumn.Width = new GridLength(200);
+                ToggleSearchButton.Content = ">";
+                _isSearchPanelExpanded = true;
+            }
+        }
+
+        private void ResetForm()
+        {
+            // フォームをリセット
+            ScanInputBox.Text = "";
+            WeightInputBox.Text = "";
+            UserIdInputBox.Text = "";
+            ResultItemIdBox.Text = "";
+            ResultWeightBox.Text = "";
+            ResultUserIdBox.Text = "";
+
+            _currentDrugItem = new DrugItem();
+            ShowStep(1);
+
+            // 検索結果を更新
+            LoadData();
+        }
+
+        #endregion
+
+        #region ウィンドウ操作
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CloseButton_MouseEnterLeave(object sender, MouseEventArgs e)
+        {
+            //if (e.RoutedEvent.Name == "MouseEnter")
+            //{
+            //    CloseButton.Background = System.Windows.Media.Brushes.Red;
+            //}
+            //else if(e.RoutedEvent.Name == "MouseLeave")
+            //{
+            //    CloseButton.Background = System.Windows.Media.Brushes.Transparent;
+            //}
+        }
+
+        #endregion
     }
 }

@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2.Views"
         mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
         Title="RegisterModeView" Height="450" Width="800" x:Name="MinWindow"
-        FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="LightGray">
+        FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True">
 
 
     <Grid>
@@ -26,98 +28,120 @@
             <!-- 3ペイン -->
         </Grid.ColumnDefinitions>
 
+        <Border Grid.ColumnSpan="4" Grid.RowSpan="3" Background="White" CornerRadius="10">
+            
+        </Border>
+
         
-        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="White" Background="White">
+
+
+            <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="ステップ１" TextAlignment="Center"/>
+                    <TextBlock Text="" TextAlignment="Center"/>
                     <TextBlock x:Name="ScanIcon" Text="&#xEC5A;" TextAlignment="Center" FontSize="33" Margin="4 4 10 4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="ScanText" Text="バーコードスキャン" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
                 <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="0" FontFamily="Segoe MDL2 Assets"/>
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="ステップ２" TextAlignment="Center"/>
+                    <TextBlock Text="" TextAlignment="Center"/>
                     <TextBlock x:Name="MassIcon" Text="&#xEF3F;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="MassText" Text="残量測定" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
                 <TextBlock VerticalAlignment="Center" Text="&#xE72A;" FontSize="33" Margin="10" FontFamily="Segoe MDL2 Assets"/>
                 <StackPanel>
-                    <TextBlock Text="ステップ３" TextAlignment="Center"/>
+                    <TextBlock Text="" TextAlignment="Center"/>
                     <TextBlock x:Name="UserIcon" Text="&#xE716;" TextAlignment="Center"  FontSize="33" Margin="4" FontFamily="Segoe MDL2 Assets"/>
                     <TextBlock x:Name="UserText" Text="ユーザー登録" TextAlignment="Center"  FontSize="10"/>
                 </StackPanel>
-
+                
             </StackPanel>
         </Border>
             
         <!-- 2ペイン：ステップの切り替え表示 -->
         <Grid Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
+
+            <StackPanel >
+                <Button x:Name="btnTEST" Click="btnTEST_Click"
+                        Content="test" 
+                        Width="100" Margin="10 90 0 0"
+                        HorizontalAlignment="Left"/>
+            </StackPanel>
             <!-- ステップ1：管理番号スキャン -->
-            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Visible">
-                <TextBlock Text="ステップ 1：管理番号のスキャン"
-                           FontSize="18"
+            <StackPanel x:Name="Step1Panel" Margin="20" Visibility="Hidden">
+                
+                <Image Source="/Resources/Images/Slide1.jpg"
+                       Height="150"
+                       Margin="0 10 0 10"                    
+                       Stretch="Uniform"/>
+                
+                <TextBlock Text="薬品IDをスキャンしてください"
+                           FontSize="26"
                            FontWeight="Bold"
+                           TextAlignment="Center"
                            Margin="0 0 0 10"/>
 
-
-                <TextBlock Text="管理番号：" FontWeight="SemiBold" 
+                <TextBlock Text="" FontWeight="SemiBold" 
                            Margin="0 0 0 5"/>
-                <TextBox Height="30" Margin="0 0 0 10" x:Name="ScanInputBox"/>
+                <TextBox Height="30"
+                         Background="Transparent"
+                         BorderBrush="Black"
+                         Margin="0 0 0 10" 
+                         x:Name="ScanInputBox"/>
 
                 <TextBlock Text="※ 管理番号はバーコードスキャンまたは手動入力で登録されます。"              
                            Foreground="Gray"
                            FontSize="12"/>
-                
-                <Image Source="/Resources/Images/Slide1.jpg"
-                       Height="150"
-                       Margin="0 10 0 10"                       
-                       Stretch="Uniform"/>
-            
             </StackPanel>
 
             <!-- ステップ2：質量測定 -->
             <StackPanel x:Name="Step2Panel" Margin="20" Visibility="Hidden">
-                <TextBlock Text="ステップ 2：質量（g）の測定"
-                           FontSize="18"
-                           FontWeight="Bold"
-                           Margin="0 0 0 10"/>
-
-
-                <TextBlock Text="質量 (g)：" FontWeight="SemiBold" Margin="0 0 0 5"/>
-                <TextBox Height="30" Margin="0 0 0 10" x:Name="WeightInputBox"/>
-
-                <TextBlock Text="※ 電子天秤から自動入力されるか、手動で入力できます。"
-                           Foreground="Gray"
-                           FontSize="12"/>
                 <Image Source="/Resources/Images/weighing2.png"
                        Height="150"
                        Margin="0 10 0 10"
                        Stretch="Uniform"/>
+                <TextBlock Text="質量を入力してください"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           TextAlignment="Center"
+                           Margin="0 0 0 10"/>
+
+                <TextBlock Text="" FontWeight="SemiBold" 
+                           Margin="0 0 0 5"/>
+                <TextBox Height="30"
+                         Background="Transparent"
+                         BorderBrush="Black"
+                         Margin="0 0 0 10" 
+                         x:Name="WeightInputBox"/>
+
+                <TextBlock Text="※連携したはかりから入力するか手動で入力（単位なし）"              
+                           Foreground="Gray"
+                           FontSize="12"/>
             </StackPanel>
 
             <!-- ステップ3：人物IDの登録 -->
-            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Hidden">
-                <!-- ステップタイトル -->
-                <TextBlock Text="ステップ 3：貸出・返却者のID登録"
-               FontSize="18"
-               FontWeight="Bold"
-               Margin="0 0 0 10"/>
-                
-                <!-- 入力欄 -->
-                <TextBlock Text="ユーザーID：" FontWeight="SemiBold" 
-                           Margin="0 0 0 5"/>
-                <TextBox Height="30"
-                Margin="0 0 0 10"
-                x:Name="UserIdInputBox"/>
-
-                <!-- 注意書き -->
-                <TextBlock Text="※ 利用者IDはバーコードスキャンまたは手動入力で登録されます。"
-               Foreground="Gray"
-               FontSize="12"/>
+            <StackPanel x:Name="Step3Panel" Margin="20" Visibility="Visible">
                 <Image Source="/Resources/Images/user_scan.png"
                    Height="150"
                    Margin="0 10 0 10"
                    Stretch="Uniform"/>
+                <TextBlock Text="利用者IDを入力してください"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           TextAlignment="Center"
+                           Margin="0 0 0 10"/>
+
+                <TextBlock Text="" FontWeight="SemiBold" 
+                           Margin="0 0 0 5"/>
+                <TextBox Height="30"
+                         Background="Transparent"
+                         BorderBrush="Black"
+                         Margin="0 0 0 10" 
+                         x:Name="UserIdInputBox"/>
+
+                <TextBlock Text="※ 利用者IDはスキャン or 手動で入力してください。"              
+                           Foreground="Gray"
+                           FontSize="12"/>
             </StackPanel>
 
             <StackPanel x:Name="Step4Panel" Margin="20" Visibility="Visible">
@@ -132,7 +156,7 @@
         <!-- 3ペイン：最新スキャン結果の表示 -->
         <Border Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"
                 BorderBrush="Black" BorderThickness="1"
-                CornerRadius="10" Background="White" Margin="5">
+                CornerRadius="10" Margin="5">
             <TextBlock Text="スキャン結果"
                 FontSize="10.5"
                 FontWeight="Bold"
@@ -163,7 +187,7 @@
                         Content="&#xE70F;"
                         Background="Transparent"
                         BorderBrush="Transparent"
-                        Foreground="DimGray"
+                        Foreground="Transparent"
                         ToolTip="編集"
                         Click="OnEditButtonClick"
                         x:Name="ResultItemBTN"/>
@@ -182,7 +206,7 @@
                                 Margin="0 0 0 0"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="DimGray"
+                                Foreground="Transparent"
                                 ToolTip="編集"
                                 Click="OnEditButtonClick"
                                 x:Name="ResultWeightBTN"/>
@@ -200,7 +224,7 @@
                                 Margin="0 2 0 0"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                Foreground="DimGray"
+                                Foreground="Transparent"
                                 ToolTip="編集"
                                 Click="OnEditButtonClick"
                                 x:Name="ResultUserIdBTN"/>
@@ -213,13 +237,17 @@
 
         <!-- 4ペイン：収納式検索パネル -->
         <Border Grid.Column="4" Grid.RowSpan="3"
-        Background="LightGray"
-        x:Name="SearchPanel"
-        BorderBrush="Gray"
-        BorderThickness="1">
+                Background="Transparent"
+                Margin="0 0 0 0"
+                x:Name="SearchPanel"
+                CornerRadius="0 10 10 0"
+                BorderThickness="1"
+                BorderBrush="LightGray"
+                Panel.ZIndex="3"
+                >
             <Grid>
                 <!-- 検索フォーム -->
-                <StackPanel VerticalAlignment="Top" Margin="20,10,10,0">
+                <StackPanel VerticalAlignment="Top" Margin="20,30,10,0">
                     <TextBlock  Text="簡易検索"
                                 FontSize="18"
                                 FontWeight="Bold"
@@ -236,6 +264,8 @@
                                 Width="auto"
                                 Height="30"
                                 Margin="10"
+                                Background="Transparent"
+                                BorderBrush="Black"
                                 VerticalAlignment="Center"/>
 
                     <!-- 検索ボタン -->
@@ -244,6 +274,8 @@
                             Width="auto"
                             Height="30"
                             Margin="10"
+                            Background="Transparent"
+                            BorderBrush="Black"
                             VerticalAlignment="Center"
                             Click="SearchButton_Click"/>
 
@@ -254,14 +286,14 @@
                                 Margin="10,0,0,5"/>
 
                     <!-- 検索結果表示（仮） -->
-                    <ListView x:Name="SearchResultsListView" Height="200" Margin="10 0 10 10">
+                    <ListView x:Name="SearchResultsListView" Height="200" Margin="10 0 10 10" Background="Transparent">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="管理番号" DisplayMemberBinding="{Binding 管理番号}" Width="60"/>
                                 <GridViewColumn Header="薬品名" DisplayMemberBinding="{Binding 薬品名}" Width="80"/>
-                                <!--<GridViewColumn Header="現在量" DisplayMemberBinding="{Binding 現在量}" Width="80"/>
+                                <GridViewColumn Header="現在量" DisplayMemberBinding="{Binding 現在量}" Width="80"/>
                                 <GridViewColumn Header="容量" DisplayMemberBinding="{Binding 容量}" Width="80"/>
-                                <GridViewColumn Header="登録日" DisplayMemberBinding="{Binding 登録日}" Width="120"/>-->
+                                <GridViewColumn Header="登録日" DisplayMemberBinding="{Binding 登録日}" Width="120"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -274,13 +306,28 @@
                 Content=">"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Left"
+                Margin="0 0 0 0"
                 Click="ToggleSearchButton_Click"
                 FontSize="14"
-                FontWeight="Bold"
-                Background="DarkGray"
-                Foreground="White"/>
+                FontWeight="Bold"            
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Foreground="Black"/>
             </Grid>
         </Border>
 
+            <Button Width="30" Height="20" 
+                    VerticalAlignment="Top" 
+                    Content="×" 
+                    Panel.ZIndex="1"
+                    Grid.Column="2"
+                    Margin="0 2 6 0"
+                    BorderBrush="Transparent"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    x:Name="CloseButton"
+                    Click="CloseButton_Click"
+                    MouseEnter="CloseButton_MouseEnterLeave"
+            />
     </Grid>
 </Window>
