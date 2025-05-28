@@ -1,0 +1,28 @@
+﻿<Window x:Class="DrugManagerApp.Views.RegisterModeView2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DrugManagerApp.Views"
+        mc:Ignorable="d"
+        Title="RegisterModeView2" Height="450" Width="800" FontFamily="HG丸ｺﾞｼｯｸM-PRO" FontSize="22"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True">
+    <Grid>
+        <DataGrid x:Name="dataGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True"
+                  PreparingCellForEdit="dataGrid_PreparingCellForEdit"
+                  CellEditEnding="dataGrid_CellEditEnding"
+                  PreviewKeyDown="dataGrid_PreviewKeyDown"
+                  Margin="10" BorderBrush="Transparent">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="薬品番号" Binding="{Binding ID}" />
+                <DataGridTextColumn Header="薬品名" Binding="{Binding name}" />
+                <DataGridTextColumn Header="現在質量" Binding="{Binding mass}" />
+                <DataGridTextColumn Header="使用者番号" Binding="{Binding userID}" />
+                <DataGridTextColumn Header="使用日" Binding="{Binding useDate}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

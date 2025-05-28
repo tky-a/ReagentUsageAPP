@@ -2,6 +2,7 @@
 using System.Windows;
 using WpfApp2.Views;
 using WpfApp2.Services;
+using DrugManagerApp.Views;
 
 namespace WpfApp2
 {
@@ -21,7 +22,7 @@ namespace WpfApp2
                 InitializeApplication();
 
                 // メインウィンドウを表示
-                var mainWindow = new RegisterModeView();
+                var mainWindow = new FrontCoverView();
                 mainWindow.Show();
             }
             catch (Exception ex)

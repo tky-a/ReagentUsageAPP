@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrugManagerApp.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -152,15 +153,25 @@ namespace WpfApp2.Views
         }
         private void btnTEST_Click(object sender, RoutedEventArgs e)
         {
-            // テスト用：次のステップに進む
-            if (_currentStep < 3)
+            try
             {
-                ShowStep(_currentStep + 1);
+                FrontCoverView window = new FrontCoverView();
+                window.Show();//NOTmodal
+                //window.ShowDialog();//modal
             }
-            else
+            catch
             {
-                CompleteLendingProcess();
+                return;
             }
+            //// テスト用：次のステップに進む
+            //if (_currentStep < 3)
+            //{
+            //    ShowStep(_currentStep + 1);
+            //}
+            //else
+            //{
+            //    CompleteLendingProcess();
+            //}
         }
         private void OnEditButtonClick(object sender, RoutedEventArgs e)
         {
@@ -382,6 +393,7 @@ namespace WpfApp2.Views
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+            
         }
 
         private void CloseButton_MouseEnterLeave(object sender, MouseEventArgs e)

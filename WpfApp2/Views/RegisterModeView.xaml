@@ -8,7 +8,9 @@
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
         Title="RegisterModeView" Height="450" MinHeight="450" MinWidth="800" Width="800" x:Name="MinWindow"
-        FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True">
+        FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True">
 
 
     <Grid>
@@ -232,10 +234,6 @@
             </StackPanel>
         </StackPanel>
 
-
-
-
-
         <!-- 4ペイン：収納式検索パネル -->
         <Border Grid.Column="4" Grid.RowSpan="3"
                 Background="Transparent"
@@ -294,18 +292,6 @@
                                Margin="10,0,0,10"
                                TextWrapping="Wrap"
                                Foreground="Gray"/>
-                    <!--<ListView x:Name="SearchResultsListView" Height="200" Margin="10 0 10 10" Background="Transparent">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="管理番号" DisplayMemberBinding="{Binding 管理番号}" Width="60"/>
-                                <GridViewColumn Header="薬品名" DisplayMemberBinding="{Binding 薬品名}" Width="80"/>
-                                <GridViewColumn Header="現在量" DisplayMemberBinding="{Binding 現在量}" Width="80"/>
-                                <GridViewColumn Header="容量" DisplayMemberBinding="{Binding 容量}" Width="80"/>
-                                <GridViewColumn Header="登録日" DisplayMemberBinding="{Binding 登録日}" Width="120"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>-->
-
                 </StackPanel>
 
                 <!-- トグルボタン：パネル右端に縦長に配置 -->
