@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2.Views"
         mc:Ignorable="d"
-        WindowStyle="None"
-        ResizeMode="CanResizeWithGrip"
-        Title="RegisterModeView" Height="450" MinHeight="450" MinWidth="800" Width="800" x:Name="MinWindow"
-        FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True"
+        Title="RegisterModeView" 
+        Height="450" MinHeight="450" MinWidth="800" Width="800"
+        x:Name="MinWindow"
+        FontFamily="HG丸ｺﾞｼｯｸM-PRO"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True">
+        Style="{StaticResource MaterialDesignWindow}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*"/>
@@ -24,59 +24,14 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Background="WhiteSmoke" Grid.ColumnSpan="4" Grid.RowSpan="4">
-            <Button Width="50" Height="25" 
-                    VerticalAlignment="Top" 
-                    Content="×" 
-                    Panel.ZIndex="1"
-                    Grid.Column="2"
-                    Margin="0 5 6 0"
-                    BorderBrush="Transparent"
-                    HorizontalAlignment="Right"
-                    Background="LightGray"
-                    x:Name="CloseButton"
-                    Click="CloseButton_Click"/>
-        </StackPanel>
-        <Button x:Name="btnToRegisterMode" Click="btnToRegisterView_Click" Width="150" Height="150" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Grid>
-                        <Ellipse x:Name="circle" Fill="LightBlue" StrokeThickness="2"/>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Grid>
-                    <!-- マウス操作による色変更 -->
-                    <ControlTemplate.Triggers>
-                        <!-- マウスホバー -->
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="circle" Property="Fill" Value="DodgerBlue"/>
-                        </Trigger>
 
-                        <!-- ボタン押下 -->
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="circle" Property="Fill" Value="SlateBlue"/>
-                            <Setter TargetName="circle" Property="RenderTransform">
-                                <Setter.Value>
-                                    <ScaleTransform ScaleX="0.95" ScaleY="0.95"/>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Button.Template>
-            <TextBlock Text="借りる" FontSize="38" Foreground="White"/>
-        </Button>
         <Button x:Name="btnToTESTMode" Click="btnToTESTView_Click"
-            Width="150" Height="150" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Grid>
-                        <Ellipse Fill="LightBlue" StrokeThickness="2"/>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Grid>
-                </ControlTemplate>
-            </Button.Template>
-            <TextBlock Text="返す" FontSize="38" Foreground="White"/>
+                Width="350" Height="100" 
+                Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                HorizontalAlignment="center">
+            <TextBlock Text="はじめる" FontSize="58" Foreground="White"/>
         </Button>
+        
         <Button Width="100" Height="100" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Right" Margin="0 0 20 10">
             <Button.Template>
                 <ControlTemplate TargetType="Button">

@@ -9,8 +9,7 @@
         ResizeMode="CanResizeWithGrip"
         Title="RegisterModeView" Height="450" MinHeight="450" MinWidth="800" Width="800" x:Name="MinWindow"
         FontFamily="HG丸ｺﾞｼｯｸM-PRO" Background="Transparent" AllowsTransparency="True"
-        xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True">
+        Style="{StaticResource MaterialDesignWindow}">
 
 
     <Grid>

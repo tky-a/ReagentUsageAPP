@@ -26,17 +26,11 @@ namespace DrugManagerApp.Views
         {
             InitializeComponent();
             dataGrid.ItemsSource = Items;
-
-            // 初期行追加
-            Items.Add(new RowData());
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // 最初のセルを編集状態に
-            dataGrid.SelectedIndex = 0;
-            dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns[0]);
-            dataGrid.BeginEdit();
+
         }
 
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -86,10 +80,13 @@ namespace DrugManagerApp.Views
     }
     public class RowData
     {
-        public string ID { get; set; } = "";
+        public int ID { get; set; }
         public string Name { get; set; } = "";
+        public string Class { get; set; } = "";
+        public string UseStatus { get; set; } = "貸出可";
         public string Mass { get; set; } = "";
-        public string userName { get; set; } = "";
-        public string useDate { get; set; } = DateTime.Now.ToString("yyyy/MM/dd");
+        public int LastUserID { get; set; }
+        public string LastUseDate { get; set; } = "";
+        public string FirstDate { get; set; } = "";
     }
 }

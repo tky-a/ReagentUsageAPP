@@ -5,23 +5,111 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DrugManagerApp.Views"
         mc:Ignorable="d"
-        Title="RegisterModeView2" Height="450" Width="800" FontFamily="HG丸ｺﾞｼｯｸM-PRO" FontSize="22"
+        Title="RegisterModeView2" Height="450" Width="800"
+        FontFamily="HG丸ｺﾞｼｯｸM-PRO" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True">
+        Style="{StaticResource MaterialDesignWindow}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="180"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="薬品IDをスキャンしてください"/>
+                <TextBox x:Name="ReagentID" Width="200" Height="auto" FontSize="20" BorderBrush="Black"/>
+            </StackPanel>
+            <Image HorizontalAlignment="Right"
+                    Source="/Resources/Images/scan.png"
+                    Height="auto"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="3" Visibility="Hidden">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <TextBlock Text="質量を登録してください"/>
+                <TextBox x:Name="Mass" Width="200" Height="auto" FontSize="20" BorderBrush="Black"/>
+                <TextBlock Text="単位は不要です" FontSize="11" HorizontalAlignment="Right"/>
+            </StackPanel>
+            <Image HorizontalAlignment="Right"
+                    Source="/Resources/Images/weighing2.png"
+                    Height="auto"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="3" 
+                    Visibility="Visible">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <TextBlock Text="使用者を登録してください" Margin="5 40 0 0"/>
+                <TextBox x:Name="UserID" Width="200" Height="auto"
+                        FontSize="20" BorderBrush="Black"
+                         Background="GhostWhite"
+                        Margin="5 10 0 0" VerticalAlignment="Center"
+                        />
+            </StackPanel>
+            <Image HorizontalAlignment="Right"
+            Source="/Resources/Images/weighing2.png"
+            Height="auto"/>
+        </StackPanel>
+
+        <DockPanel VerticalAlignment="Center" Margin="20 130 0 0">
+            <StackPanel Orientation="Horizontal" Margin="2" Height="40">
+                <Button x:Name="btnReturn"
+                                Content="戻る" Visibility="Visible"                            
+                                VerticalAlignment="Top"
+                                Margin="0 0 50 0" Background="Transparent"
+                                ForceCursor="False"
+                                Height="auto"
+                                Width="auto"
+                                Foreground="Black"/>
+                <Button x:Name="btnNext"
+                                Content="次へ" Visibility="Visible"                           
+                                VerticalAlignment="Top"
+                                Margin="50 0 0 0" Background="Transparent"
+                                Height="auto"
+                                Width="auto"
+                                Foreground="Black"/>
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBox Grid.Row="1" 
+                     Width="auto"
+                     MinWidth="150"
+                     Height="auto"
+                     FontSize="16"
+                     VerticalAlignment="Top"
+                     
+                     Margin="10 5 5 5"
+                     />
+            <Button FontFamily="Segoe MDL2 Assets"
+                        Margin="-5 8 5 5"
+                        Content="&#xE71F;"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Foreground="DarkGray"
+                        ToolTip="編集"
+                        x:Name="ResultItemBTN"
+                        VerticalAlignment="Top"/><!--後でclickイベ必要-->
+        </StackPanel>
+
         <DataGrid x:Name="dataGrid"
+                  Grid.Row="1"
+                  Background="WhiteSmoke"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   PreparingCellForEdit="dataGrid_PreparingCellForEdit"
                   CellEditEnding="dataGrid_CellEditEnding"
                   PreviewKeyDown="dataGrid_PreviewKeyDown"
-                  Margin="10" BorderBrush="Transparent">
+                  Margin="0 45 0 0" BorderBrush="Purple">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="薬品番号" Binding="{Binding ID}" />
-                <DataGridTextColumn Header="薬品名" Binding="{Binding name}" />
-                <DataGridTextColumn Header="現在質量" Binding="{Binding mass}" />
-                <DataGridTextColumn Header="使用者番号" Binding="{Binding userID}" />
-                <DataGridTextColumn Header="使用日" Binding="{Binding useDate}" />
+                <DataGridTextColumn Header="薬品番号" Binding="{Binding ID}" Width="auto" />
+                <DataGridTextColumn Header="薬品名" Binding="{Binding Name}" Width="100" />
+                <DataGridTextColumn Header="毒・劇・危" Binding="{Binding Class}" Width="auto"/>
+                <DataGridTextColumn Header="使用状況" Binding="{Binding UseStatus}" Width="auto"/>
+                <DataGridTextColumn Header="現在質量" Binding="{Binding Mass}" Width="auto"/>
+                <DataGridTextColumn Header="最終使用者" Binding="{Binding LastUserID}" Width="auto"/>
+                <DataGridTextColumn Header="最終使用日" Binding="{Binding LastUseDate}" Width="auto"/>
+                <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate}" Width="auto"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
