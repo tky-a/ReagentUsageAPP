@@ -8,6 +8,7 @@
         Title="RegisterModeView2" Height="450" Width="800"
         FontFamily="HG丸ｺﾞｼｯｸM-PRO" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
         <Grid x:Name="FirstViewPanel" Visibility="Hidden">
@@ -113,14 +114,16 @@
 
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <TextBox Grid.Row="1" 
-                     Width="auto"
-                     MinWidth="150"
-                     Height="auto"
-                     FontSize="16"
-                     VerticalAlignment="Top"
-                     
-                     Margin="10 5 5 5"
-                     />
+                         Width="auto"
+                         MinWidth="150"
+                         Height="auto"
+                         FontSize="16"
+                         VerticalAlignment="Top"
+                         TextAlignment="Left"
+                         Margin="10 5 5 5"
+                         materialDesign:HintAssist.Hint="薬品名で検索できます"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 />
                 <Button FontFamily="Segoe MDL2 Assets"
                         Margin="-5 8 5 5"
                         Content="&#xE71F;"
@@ -141,8 +144,6 @@
                         CellEditEnding="dataGrid_CellEditEnding"
                         PreviewKeyDown="dataGrid_PreviewKeyDown"
                         Margin="0 45 0 0" BorderBrush="Purple"
-                        IsHitTestVisible="true"
-                        
                   >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="薬品番号" Binding="{Binding ID}" Width="auto" IsReadOnly="True"/>
