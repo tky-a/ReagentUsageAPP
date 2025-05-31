@@ -53,38 +53,51 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="Hidden">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="薬品IDをスキャンしてください"/>
-                    <TextBox x:Name="ReagentID" Width="200" Height="auto" 
-                             FontSize="20" BorderBrush="Black"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal"
+                        Margin="3" Visibility="Visible" x:Name="Panel1">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="" Margin="5"/>
+                    <TextBox x:Name="ReagentID" MinWidth="250" Width="auto" Height="auto" 
+                             FontSize="20" BorderBrush="Black"
+                             Background="GhostWhite"
+                             Margin="15 10 0 0" VerticalAlignment="Center"
+                            materialDesign:HintAssist.Hint=" 薬品IDをスキャン・入力"
+                            materialDesign:HintAssist.HelperTextFontSize="12"                                                         
+                            materialDesign:HintAssist.HelperText="  スキャンすると下の表で自動検索されます"/>
                 </StackPanel>
                 <Image HorizontalAlignment="Right"
                         Source="/Resources/Images/scan.png"
-                        Height="auto"/>
+                        Height="auto" Margin="20 0 0 0"/>
             </StackPanel>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" 
-                        Margin="3" Visibility="Hidden">
+                        Margin="3" Visibility="Hidden" x:Name="Panel2">
                 <StackPanel Orientation="Vertical" Margin="5">
-                    <TextBlock Text="質量を登録してください"/>
-                    <TextBox x:Name="Mass" Width="200" Height="auto" FontSize="20" BorderBrush="Black"/>
-                    <TextBlock Text="単位は不要です" FontSize="11" HorizontalAlignment="Right"/>
+                    <TextBlock Text="" Margin="5"/>
+                    <TextBox x:Name="Mass" Width="200" Height="auto"
+                            FontSize="20" BorderBrush="Black"
+                             Background="GhostWhite"
+                             Margin="15 10 0 0" VerticalAlignment="Center"
+                            materialDesign:HintAssist.Hint="質量を送信・入力"
+                            materialDesign:HintAssist.HelperTextFontSize="12"
+                            materialDesign:HintAssist.HelperText="単位は不要"/>
                 </StackPanel>
                 <Image HorizontalAlignment="Right"
                     Source="/Resources/Images/weighing2.png"
-                    Height="auto"/>
+                    Height="auto" Margin="30 0 0 0"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="3" 
-                    Visibility="Visible">
+            <StackPanel Grid.Row="0" Orientation="Horizontal"
+                        Margin="3" Visibility="Hidden" x:Name="Panel3">
                 <StackPanel Orientation="Vertical" Margin="5">
-                    <TextBlock Text="使用者を登録してください" Margin="5 40 0 0"/>
+                    <TextBlock Text="" Margin="5"/>
                     <TextBox x:Name="UserID" Width="200" Height="auto"
-                        FontSize="20" BorderBrush="Black"
-                        Background="GhostWhite"
-                        Margin="5 10 0 0" VerticalAlignment="Center"
-                         
+                            FontSize="20" BorderBrush="Black"
+                            Background="GhostWhite"
+                            Margin="5 10 0 0" VerticalAlignment="Center"
+                            materialDesign:HintAssist.Hint="スキャンまたは入力"
+                            materialDesign:HintAssist.HelperTextFontSize="12"
+                            materialDesign:HintAssist.HelperText="使用者IDをスキャンまたは入力"
                         />
                 </StackPanel>
                 <Image HorizontalAlignment="Right"
@@ -101,14 +114,18 @@
                                 ForceCursor="False"
                                 Height="auto"
                                 Width="auto"
-                                Foreground="Black"/>
+                                Foreground="Black"
+                                Click="btnReturn_Click"
+                                />
                     <Button x:Name="btnNext"
                                 Content="次へ" Visibility="Visible"                           
                                 VerticalAlignment="Top"
                                 Margin="50 0 0 0" Background="Transparent"
                                 Height="auto"
                                 Width="auto"
-                                Foreground="Black"/>
+                                Foreground="Black"
+                                Click="btnNext_Click"
+                                />
                 </StackPanel>
             </DockPanel>
 

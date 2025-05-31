@@ -34,6 +34,8 @@ namespace DrugManagerApp.Views
             FirstViewPanel.Visibility = Visibility.Hidden;
             RegisterModePanel.Visibility = Visibility.Visible;
             RegisterViewMode2_Loaded(sender, e); // データグリッドの初期化
+            btnNext.IsEnabled = true;
+            btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
         }
 
         private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
@@ -53,6 +55,47 @@ namespace DrugManagerApp.Views
                     LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
                     FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
                 });
+            }
+        }
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            if (Panel1.Visibility == Visibility.Visible)
+            {
+                // 次のパネルへ移動
+                Panel1.Visibility = Visibility.Hidden;
+                Panel2.Visibility = Visibility.Visible;
+                btnReturn.Visibility = Visibility.Visible;
+            }
+            else if (Panel2.Visibility == Visibility.Visible)
+            {
+                Panel2.Visibility = Visibility.Hidden;
+                Panel3.Visibility = Visibility.Visible;
+                btnNext.Content = "完了"; // ボタンのテキストを変更
+            }
+            else if (Panel3.Visibility == Visibility.Visible)
+            {
+                Panel3.Visibility = Visibility.Hidden;
+                Panel1.Visibility = Visibility.Visible;
+                btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
+                btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
+            }
+        }
+
+        private void btnReturn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Panel2.Visibility == Visibility.Visible)
+            {
+                // 前のパネルへ戻る
+                Panel2.Visibility = Visibility.Hidden;
+                Panel1.Visibility = Visibility.Visible;
+                btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
+            }
+            else if (Panel3.Visibility == Visibility.Visible)
+            {
+                Panel3.Visibility = Visibility.Hidden;
+                Panel2.Visibility = Visibility.Visible;
+                btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
             }
         }
 
