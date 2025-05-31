@@ -22,7 +22,7 @@ namespace WpfApp2
                 InitializeApplication();
 
                 // メインウィンドウを表示
-                var mainWindow = new FrontCoverView();
+                var mainWindow = new RegisterModeView2();
                 mainWindow.Show();
             }
             catch (Exception ex)

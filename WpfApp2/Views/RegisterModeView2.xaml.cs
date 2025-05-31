@@ -25,7 +25,35 @@ namespace DrugManagerApp.Views
         public RegisterModeView2()
         {
             InitializeComponent();
+            FirstViewPanel.Visibility = Visibility.Visible;
+            RegisterModePanel.Visibility = Visibility.Hidden;
+        }
+
+        private void btnToTESTView_Click(object sender, RoutedEventArgs e)
+        {
+            FirstViewPanel.Visibility = Visibility.Hidden;
+            RegisterModePanel.Visibility = Visibility.Visible;
+            RegisterViewMode2_Loaded(sender, e); // データグリッドの初期化
+        }
+
+        private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
+        {
             dataGrid.ItemsSource = Items;
+            // 初期データの設定（例として3行追加）
+            for (int i = 0; i < 3; i++)
+            {
+                Items.Add(new RowData
+                {
+                    ID = i + 1,
+                    Name = $"Item {i + 1}",
+                    Class = "Class A",
+                    UseStatus = "貸出可",
+                    Mass = $"{(i + 1) * 10}g",
+                    LastUserID = 0,
+                    LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
+                    FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
+                });
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
