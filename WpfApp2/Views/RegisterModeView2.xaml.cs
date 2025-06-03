@@ -41,21 +41,55 @@ namespace DrugManagerApp.Views
         private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
         {
             dataGrid.ItemsSource = Items;
-            // 初期データの設定（例として3行追加）
-            for (int i = 0; i < 3; i++)
-            {
-                Items.Add(new RowData
+
+            Items.Add(new RowData
                 {
-                    ID = i + 1,
-                    Name = $"Item {i + 1}",
-                    Class = "Class A",
+                    ID = 1, 
+                    Name = "エタノール",
+                    Class = "危",
                     UseStatus = "貸出可",
-                    Mass = $"{(i + 1) * 10}g",
+                    Mass = "200",
                     LastUserID = 0,
-                    LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
-                    FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
-                });
-            }
+                    LastUseDate = new DateTime(2024,5,2).ToString("yyyy/MM/dd"),
+                    FirstDate = new DateTime(2023,6,30).ToString("yyyy/MM/dd") });
+            Items.Add(new RowData
+            {
+                ID = 1,
+                Name = "",
+                Class = "Class A",
+                UseStatus = "貸出可",
+                Mass = "10g",
+                LastUserID = 0,
+                LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
+                FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
+            }); Items.Add(new RowData
+            {
+                ID = 1,
+                Name = "Item 1",
+                Class = "Class A",
+                UseStatus = "貸出可",
+                Mass = "10g",
+                LastUserID = 0,
+                LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
+                FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
+            });
+
+
+            //// 初期データの設定（例として3行追加）
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    Items.Add(new RowData
+            //    {
+            //        ID = i + 1,
+            //        Name = $"Item {i + 1}",
+            //        Class = "Class A",
+            //        UseStatus = "貸出可",
+            //        Mass = $"{(i + 1) * 10}g",
+            //        LastUserID = 0,
+            //        LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
+            //        FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
+            //    });
+            //}
         }
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
