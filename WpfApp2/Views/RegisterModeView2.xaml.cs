@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DrugManagerApp.Models;
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +23,9 @@ namespace DrugManagerApp.Views
     /// </summary>
     public partial class RegisterModeView2 : Window
     {
-        public ObservableCollection<RowData> Items { get; set; } = new();
+        public ObservableCollection<ReagentModel> Items { get; set; } = new();
+
+
 
         public RegisterModeView2()
         {
@@ -41,55 +46,6 @@ namespace DrugManagerApp.Views
         private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
         {
             dataGrid.ItemsSource = Items;
-
-            Items.Add(new RowData
-                {
-                    ID = 1, 
-                    Name = "エタノール",
-                    Class = "危",
-                    UseStatus = "貸出可",
-                    Mass = "200",
-                    LastUserID = 0,
-                    LastUseDate = new DateTime(2024,5,2).ToString("yyyy/MM/dd"),
-                    FirstDate = new DateTime(2023,6,30).ToString("yyyy/MM/dd") });
-            Items.Add(new RowData
-            {
-                ID = 1,
-                Name = "",
-                Class = "Class A",
-                UseStatus = "貸出可",
-                Mass = "10g",
-                LastUserID = 0,
-                LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
-                FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
-            }); Items.Add(new RowData
-            {
-                ID = 1,
-                Name = "Item 1",
-                Class = "Class A",
-                UseStatus = "貸出可",
-                Mass = "10g",
-                LastUserID = 0,
-                LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
-                FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
-            });
-
-
-            //// 初期データの設定（例として3行追加）
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    Items.Add(new RowData
-            //    {
-            //        ID = i + 1,
-            //        Name = $"Item {i + 1}",
-            //        Class = "Class A",
-            //        UseStatus = "貸出可",
-            //        Mass = $"{(i + 1) * 10}g",
-            //        LastUserID = 0,
-            //        LastUseDate = DateTime.Now.ToString("yyyy/MM/dd"),
-            //        FirstDate = DateTime.Now.ToString("yyyy/MM/dd")
-            //    });
-            //}
         }
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
@@ -183,15 +139,5 @@ namespace DrugManagerApp.Views
             }
         }
     }
-    public class RowData
-    {
-        public int ID { get; set; }
-        public string Name { get; set; } = "";
-        public string Class { get; set; } = "";
-        public string UseStatus { get; set; } = "貸出可";
-        public string Mass { get; set; } = "";
-        public int LastUserID { get; set; }
-        public string LastUseDate { get; set; } = "";
-        public string FirstDate { get; set; } = "";
-    }
+    
 }

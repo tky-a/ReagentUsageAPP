@@ -63,7 +63,8 @@
                              Margin="15 10 0 0" VerticalAlignment="Center"
                             materialDesign:HintAssist.Hint=" 薬品IDをスキャン・入力"
                             materialDesign:HintAssist.HelperTextFontSize="12"                                                         
-                            materialDesign:HintAssist.HelperText="  スキャンすると下の表で自動検索されます"/>
+                            materialDesign:HintAssist.HelperText="  スキャンすると下の表で自動検索されます"
+                             />
                 </StackPanel>
                 <Image HorizontalAlignment="Right"
                         Source="/Resources/Images/scan.png"
