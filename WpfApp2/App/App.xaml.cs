@@ -2,7 +2,6 @@
 using System.Windows;
 using WpfApp2.Views;
 using WpfApp2.Services;
-using DrugManagerApp.Views;
 
 namespace WpfApp2
 {

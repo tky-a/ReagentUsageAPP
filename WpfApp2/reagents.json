@@ -2,7 +2,7 @@
   {
     "ID": 1,
     "Name": "塩酸",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "500",
     "LastUserID": 0,
@@ -12,7 +12,7 @@
   {
     "ID": 2,
     "Name": "硫酸",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出中",
     "Mass": "1000",
     "LastUserID": 0,
@@ -22,7 +22,7 @@
   {
     "ID": 3,
     "Name": "水酸化ナトリウム",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "250",
     "LastUserID": 0,
@@ -32,7 +32,7 @@
   {
     "ID": 4,
     "Name": "エタノール",
-    "Class": "",
+    "Class": "危",
     "UseStatus": "貸出可",
     "Mass": "500",
     "LastUserID": 0,
@@ -42,7 +42,7 @@
   {
     "ID": 5,
     "Name": "アセトン",
-    "Class": "",
+    "Class": "危",
     "UseStatus": "使用停止",
     "Mass": "100",
     "LastUserID": 0,
@@ -62,7 +62,7 @@
   {
     "ID": 7,
     "Name": "過酸化水素",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出中",
     "Mass": "250",
     "LastUserID": 0,
@@ -72,7 +72,7 @@
   {
     "ID": 8,
     "Name": "硝酸",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "500",
     "LastUserID": 0,
@@ -92,7 +92,7 @@
   {
     "ID": 10,
     "Name": "硫酸銅",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出中",
     "Mass": "100",
     "LastUserID": 0,
@@ -102,7 +102,7 @@
   {
     "ID": 11,
     "Name": "アンモニア水",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "500",
     "LastUserID": 0,
@@ -112,7 +112,7 @@
   {
     "ID": 12,
     "Name": "メタノール",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "250",
     "LastUserID": 0,
@@ -162,7 +162,7 @@
   {
     "ID": 17,
     "Name": "水酸化カリウム",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "使用停止",
     "Mass": "100",
     "LastUserID": 0,
@@ -222,7 +222,7 @@
   {
     "ID": 23,
     "Name": "硝酸銀",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "50",
     "LastUserID": 0,
@@ -232,7 +232,7 @@
   {
     "ID": 24,
     "Name": "フェノール",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "使用停止",
     "Mass": "100",
     "LastUserID": 0,
@@ -242,7 +242,7 @@
   {
     "ID": 25,
     "Name": "ヨウ素",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出可",
     "Mass": "25",
     "LastUserID": 0,
@@ -292,7 +292,7 @@
   {
     "ID": 30,
     "Name": "過マンガン酸カリウム",
-    "Class": "",
+    "Class": "劇",
     "UseStatus": "貸出中",
     "Mass": "50",
     "LastUserID": 0,

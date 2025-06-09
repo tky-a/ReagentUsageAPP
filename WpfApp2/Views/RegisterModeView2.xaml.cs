@@ -1,37 +1,81 @@
-﻿using DrugManagerApp.Models;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WpfApp2.Models;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace DrugManagerApp.Views
+namespace WpfApp2.Views
 {
     /// <summary>
     /// RegisterModeView2.xaml の相互作用ロジック
     /// </summary>
-    public partial class RegisterModeView2 : Window
+    public partial class RegisterModeView2 : Window, INotifyPropertyChanged
     {
-        public ObservableCollection<ReagentModel> Items { get; set; } = new();
+        private readonly DatabaseManager _databaseManager;
+        public ObservableCollection<ReagentModel> Reagents { get; set; } 
+        private ReagentModel _selectedReagent;
+
+        //データベース関連
+        public ReagentModel SelectedReagent
+        {
+            get => _selectedReagent;
+            set
+            {
+                _selectedReagent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private async void LoadDataAsync()
+        {
+            try
+            {
+                var reagents = await _databaseManager.LoadReagentsAsync();
+
+                Reagents.Clear();
+                foreach (var reagent in reagents)
+                {
+                    Reagents.Add(reagent);
+                }
+            }
+            catch (Exception ex)
+            {
+                // エラーハンドリング（MessageBoxやログ出力など）
+                MessageBox.Show($"データの読み込みエラー: {ex.Message}");
+            }
+        }
+        public async Task SaveDataAsync()
+        {
+            try
+            {
+                await _databaseManager.SaveReagentsAsync(Reagents.ToList());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"データの保存エラー: {ex.Message}");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        //ここまでデータベース関連
 
 
 
         public RegisterModeView2()
         {
             InitializeComponent();
+            DataContext = this;
             FirstViewPanel.Visibility = Visibility.Visible;
             RegisterModePanel.Visibility = Visibility.Hidden;
+            _databaseManager = new DatabaseManager();
+            Reagents = new ObservableCollection<ReagentModel>();
+            LoadDataAsync();
         }
 
         private void btnToTESTView_Click(object sender, RoutedEventArgs e)
@@ -45,7 +89,7 @@ namespace DrugManagerApp.Views
 
         private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
         {
-            dataGrid.ItemsSource = Items;
+            dataGrid.ItemsSource = Reagents;
         }
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
@@ -125,7 +169,7 @@ namespace DrugManagerApp.Views
                 else
                 {
                     // 最後の列なら次の行へ
-                    if (currentRowIndex + 1 >= Items.Count)
+                    if (currentRowIndex + 1 >= Reagents.Count)
                     {
                         //Items.Add(new RowData());
                         //dataGrid.UpdateLayout(); // すぐに表示を反映
@@ -136,6 +180,44 @@ namespace DrugManagerApp.Views
                 dataGrid.SelectedItems.Clear();
                 //dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
                 dataGrid.BeginEdit();
+            }
+        }
+        // 編集ボタンのイベントハンドラー
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button?.CommandParameter != null)
+            {
+                // CommandParameterに選択された行のデータオブジェクトが渡される
+                var selectedReagent = button.CommandParameter;
+
+                // ここに編集処理を記述
+                // 例：編集ダイアログを開く、編集画面に遷移する等
+                MessageBox.Show($"編集ボタンがクリックされました: {selectedReagent}");
+            }
+        }
+        // 削除ボタンのイベントハンドラー
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button?.CommandParameter != null)
+            {
+                // CommandParameterに選択された行のデータオブジェクトが渡される
+                var selectedReagent = button.CommandParameter;
+
+                // 確認ダイアログを表示
+                MessageBoxResult result = MessageBox.Show(
+                    "この項目を削除しますか？",
+                    "削除確認",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // ここに削除処理を記述
+                    // 例：ViewModelのコレクションから削除等
+                    MessageBox.Show($"削除ボタンがクリックされました: {selectedReagent}");
+                }
             }
         }
     }
