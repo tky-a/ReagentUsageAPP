@@ -46,8 +46,7 @@
                 <TextBlock Text="管理" FontSize="38" Foreground="White"/>
             </Button>
         </Grid>
-        
-        
+
         <Grid x:Name="RegisterModePanel" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="180"/>
