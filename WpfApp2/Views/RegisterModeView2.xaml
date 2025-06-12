@@ -11,7 +11,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
-        <Grid x:Name="FirstViewPanel" Visibility="Hidden">
+        <Grid x:Name="FirstViewPanel" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.7*"/>
                 <ColumnDefinition Width="*"/>
@@ -29,7 +29,21 @@
                 Width="350" Height="100" 
                 Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 HorizontalAlignment="center">
-                <TextBlock Text="はじめる" FontSize="58" Foreground="White"/>
+                <TextBlock Text="貸出/返却" FontSize="58" Foreground="White"/>
+            </Button>
+
+            <Button Width="100" Height="100" Grid.Column="3" Grid.Row="2"
+                    HorizontalAlignment="Right" Margin="0 0 20 10">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="LightBlue" StrokeThickness="2"/>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>
+                <TextBlock Text="新規/破棄" FontSize="21" Foreground="White"/>
             </Button>
 
             <Button Width="100" Height="100" Grid.Column="3" Grid.Row="3"
@@ -43,11 +57,11 @@
                         </Grid>
                     </ControlTemplate>
                 </Button.Template>
-                <TextBlock Text="管理" FontSize="38" Foreground="White"/>
+                <TextBlock Text="設定" FontSize="38" Foreground="White"/>
             </Button>
         </Grid>
 
-        <Grid x:Name="RegisterModePanel" Visibility="Visible">
+        <Grid x:Name="RegisterModePanel" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="180"/>
                 <RowDefinition Height="*"/>
@@ -139,6 +153,7 @@
                          VerticalAlignment="Top"
                          TextAlignment="Left"
                          Margin="10 5 5 5"
+                         BorderBrush="Black"
                          materialDesign:HintAssist.Hint="薬品名で検索できます"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                  />
