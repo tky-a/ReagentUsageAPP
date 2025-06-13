@@ -1,96 +1,56 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using System.IO;
+using System.Text;
 using WpfApp2.Models;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+
 
 namespace WpfApp2.Views
 {
     /// <summary>
     /// RegisterModeView2.xaml の相互作用ロジック
     /// </summary>
-    public partial class RegisterModeView2 : Window, INotifyPropertyChanged
+    public partial class RegisterModeView2 : Window
     {
         private readonly DatabaseManager _databaseManager;
-        public ObservableCollection<ReagentModel> Reagents { get; set; } 
-        private ReagentModel _selectedReagent;
-
-        //データベース関連
-        public ReagentModel SelectedReagent
-        {
-            get => _selectedReagent;
-            set
-            {
-                _selectedReagent = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private async void LoadDataAsync()
-        {
-            try
-            {
-                var reagents = await _databaseManager.LoadReagentsAsync();
-
-                Reagents.Clear();
-                foreach (var reagent in reagents)
-                {
-                    Reagents.Add(reagent);
-                }
-            }
-            catch (Exception ex)
-            {
-                // エラーハンドリング（MessageBoxやログ出力など）
-                MessageBox.Show($"データの読み込みエラー: {ex.Message}");
-            }
-        }
-        public async Task SaveDataAsync()
-        {
-            try
-            {
-                await _databaseManager.SaveReagentsAsync(Reagents.ToList());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"データの保存エラー: {ex.Message}");
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        //ここまでデータベース関連
-
-
+        private ObservableCollection<Chemical> _chemicals;
+        private ObservableCollection<User> _users;
+        private ObservableCollection<StorageLocation> _storageLocations;
 
         public RegisterModeView2()
         {
             InitializeComponent();
+            _databaseManager = new DatabaseManager();
+            _databaseManager.EnsureTablesCreated();
             DataContext = this;
             FirstViewPanel.Visibility = Visibility.Visible;
             RegisterModePanel.Visibility = Visibility.Hidden;
-            _databaseManager = new DatabaseManager();
-            Reagents = new ObservableCollection<ReagentModel>();
-            LoadDataAsync();
+            btnNext.IsEnabled = true;
+            btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
+        }
+
+        private void SetupUI()
+        {
+            // DataGridに薬品一覧を表示
+            ChemicalDataGrid.ItemsSource = _chemicals;
+        }
+
+        private void LoadData()
+        {
+            _chemicals = _databaseManager.GetAllChemicals();
+            _users = _databaseManager.GetAllUsers();
+            _storageLocations = _databaseManager.GetAllStorageLocations();
         }
 
         private void btnToTESTView_Click(object sender, RoutedEventArgs e)
         {
             FirstViewPanel.Visibility = Visibility.Hidden;
             RegisterModePanel.Visibility = Visibility.Visible;
-            RegisterViewMode2_Loaded(sender, e); // データグリッドの初期化
-            btnNext.IsEnabled = true;
-            btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
+            LoadData();
+            SetupUI();
         }
 
-        private void RegisterViewMode2_Loaded(object sender, RoutedEventArgs e)
-        {
-            dataGrid.ItemsSource = Reagents;
-        }
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
@@ -133,11 +93,6 @@ namespace WpfApp2.Views
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             // ここでは処理しない（PreviewKeyDownで制御）
@@ -147,41 +102,41 @@ namespace WpfApp2.Views
             // 今は処理が不要なら空のままでOK
         }
 
-        private void dataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                e.Handled = true;
+        //private void dataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Enter)
+        //    {
+        //        e.Handled = true;
 
-                var cellInfo = dataGrid.CurrentCell;
-                int currentColumnIndex = cellInfo.Column.DisplayIndex;
-                int currentRowIndex = dataGrid.Items.IndexOf(cellInfo.Item);
+        //        var cellInfo = dataGrid.CurrentCell;
+        //        int currentColumnIndex = cellInfo.Column.DisplayIndex;
+        //        int currentRowIndex = dataGrid.Items.IndexOf(cellInfo.Item);
 
-                // 編集確定
-                dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
-                //dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+        //        // 編集確定
+        //        dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+        //        //dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
 
-                // 次のセルへ移動
-                if (currentColumnIndex < dataGrid.Columns.Count - 1)
-                {
-                    dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[currentRowIndex], dataGrid.Columns[currentColumnIndex + 1]);
-                }
-                else
-                {
-                    // 最後の列なら次の行へ
-                    if (currentRowIndex + 1 >= Reagents.Count)
-                    {
-                        //Items.Add(new RowData());
-                        //dataGrid.UpdateLayout(); // すぐに表示を反映
-                    }
+        //        // 次のセルへ移動
+        //        if (currentColumnIndex < dataGrid.Columns.Count - 1)
+        //        {
+        //            dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[currentRowIndex], dataGrid.Columns[currentColumnIndex + 1]);
+        //        }
+        //        else
+        //        {
+        //            // 最後の列なら次の行へ
+        //            if (currentRowIndex + 1 >= Reagents.Count)
+        //            {
+        //                //Items.Add(new RowData());
+        //                //dataGrid.UpdateLayout(); // すぐに表示を反映
+        //            }
 
-                    dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[currentRowIndex + 1], dataGrid.Columns[0]);
-                }
-                dataGrid.SelectedItems.Clear();
-                //dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
-                dataGrid.BeginEdit();
-            }
-        }
+        //            dataGrid.CurrentCell = new DataGridCellInfo(dataGrid.Items[currentRowIndex + 1], dataGrid.Columns[0]);
+        //        }
+        //        dataGrid.SelectedItems.Clear();
+        //        //dataGrid.SelectedCells.Add(dataGrid.CurrentCell);
+        //        dataGrid.BeginEdit();
+        //    }
+        //}
         // 編集ボタンのイベントハンドラー
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
