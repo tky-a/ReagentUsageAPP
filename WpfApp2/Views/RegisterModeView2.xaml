@@ -11,10 +11,6 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid x:Name="FirstViewPanel" Visibility="Hidden" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.7*"/>
@@ -66,39 +62,47 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="RegisterModePanel" Visibility="Visible" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="180"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        
+        
+        
+        <Grid x:Name="RegisterModePanel" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Row="0" Orientation="Horizontal"
-                        Margin="3" Visibility="Visible" x:Name="Panel1">
-                <StackPanel Orientation="Vertical" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="3" Visibility="Visible" x:Name="Panel">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top"
+                            Margin="0 0 0 0">
                     <TextBlock Text="" Margin="5"/>
-                    <TextBox x:Name="ReagentID" MinWidth="250" Width="auto" Height="auto" 
-                             FontSize="20" BorderBrush="Black"
-                             Background="GhostWhite"
-                             Margin="15 10 0 0" VerticalAlignment="Center"
+                    <TextBox x:Name="InputBox" MinWidth="250" Width="auto"
+                             Height="auto" 
+                            FontSize="20" BorderBrush="Black"
+                            Background="GhostWhite"
+                            Margin="0 80 0 10"
                             materialDesign:HintAssist.Hint=" 薬品IDをスキャン・入力"
                             materialDesign:HintAssist.HelperTextFontSize="12"                                                         
-                            materialDesign:HintAssist.HelperText="  スキャンすると下の表で自動検索されます"
-                             />
+                            materialDesign:HintAssist.HelperText=" バーコードをスキャンするか入力"
+                            />
                 </StackPanel>
-                <Image HorizontalAlignment="Right"
+                <Image  x:Name="ImgPanel"
+                        HorizontalAlignment="Right"
                         Source="/Resources/Images/scan.png"
-                        Height="auto" Margin="20 0 0 0"/>
+                        Height="200" Margin="20 -70 0 0"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" 
-                        Margin="3" Visibility="Hidden" x:Name="Panel2">
-                <StackPanel Orientation="Vertical" Margin="5">
+            <!--<StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" 
+                        HorizontalAlignment="Center" Background="Transparent"
+                        Margin="3" Visibility="Visible" x:Name="Panel2">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top" 
+                            Margin="0 0 0 0">
                     <TextBlock Text="" Margin="5"/>
-                    <TextBox x:Name="Mass" Width="200" Height="auto"
+                    <TextBox x:Name="Mass" Width="auto" Height="auto"
                             FontSize="20" BorderBrush="Black"
                              Background="GhostWhite"
                              Margin="15 10 0 0" VerticalAlignment="Center"
@@ -108,7 +112,7 @@
                 </StackPanel>
                 <Image HorizontalAlignment="Right"
                     Source="/Resources/Images/weighing2.png"
-                    Height="auto" Margin="30 0 0 0"/>
+                    Height="200" Margin="20 -70 0 0"/>
             </StackPanel>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal"
@@ -127,10 +131,16 @@
                 <Image HorizontalAlignment="Right"
                     Source="/Resources/Images/weighing2.png"
                     Height="auto"/>
-            </StackPanel>
+            </StackPanel>-->
 
-            <DockPanel VerticalAlignment="Center" Margin="20 130 0 0">
-                <StackPanel Orientation="Horizontal" Margin="2" Height="40">
+            
+            
+            <DockPanel VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="-250 100 0 0"
+                       Grid.Row="1" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal"
+                            Margin="2" Height="40" HorizontalAlignment="Center">
                     <Button x:Name="btnReturn"
                                 Content="戻る" Visibility="Visible"                            
                                 VerticalAlignment="Top"
@@ -139,7 +149,7 @@
                                 Height="auto"
                                 Width="auto"
                                 Foreground="Black"
-                                Click="btnReturn_Click"
+                                Click=""
                                 />
                     <Button x:Name="btnNext"
                                 Content="次へ" Visibility="Visible"                           
@@ -153,107 +163,9 @@
                 </StackPanel>
             </DockPanel>
 
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                <TextBox Grid.Row="1" 
-                         Width="auto"
-                         MinWidth="150"
-                         Height="auto"
-                         FontSize="16"
-                         VerticalAlignment="Top"
-                         TextAlignment="Left"
-                         Margin="10 5 5 5"
-                         BorderBrush="Black"
-                         materialDesign:HintAssist.Hint="薬品名で検索できます"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 />
-                <Button FontFamily="Segoe MDL2 Assets"
-                        Margin="-5 8 5 5"
-                        Content="&#xE71F;"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        Foreground="DarkGray"
-                        ToolTip="編集"
-                        x:Name="ResultItemBTN"
-                        VerticalAlignment="Top"/>
-                <!--後でclickイベ必要-->
-            </StackPanel>
+            
 
-            <DataGrid x:Name="ChemicalDataGrid"
-                      Grid.Row="0"
-                      Grid.Column="1"
-                      Grid.RowSpan="2"
-                      Background="WhiteSmoke"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      PreparingCellForEdit="dataGrid_PreparingCellForEdit"
-                      CellEditEnding="dataGrid_CellEditEnding"
-                      Margin="0 60 0 0"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      ColumnWidth="*"
-                      RowHeight="40"
-                      GridLinesVisibility="All"
-                      Padding="0 0 0 0"                      
-                      CanUserReorderColumns="False"
-                      HeadersVisibility="Column"
-                  >
-
-                <DataGrid.Columns>
-
-                    <DataGridTextColumn Header="薬品&#x0A;番号" Binding="{Binding ChemicalId}"  Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="薬品名" Binding="{Binding Name}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="毒劇危" Binding="{Binding Class}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="現在質量" Binding="{Binding CurrentMass}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="使用状況" Binding="{Binding UseStatus}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="保管場所" Binding="{Binding StorageLocationId}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="最終&#x0A;使用者" Binding="{Binding LastUserName}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="最終&#x0A;使用日" Binding="{Binding LastUseDate}" Width="auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate}" Width="auto" MinWidth="110" IsReadOnly="True"/>
-
-                    <!-- 編集ボタン列 -->
-                    <DataGridTemplateColumn Header="編集" MinWidth="60" Width="auto" MaxWidth="60">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button 
-                                        FontFamily="Segoe MDL2 Assets"
-                                        Content="&#xE70F;"
-                                        Click="EditButton_Click"
-                                        CommandParameter="{Binding}"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        Foreground="Black"
-                                        HorizontalAlignment="Stretch"
-                                        Margin="0"
-                                        Padding="0"
-                                        Height="30"
-                                        Width="30"
-                                    />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <!-- 削除ボタン列 -->
-                    <DataGridTemplateColumn Header="削除" MinWidth="60" Width="auto" MaxWidth="60">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button FontFamily="Segoe MDL2 Assets"
-                                        Content="&#xE74D;"
-                                        Click="DeleteButton_Click"
-                                        CommandParameter="{Binding}"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        Foreground="Black"
-                                        HorizontalAlignment="Stretch"
-                                        Margin="0"
-                                        Padding="0"
-                                        Height="30"
-                                        Width="30"
-                                        />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+            
         </Grid>
     </Grid>
 </Window>

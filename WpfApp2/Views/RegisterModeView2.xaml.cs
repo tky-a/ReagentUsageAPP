@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.IO;
 using System.Text;
 using WpfApp2.Models;
+using MaterialDesignThemes.Wpf;
 
 
 namespace WpfApp2.Views
@@ -17,6 +18,7 @@ namespace WpfApp2.Views
         private ObservableCollection<Chemical> _chemicals;
         private ObservableCollection<User> _users;
         private ObservableCollection<StorageLocation> _storageLocations;
+        private int PanelNumber;
 
         public RegisterModeView2()
         {
@@ -24,16 +26,18 @@ namespace WpfApp2.Views
             _databaseManager = new DatabaseManager();
             _databaseManager.EnsureTablesCreated();
             DataContext = this;
-            FirstViewPanel.Visibility = Visibility.Visible;
-            RegisterModePanel.Visibility = Visibility.Hidden;
-            btnNext.IsEnabled = true;
-            btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
+            SetupUI();
         }
 
         private void SetupUI()
         {
             // DataGridに薬品一覧を表示
-            ChemicalDataGrid.ItemsSource = _chemicals;
+            //ChemicalDataGrid.ItemsSource = _chemicals;
+            PanelNumber = 1;
+            FirstViewPanel.Visibility = Visibility.Visible;
+            RegisterModePanel.Visibility = Visibility.Hidden;
+            btnNext.IsEnabled = true;
+            btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
         }
 
         private void LoadData()
@@ -54,44 +58,46 @@ namespace WpfApp2.Views
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            if (Panel1.Visibility == Visibility.Visible)
-            {
-                // 次のパネルへ移動
-                Panel1.Visibility = Visibility.Hidden;
-                Panel2.Visibility = Visibility.Visible;
+            if (PanelNumber ==1)
+            {                
+                InputBox.SetValue(HintAssist.HintProperty, "質量を送信・入力");
+                InputBox.SetValue(HintAssist.HelperTextProperty, "はかりにより送信ボタンを押す必要があります");
                 btnReturn.Visibility = Visibility.Visible;
+                PanelNumber = 2;
             }
-            else if (Panel2.Visibility == Visibility.Visible)
+            else if (PanelNumber==2)
             {
-                Panel2.Visibility = Visibility.Hidden;
-                Panel3.Visibility = Visibility.Visible;
+                InputBox.SetValue(HintAssist.HintProperty, "ユーザーIDを入力");
+                InputBox.SetValue(HintAssist.HelperTextProperty, "数値を入力");
                 btnNext.Content = "完了"; // ボタンのテキストを変更
+                PanelNumber = 3;
             }
-            else if (Panel3.Visibility == Visibility.Visible)
+            else if (PanelNumber ==3)
             {
-                Panel3.Visibility = Visibility.Hidden;
-                Panel1.Visibility = Visibility.Visible;
+                InputBox.SetValue(HintAssist.HintProperty, "薬品IDをスキャン・入力");
+                InputBox.SetValue(HintAssist.HelperTextProperty, "バーコードをスキャンするか入力します");
                 btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
                 btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
+                PanelNumber = 1;
             }
         }
 
-        private void btnReturn_Click(object sender, RoutedEventArgs e)
-        {
-            if (Panel2.Visibility == Visibility.Visible)
-            {
-                // 前のパネルへ戻る
-                Panel2.Visibility = Visibility.Hidden;
-                Panel1.Visibility = Visibility.Visible;
-                btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
-            }
-            else if (Panel3.Visibility == Visibility.Visible)
-            {
-                Panel3.Visibility = Visibility.Hidden;
-                Panel2.Visibility = Visibility.Visible;
-                btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
-            }
-        }
+        //private void btnReturn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (Panel2.Visibility == Visibility.Visible)
+        //    {
+        //        // 前のパネルへ戻る
+        //        Panel2.Visibility = Visibility.Hidden;
+        //        Panel1.Visibility = Visibility.Visible;
+        //        btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
+        //    }
+        //    else if (Panel3.Visibility == Visibility.Visible)
+        //    {
+        //        Panel3.Visibility = Visibility.Hidden;
+        //        Panel2.Visibility = Visibility.Visible;
+        //        btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
+        //    }
+        //}
 
         private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {

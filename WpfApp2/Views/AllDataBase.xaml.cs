@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp2.Views
+namespace DrugManagerApp.Views
 {
     /// <summary>
-    /// ManagerModeView.xaml の相互作用ロジック
+    /// AllDataBase.xaml の相互作用ロジック
     /// </summary>
-    public partial class ManagerModeView : UserControl
+    public partial class AllDataBase : Window
     {
-        public ManagerModeView()
+        public AllDataBase()
         {
             InitializeComponent();
         }
