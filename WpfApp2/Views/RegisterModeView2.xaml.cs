@@ -52,7 +52,6 @@ namespace WpfApp2.Views
             FirstViewPanel.Visibility = Visibility.Hidden;
             RegisterModePanel.Visibility = Visibility.Visible;
             LoadData();
-            SetupUI();
         }
 
 

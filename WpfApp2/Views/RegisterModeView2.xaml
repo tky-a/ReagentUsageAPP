@@ -11,7 +11,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}">
     <Grid>
-        <Grid x:Name="FirstViewPanel" Visibility="Hidden" Grid.ColumnSpan="2">
+        <Grid x:Name="FirstViewPanel" Visibility="Visible" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.7*"/>
                 <ColumnDefinition Width="*"/>
@@ -65,7 +65,7 @@
         
         
         
-        <Grid x:Name="RegisterModePanel" Visibility="Visible">
+        <Grid x:Name="RegisterModePanel" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
