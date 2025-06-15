@@ -43,8 +43,8 @@
           Background="WhiteSmoke"
           AutoGenerateColumns="False"
           CanUserAddRows="False"
-          PreparingCellForEdit="dataGrid_PreparingCellForEdit"
-          CellEditEnding="dataGrid_CellEditEnding"
+          
+                  
           Margin="0 60 0 0"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
@@ -74,7 +74,7 @@
                             <Button 
                             FontFamily="Segoe MDL2 Assets"
                             Content="&#xE70F;"
-                            Click="EditButton_Click"
+                                
                             CommandParameter="{Binding}"
                             Background="Transparent"
                             BorderBrush="Transparent"
@@ -95,7 +95,7 @@
                         <DataTemplate>
                             <Button FontFamily="Segoe MDL2 Assets"
                             Content="&#xE74D;"
-                            Click="DeleteButton_Click"
+                                    
                             CommandParameter="{Binding}"
                             Background="Transparent"
                             BorderBrush="Transparent"

@@ -149,7 +149,6 @@
                                 Height="auto"
                                 Width="auto"
                                 Foreground="Black"
-                                Click=""
                                 />
                     <Button x:Name="btnNext"
                                 Content="次へ" Visibility="Visible"                           
