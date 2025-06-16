@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.IO;
 using System.Text;
 using WpfApp2.Models;
 using MaterialDesignThemes.Wpf;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 
 namespace WpfApp2.Views
@@ -35,9 +38,10 @@ namespace WpfApp2.Views
             //ChemicalDataGrid.ItemsSource = _chemicals;
             PanelNumber = 1;
             FirstViewPanel.Visibility = Visibility.Visible;
-            RegisterModePanel.Visibility = Visibility.Hidden;
+            RegisterModePanel.Visibility = Visibility.Hidden;            
             btnNext.IsEnabled = true;
             btnReturn.Visibility = Visibility.Hidden; // 初期状態では戻るボタンを非表示
+
         }
 
         private void LoadData()
@@ -57,8 +61,13 @@ namespace WpfApp2.Views
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
+            string uri;
             if (PanelNumber ==1)
-            {                
+            {
+                uri = "pack://application:,,,/Resources/Images/weighing2.png";
+                BitmapImage bitmap = new BitmapImage(new Uri(uri, UriKind.Absolute));
+                ImgPanel.Source = bitmap;
+
                 InputBox.SetValue(HintAssist.HintProperty, "質量を送信・入力");
                 InputBox.SetValue(HintAssist.HelperTextProperty, "はかりにより送信ボタンを押す必要があります");
                 btnReturn.Visibility = Visibility.Visible;
@@ -66,15 +75,27 @@ namespace WpfApp2.Views
             }
             else if (PanelNumber==2)
             {
+                uri = "pack://application:,,,/Resources/Images/user_scan.png";
+                BitmapImage bitmap = new BitmapImage(new Uri(uri, UriKind.Absolute));
+                ImgPanel.Source = bitmap;
+
                 InputBox.SetValue(HintAssist.HintProperty, "ユーザーIDを入力");
                 InputBox.SetValue(HintAssist.HelperTextProperty, "数値を入力");
+                btnNext.Background = new SolidColorBrush(Colors.Purple);
+                btnNext.Foreground = new SolidColorBrush(Colors.White);
                 btnNext.Content = "完了"; // ボタンのテキストを変更
                 PanelNumber = 3;
             }
             else if (PanelNumber ==3)
             {
+                uri = "pack://application:,,,/Resources/Images/scan.png";
+                BitmapImage bitmap = new BitmapImage(new Uri(uri, UriKind.Absolute));
+                ImgPanel.Source = bitmap;
+
                 InputBox.SetValue(HintAssist.HintProperty, "薬品IDをスキャン・入力");
                 InputBox.SetValue(HintAssist.HelperTextProperty, "バーコードをスキャンするか入力します");
+                btnNext.Background = new SolidColorBrush(Colors.Transparent);
+                btnNext.Foreground = new SolidColorBrush(Colors.Black);
                 btnNext.Content = "次へ"; // ボタンのテキストを元に戻す
                 btnReturn.Visibility = Visibility.Hidden; // 戻るボタンを非表示にする
                 PanelNumber = 1;

@@ -9,9 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\scan.png" />
+    <None Remove="Resources\Images\Slide1.jpg" />
+    <None Remove="Resources\Images\user_scan.png" />
+    <None Remove="Resources\Images\weighing2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="App\" />
 	  <!-- App.xaml を App フォルダからビルド対象に -->
 	  <ApplicationDefinition Include="App\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\scan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Slide1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -22,18 +38,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\Images\scan.png">
+    <Resource Include="Resources\Images\user_scan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Images\Slide1.jpg">
+    </Resource>
+    <Resource Include="Resources\Images\weighing2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Images\user_scan.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Images\weighing2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Resource>
   </ItemGroup>
 
 </Project>
