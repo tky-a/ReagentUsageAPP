@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2.Views"
         mc:Ignorable="d"
-        Title="RegisterModeView2" Height="500" Width="600"
+        Title="RegisterModeView2" Height="500" Width="650"
+        ResizeMode="NoResize"
+        SizeToContent="Manual"
         FontFamily="Segoe UI" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -25,11 +27,18 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
+            <!--&#x0A; 改行-->
+            
+            <Label  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    FontSize="40"
+                    Content="貸し借り登録システム"/>
             <Button x:Name="btnToTESTMode" Click="btnToTESTView_Click"
                 Width="350" Height="200" 
                 Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
-                HorizontalAlignment="center">
-                <TextBlock Text="貸出返却を&#x0A;はじめる" FontSize="55" 
+                HorizontalAlignment="center"
+                    KeyDown="FirstPanelEnterKeyDown">
+                <TextBlock Text="持ち出し / 持ち戻し" FontSize="35" 
                            Foreground="White" TextAlignment="Center"/>
             </Button>
 
@@ -62,6 +71,70 @@
             </Button>
         </Grid>
 
+        <Grid VerticalAlignment="Top"
+              Height="100"
+              x:Name="HedderPanel">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="&#xE80F;"
+                    FontSize="30"
+                    FontFamily="Segoe MDL2 Assets"
+                    Width="auto"
+                    Height="auto"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Foreground="Black"
+                    Margin="10"
+                    Padding="5"
+                    HorizontalAlignment="Center"
+                />
+            <StackPanel Orientation="Horizontal" 
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Margin="-50 0 0 0">
+                <Grid Width="70" Height="70">
+                    <Ellipse Fill="MediumPurple" x:Name="HedderReagentIDEllipse"/>
+                    <TextBlock  x:Name="HedderReagentIDText"
+                                Text="薬品ID&#x0A;スキャン"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               FontSize="18"
+                                FontWeight="SemiBold"
+                               Foreground="White"/>
+                </Grid>
+                <Canvas Width="80" Height="2" Background="Gray" x:Name="HedderFirstSecond"/>
+                <Grid Width="70" Height="70">
+                    <Ellipse Fill="Gray" x:Name="HedderMassEllipse"/>
+                    <TextBlock x:Name="HedderMassText"
+                               Text="質量&#x0A;測定"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"                             
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="LightGray"/>
+                </Grid>
+                <Canvas Width="80" Height="2" Background="gray" x:Name="HedderSecondThird"/>
+                <Grid Width="70" Height="70">
+                    <Ellipse Fill="Gray" x:Name="HedderUserEllipse"/>
+                    <TextBlock  x:Name="HedderUserText"
+                                Text="使用者ID&#x0A;スキャン"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               FontSize="16"
+                                FontWeight="SemiBold"
+                               Foreground="LightGray"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+
         <Grid x:Name="RegisterModePanel" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="66"/>
@@ -69,31 +142,43 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="100"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="0.8*"/>
             </Grid.RowDefinitions>
 
+            <!--<TextBlock Text="続けて入力できます。最後に記録ボタンを押してください"
+                       Grid.Row="1" Grid.Column="1"
+                       FontSize="12"
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="DarkGray"
+                       Margin="0 -90 0 0"/>-->
             <StackPanel Grid.Row="1" Grid.Column="1"
                             Orientation="Vertical" VerticalAlignment="Top"
                             Margin="5" Visibility="Visible" x:Name="Panel">
 
                 <TextBox x:Name="InputBox" MinWidth="150" Width="auto"
                                 Height="auto" VerticalAlignment="Center" 
-                                FontSize="20" BorderBrush="Black"
+                                FontSize="25" BorderBrush="Black"
                                 Background="GhostWhite"
                                 Margin="0 70 0 10"
+                                KeyDown="InputBox_KeyDown"
                                 materialDesign:HintAssist.Hint=" 薬品IDをスキャン・入力"
+                                materialDesign:HintAssist.HintPaddingBrush="Purple"
                                 materialDesign:HintAssist.HelperTextFontSize="12"                                                         
                                 materialDesign:HintAssist.HelperText=" バーコードをスキャンするか入力"
-                                />
-                <StackPanel Margin="0 30 0 0" Grid.Row="1" Grid.Column="1"
-                                HorizontalAlignment="Right" VerticalAlignment="Center"
-                                Orientation="Horizontal" 
-                                >
+                />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <Button x:Name="btnReturn"
+                                        Grid.Column="0"
                                         Content="戻る" Visibility="Visible"                            
-                                        Margin="0 0 60 0" Background="Transparent"
+                                        Margin="0 20 0 0" Background="Transparent"
                                         HorizontalAlignment="Left"
                                         ForceCursor="False"
                                         Height="35"
@@ -101,71 +186,97 @@
                                         Foreground="Black"
                                         />
                     <Button x:Name="btnNext"
+                                        Grid.Column="1"
                                         Content="次へ" Visibility="Visible"                           
-                                        Margin="70 0 0 0" Background="Transparent"
+                                        Margin="0 20 0 0" Background="Transparent"
                                         HorizontalAlignment="Right"
                                         Height="35"
                                         Width="auto"
                                         Foreground="Black"
                                         Click="btnNext_Click"
                                         />
-                </StackPanel>
+                </Grid>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="2" Visibility="Visible"
                             HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Image  x:Name="ImgPanel"
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Right"                        
                         Source="/Resources/Images/scan.png"
                         Height="200" Margin="50 0 0 0"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
-                <StackPanel Orientation="Horizontal">
-                    <Label BorderBrush="Transparent" Content="薬品番号:" FontSize="14"/>
-                    <TextBlock x:Name="ReagentID" Text="1111" FontSize="14" VerticalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label x:Name="Class" 
-                           Background="LightGray" 
-                           Width="auto" Height="30" 
-                           Content="水酸化ナトリウム"
-                           FontSize="20"
-                           Padding="10 0 0 0"
-                           />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Background="LightPink" Text="毒・劇・危" FontSize="14" VerticalAlignment="Center"/>
-                    <Label 
-                           Background="LightGray" 
-                           Width="auto" Height="30" 
-                           Content="水酸化ナトリウム"
-                           FontSize="20"
-                           Padding="10 0 0 0"
-                           />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Background="LightPink" Text="使用開始日" FontSize="14"/>
-                    <Label  
-                           Background="LightGray" 
-                           Width="auto" Height="30" 
-                           Content="水酸化ナトリウム"
-                           FontSize="20"
-                           Padding="10 0 0 0"
-                           />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Background="LightPink" Text="最終使用日" FontSize="14"/>
-                    <Label 
-                           Background="LightGray" 
-                           Width="auto" Height="30" 
-                           Content="水酸化ナトリウム"
-                           FontSize="20"
-                           Padding="10 0 0 0"
-                           />
-                </StackPanel>
-            </StackPanel>
+            <DataGrid
+                x:Name="ReagentDataGrid"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                HeadersVisibility="Column"
+                SelectionMode="Single"
+                IsReadOnly="True"
+                GridLinesVisibility="Horizontal"
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="20 5 5 5"
+                Background="Transparent"
+                FontSize="16"
+                >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ChemicalId}"/>
+                    <DataGridTextColumn Header="薬品名" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="現在量" Binding="{Binding CurrentMass}"/>
 
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2" Grid.Column="2" x:Name="ResultPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="一時保存本数"
+                           FontSize="14"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Grid.ColumnSpan="2"
+                           />
+                <TextBlock x:Name="ReagentCountText"
+                            Text="{Binding ReagentCount}"
+                           Width="auto"
+                            FontSize="40"
+                            TextAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                           Grid.Row="0" Grid.Column="1"
+                           Grid.RowSpan="2"
+                           Margin="5 20 0 0"/>
+                <TextBlock Text="本"
+                            FontSize="20"
+                            TextAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                           Grid.Row="0" Grid.Column="1"
+                           Grid.RowSpan="2"
+                           Margin="10 0 0 0"/>
+                <Button x:Name="BTNconfirmation"
+                        Grid.Row="0" 
+                        Grid.Column="2" 
+                        Grid.RowSpan="3"
+                        Margin="30 0 30 0"
+                        Height="100"
+                        Content="記録"
+                        FontSize="20"
+                        Background="Purple">
+                    
+                </Button>
+            </Grid>
 
 
 
