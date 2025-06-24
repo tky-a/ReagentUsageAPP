@@ -8,277 +8,613 @@
         Title="RegisterModeView2" Height="500" Width="650"
         ResizeMode="NoResize"
         SizeToContent="Manual"
-        FontFamily="Segoe UI" FontSize="22"
+        FontFamily="Meiryo" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}">
+
+    <Window.Resources>
+        <!-- スタイル定義 -->
+        <Style x:Key="ActiveHeaderStyle" TargetType="Ellipse">
+            <Setter Property="Fill" Value="Lavender"/>
+            <Setter Property="Stroke" Value="Purple"/>
+            <Setter Property="StrokeThickness" Value="2"/>
+        </Style>
+
+        <Style x:Key="InactiveHeaderStyle" TargetType="Ellipse">
+            <Setter Property="Fill" Value="Gray"/>
+            <Setter Property="Stroke" Value="Gray"/>
+            <Setter Property="StrokeThickness" Value="2"/>
+        </Style>
+
+        <Style x:Key="ActiveHeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Purple"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="InactiveHeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- 表紙用のボタンスタイル -->
+        <Style x:Key="MainPageButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Purple"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Gray" Direction="315" ShadowDepth="5" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="DarkMagenta"/>
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SettingsButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Foreground" Value="DarkGray"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Margin" Value="10"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- コンバーター -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+    </Window.Resources>
+
     <Grid>
-        <Grid x:Name="FirstViewPanel" Visibility="Hidden" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.7*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="0.8*"/>
-            </Grid.ColumnDefinitions>
+        <!-- 表紙画面 -->
+        <Grid x:Name="MainPagePanel" 
+              Visibility="{Binding IsMainPage, Converter={StaticResource BoolToVisConverter}}">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <!--&#x0A; 改行-->
-            
-            <Label  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                    VerticalAlignment="Center" HorizontalAlignment="Center"
-                    FontSize="40"
-                    Content="貸し借り登録システム"/>
-            <Button x:Name="btnToTESTMode" Click="btnToTESTView_Click"
-                Width="350" Height="200" 
-                Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
-                HorizontalAlignment="center"
-                    KeyDown="FirstPanelEnterKeyDown">
-                <TextBlock Text="持ち出し / 持ち戻し" FontSize="35" 
-                           Foreground="White" TextAlignment="Center"/>
-            </Button>
+            <!-- タイトル -->
+            <TextBlock Text="薬品管理システム"
+                       Grid.Row="0" 
+                       Grid.Column="1"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="Purple"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       Margin="0,0,0,20"/>
 
-            <Button Width="100" Height="100" Grid.Column="3" Grid.Row="2"
-                    HorizontalAlignment="Right" Margin="0 0 20 10">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Fill="LightBlue" StrokeThickness="2"/>
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Button.Template>
-                <TextBlock Text="新規/破棄" FontSize="21" Foreground="White"/>
-            </Button>
+            <!-- メインの記録開始ボタン -->
+            <Button Content="記録開始"
+                    Grid.Row="1" 
+                    Grid.Column="1"
+                    Width="200"
+                    Height="80"
+                    Style="{StaticResource MainPageButtonStyle}"
+                    Command="{Binding StartRecordingCommand}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
 
-            <Button Width="100" Height="100" Grid.Column="3" Grid.Row="3"
-                    HorizontalAlignment="Right" Margin="0 0 20 10">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Fill="LightBlue" StrokeThickness="2"/>
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Button.Template>
-                <TextBlock Text="設定" FontSize="38" Foreground="White"/>
-            </Button>
+            <!-- 設定ボタン（右端） -->
+            <Button Content="設定"
+                    Grid.Row="0" 
+                    Grid.Column="2"
+                    Width="80"
+                    Height="40"
+                    Style="{StaticResource SettingsButtonStyle}"
+                    Command="{Binding SettingsCommand}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,20,20,0"/>
+
+            <!-- 装飾的な要素（オプション） -->
+            <!--<Ellipse Grid.Row="2" 
+                     Grid.Column="0"
+                     Width="50" 
+                     Height="50"
+                     Fill="Lavender"
+                     Stroke="Purple"
+                     StrokeThickness="2"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Margin="30,20,0,0"/>
+
+            <Ellipse Grid.Row="2" 
+                     Grid.Column="2"
+                     Width="30" 
+                     Height="30"
+                     Fill="Purple"
+                     HorizontalAlignment="Right"
+                     VerticalAlignment="Bottom"
+                     Margin="0,0,50,30"/>-->
         </Grid>
 
-        <Grid VerticalAlignment="Top"
-              Height="100"
-              x:Name="HedderPanel">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                    Content="&#xE80F;"
-                    FontSize="30"
+        <!-- 記録画面（既存のUI） -->
+        <Grid x:Name="RecordingPagePanel" 
+              Visibility="{Binding IsRecordingPage, Converter={StaticResource BoolToVisConverter}}">
+
+
+            <!-- ヘッダーパネル -->
+            <Grid VerticalAlignment="Top" x:Name="HedderPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 戻るボタン -->
+                <Button Content="&#xE80F;"
+                    FontSize="25"
                     FontFamily="Segoe MDL2 Assets"
-                    Width="auto"
-                    Height="auto"
                     Background="Transparent"
                     BorderBrush="Transparent"
                     Foreground="Black"
                     Margin="10"
-                    Padding="5"
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
                     HorizontalAlignment="Center"
-                />
-            <StackPanel Orientation="Horizontal" 
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        Margin="-50 0 0 0">
-                <Grid Width="70" Height="70">
-                    <Ellipse Fill="MediumPurple" x:Name="HedderReagentIDEllipse"/>
-                    <TextBlock  x:Name="HedderReagentIDText"
-                                Text="薬品ID&#x0A;スキャン"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               TextAlignment="Center"
-                               FontSize="18"
-                                FontWeight="SemiBold"
-                               Foreground="White"/>
-                </Grid>
-                <Canvas Width="80" Height="2" Background="Gray" x:Name="HedderFirstSecond"/>
-                <Grid Width="70" Height="70">
-                    <Ellipse Fill="Gray" x:Name="HedderMassEllipse"/>
-                    <TextBlock x:Name="HedderMassText"
-                               Text="質量&#x0A;測定"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               TextAlignment="Center"                             
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="LightGray"/>
-                </Grid>
-                <Canvas Width="80" Height="2" Background="gray" x:Name="HedderSecondThird"/>
-                <Grid Width="70" Height="70">
-                    <Ellipse Fill="Gray" x:Name="HedderUserEllipse"/>
-                    <TextBlock  x:Name="HedderUserText"
-                                Text="使用者ID&#x0A;スキャン"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               TextAlignment="Center"
-                               FontSize="16"
-                                FontWeight="SemiBold"
-                               Foreground="LightGray"/>
-                </Grid>
-            </StackPanel>
-        </Grid>
+                    Command="{Binding GoToMainPageCommand}"/>
 
-
-        <Grid x:Name="RegisterModePanel" Visibility="Visible">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="66"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="0.8*"/>
-            </Grid.RowDefinitions>
-
-            <!--<TextBlock Text="続けて入力できます。最後に記録ボタンを押してください"
-                       Grid.Row="1" Grid.Column="1"
-                       FontSize="12"
-                       TextAlignment="Center"
+                <!-- ステップ1: 薬品スキャン -->
+                <Grid Width="20" Height="20" Grid.Column="2" HorizontalAlignment="Center">
+                    <Ellipse x:Name="HedderReagentIDEllipse">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="Gray"/>
+                                <Setter Property="Stroke" Value="Gray"/>
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="1">
+                                        <Setter Property="Fill" Value="Lavender"/>
+                                        <Setter Property="Stroke" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock Text="&#xE73E;"
+                           FontFamily="Segoe MDL2 Assets"
+                           FontSize="12"
+                           Foreground="Gray"
+                           FontWeight="Bold"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="1">
+                                        <Setter Property="Foreground" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <TextBlock Text="薬品スキャン"
+                       HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Foreground="DarkGray"
-                       Margin="0 -90 0 0"/>-->
-            <StackPanel Grid.Row="1" Grid.Column="1"
-                            Orientation="Vertical" VerticalAlignment="Top"
-                            Margin="5" Visibility="Visible" x:Name="Panel">
+                       TextAlignment="Center"
+                       FontSize="12"
+                       Grid.Row="1"
+                       Grid.Column="2">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PanelNumber}" Value="1">
+                                    <Setter Property="Foreground" Value="Purple"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
-                <TextBox x:Name="InputBox" MinWidth="150" Width="auto"
-                                Height="auto" VerticalAlignment="Center" 
-                                FontSize="25" BorderBrush="Black"
-                                Background="GhostWhite"
-                                Margin="0 70 0 10"
-                                KeyDown="InputBox_KeyDown"
-                                materialDesign:HintAssist.Hint=" 薬品IDをスキャン・入力"
-                                materialDesign:HintAssist.HintPaddingBrush="Purple"
-                                materialDesign:HintAssist.HelperTextFontSize="12"                                                         
-                                materialDesign:HintAssist.HelperText=" バーコードをスキャンするか入力"
-                />
+                <!-- ステップ間の線1 -->
+                <Canvas Width="80" Height="2"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Background="Gray" 
+                    x:Name="HedderFirstSecond"/>
 
-                <Grid>
+                <!-- ステップ2: 質量測定 -->
+                <Grid Width="20" Height="20" Grid.Column="3" HorizontalAlignment="Center">
+                    <Ellipse x:Name="HedderMassEllipse">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="Gray"/>
+                                <Setter Property="Stroke" Value="Gray"/>
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="2">
+                                        <Setter Property="Fill" Value="Lavender"/>
+                                        <Setter Property="Stroke" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock Text="&#xE73E;"
+                           FontFamily="Segoe MDL2 Assets"
+                           FontSize="12"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="2">
+                                        <Setter Property="Foreground" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <TextBlock Text="質量測定"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       FontSize="12"
+                       Grid.Row="1"
+                       Grid.Column="3">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PanelNumber}" Value="2">
+                                    <Setter Property="Foreground" Value="Purple"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <!-- ステップ間の線2 -->
+                <Canvas Width="80" Height="2"
+                    Background="Gray" 
+                    x:Name="HedderSecondThird"
+                    Grid.Column="3" 
+                    Grid.ColumnSpan="2"/>
+
+                <!-- ステップ3: ユーザーIDスキャン -->
+                <Grid Width="20" Height="20" Grid.Column="4" HorizontalAlignment="Center">
+                    <Ellipse x:Name="HedderUserEllipse">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="Gray"/>
+                                <Setter Property="Stroke" Value="Gray"/>
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="3">
+                                        <Setter Property="Fill" Value="Lavender"/>
+                                        <Setter Property="Stroke" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock Text="&#xE73E;"
+                           FontFamily="Segoe MDL2 Assets"
+                           FontSize="12"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PanelNumber}" Value="3">
+                                        <Setter Property="Foreground" Value="Purple"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <TextBlock Text="使用者IDスキャン"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       FontSize="12"
+                       Grid.Row="1"
+                       Grid.Column="4">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PanelNumber}" Value="3">
+                                    <Setter Property="Foreground" Value="Purple"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <!-- メインパネル -->
+            <Grid x:Name="RegisterModePanel" Visibility="Visible" Margin="0,70,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="33"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.7*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="0.5*"/>
+                </Grid.RowDefinitions>
+
+                <!-- 入力パネル -->
+                <StackPanel Grid.Row="1" Grid.Column="1"
+                        Orientation="Vertical" 
+                        VerticalAlignment="Top"
+                        Margin="5">
+
+                    <!--"{Binding InputText, UpdateSourceTrigger=PropertyChanged}"-->
+                    <TextBox x:Name="InputBox"
+                         Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                         MinWidth="150" 
+                         Height="auto" 
+                         VerticalAlignment="Center" 
+                         FontSize="25" 
+                         BorderBrush="Black"
+                         Background="GhostWhite"
+                         Margin="0,50,0,10"
+                         materialDesign:HintAssist.Hint="{Binding HintText}"
+                         materialDesign:HintAssist.HintPaddingBrush="Purple"
+                         materialDesign:HintAssist.HelperTextFontSize="12"                                                         
+                         materialDesign:HintAssist.HelperText="{Binding HelperText}"/>
+
+                    <!-- ナビゲーションボタン -->
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="btnReturn"
+                            Grid.Column="0"
+                            Content="戻る" 
+                            Margin="0,10,0,0" 
+                            Background="Transparent"
+                            HorizontalAlignment="Left"
+                            Height="35"
+                            Foreground="Black"
+                            Command="{Binding ReturnCommand}"/>
+
+                        <Button x:Name="btnNext"
+                            Grid.Column="1"                       
+                            Content="{Binding BtnNextContent}" 
+                            Margin="0,10,0,0" 
+                            Background="Transparent"
+                            HorizontalAlignment="Right"
+                            Height="35"
+                            Foreground="Black"
+                            Command="{Binding NextCommand}"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- 画像パネル -->
+                <StackPanel Grid.Row="1" Grid.Column="2"
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center">
+                    <Image Source="{Binding ImgPanel}"
+                       HorizontalAlignment="Right"                       
+                       Height="200" 
+                       Margin="50,0,0,0"/>
+                </StackPanel>
+
+                <!-- 薬品情報表示 -->
+                <StackPanel Grid.Row="2" Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        
+                        Visibility="{Binding SelectedChemical}">
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="薬品ID:" FontWeight="SemiBold" Foreground="Gray"
+                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/> 
+                        <TextBlock Text="薬品名:" FontWeight="SemiBold" Foreground="Gray"
+                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/>
+                        <TextBlock Text="現在質量:" FontWeight="SemiBold" Foreground="Gray"
+                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedChemical.ChemicalId}" FontSize="16"/>
+                        <TextBlock Text="{Binding SelectedChemical.Name}"
+                                   TextWrapping="NoWrap" Width="200"
+                                   TextTrimming="CharacterEllipsis" FontSize="16"
+                                   ToolTip="{Binding SelectedChemical.Name}"
+                                   />
+                        <TextBlock Text="{Binding SelectedChemical.CurrentMass, StringFormat={}{0:F2}g}" FontSize="16"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <!-- 薬品ステータスラベル -->
+                        <Grid Margin="0,10,0,0" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="貸出中" 
+                                FontSize="12" 
+                                FontWeight="SemiBold"
+                                Grid.Row="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                BorderBrush="Gray" 
+                                BorderThickness="0.1"
+                                >
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="Foreground" Value="DarkGray"/>
+                                        <Setter Property="Background" Value="Gray"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsInUse}" Value="True">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+
+                            <Label Content="毒　物" 
+                                FontSize="12" 
+                                FontWeight="SemiBold"
+                                Grid.Row="2"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                BorderBrush="Gray" 
+                                BorderThickness="0.1">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="Foreground" Value="DarkGray"/>
+                                        <Setter Property="Background" Value="Gray"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPoisonous}" Value="True">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="Purple"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+
+                            <Label Content="劇　物" 
+                                FontSize="12" 
+                                FontWeight="SemiBold"
+                                Grid.Row="4" 
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                BorderBrush="Gray" 
+                                BorderThickness="0.1">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="Foreground" Value="DarkGray"/>
+                                        <Setter Property="Background" Value="Gray"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDeleterious}" Value="True">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="Orange"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- 結果パネル -->
+                <Grid Grid.Row="2" Grid.Column="2" x:Name="ResultPanel">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnReturn"
-                                        Grid.Column="0"
-                                        Content="戻る" Visibility="Visible"                            
-                                        Margin="0 20 0 0" Background="Transparent"
-                                        HorizontalAlignment="Left"
-                                        ForceCursor="False"
-                                        Height="35"
-                                        Width="auto"
-                                        Foreground="Black"
-                                        />
-                    <Button x:Name="btnNext"
-                                        Grid.Column="1"
-                                        Content="次へ" Visibility="Visible"                           
-                                        Margin="0 20 0 0" Background="Transparent"
-                                        HorizontalAlignment="Right"
-                                        Height="35"
-                                        Width="auto"
-                                        Foreground="Black"
-                                        Click="btnNext_Click"
-                                        />
-                </Grid>
-            </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="1" Grid.Column="2" Visibility="Visible"
-                            HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Image  x:Name="ImgPanel"
-                        HorizontalAlignment="Right"                        
-                        Source="/Resources/Images/scan.png"
-                        Height="200" Margin="50 0 0 0"/>
-            </StackPanel>
-
-            <DataGrid
-                x:Name="ReagentDataGrid"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                HeadersVisibility="Column"
-                SelectionMode="Single"
-                IsReadOnly="True"
-                GridLinesVisibility="Horizontal"
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="20 5 5 5"
-                Background="Transparent"
-                FontSize="16"
-                >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding ChemicalId}"/>
-                    <DataGridTextColumn Header="薬品名" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="現在量" Binding="{Binding CurrentMass}"/>
-
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <Grid Grid.Row="2" Grid.Column="2" x:Name="ResultPanel">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="一時保存本数"
+                    <TextBlock Text="一時保存本数"
                            FontSize="14"
                            TextAlignment="Center"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
-                           Grid.ColumnSpan="2"
-                           />
-                <TextBlock x:Name="ReagentCountText"
-                            Text="{Binding ReagentCount}"
+                           Grid.ColumnSpan="2"/>
+
+                    <TextBlock Text="{Binding ReagentCount}"
                            Width="auto"
-                            FontSize="40"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left"
+                           FontSize="40"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
                            Grid.Row="0" Grid.Column="1"
                            Grid.RowSpan="2"
-                           Margin="5 20 0 0"/>
-                <TextBlock Text="本"
-                            FontSize="20"
-                            TextAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Right"
+                           Margin="5,30,0,0"/>
+
+                    <TextBlock Text="本"
+                           FontSize="20"
+                           TextAlignment="Center"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right"
                            Grid.Row="0" Grid.Column="1"
                            Grid.RowSpan="2"
-                           Margin="10 0 0 0"/>
-                <Button x:Name="BTNconfirmation"
-                        Grid.Row="0" 
+                           Margin="10,0,0,0"/>
+
+                    <Button Grid.Row="0" 
                         Grid.Column="2" 
                         Grid.RowSpan="3"
-                        Margin="30 0 30 0"
-                        Height="100"
+                        Margin="30,0,10,0"
+                        Height="80"
                         Content="記録"
                         FontSize="20"
-                        Background="Purple">
-                    
-                </Button>
+                        Background="Purple"
+                        Command="{Binding ConfirmCommand}"/>
+                </Grid>
+
+                <!-- ステータスラベル -->
+                <Grid Grid.Row="2" Grid.Column="0" 
+                  VerticalAlignment="Center"
+                  Grid.ColumnSpan="2" 
+                  HorizontalAlignment="Right"
+                  Margin="0,0,0,-50">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- ステータス表示エリア（必要に応じて追加） -->
+                    <TextBlock Grid.Row="0" Text="{Binding StatusMessage}" 
+                           FontSize="12" 
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="DarkGray"/>
+                </Grid>
             </Grid>
-
-
 
         </Grid>
     </Grid>
