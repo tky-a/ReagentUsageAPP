@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DrugManagerApp.Helpers
+namespace WpfApp2.Helpers
 {
     internal class FileHelper
     {

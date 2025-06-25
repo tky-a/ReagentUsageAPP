@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfApp2.ViewModels;
 
@@ -7,15 +8,14 @@ namespace WpfApp2.Views
     /// <summary>
     /// RegisterModeView2.xaml の相互作用ロジック
     /// </summary>
-    public partial class RegisterModeView2 : Window
+    public partial class RegisterModeView2 : UserControl
     {
         private readonly RegisterModeView2ViewModel _viewModel;
 
         public RegisterModeView2()
         {
             InitializeComponent();
-            _viewModel = new RegisterModeView2ViewModel();
-            DataContext = _viewModel;
+
         }
 
         /// <summary>

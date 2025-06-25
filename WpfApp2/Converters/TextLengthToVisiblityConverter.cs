@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace DrugManager.Converters
+namespace WpfApp2.Converters
 {
     public class TextLengthToVisibilityConverter : IValueConverter
     {

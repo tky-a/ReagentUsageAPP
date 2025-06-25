@@ -21,7 +21,7 @@ namespace WpfApp2.ViewModels
         private bool _isPoisonous;
         private bool _isDeleterious;
         private bool _isInUse;
-        private bool _isMainPage = true; // 表紙画面フラグを追加
+        private UsageRecord _usageRecord = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -31,9 +31,10 @@ namespace WpfApp2.ViewModels
         public ICommand StartRecordingCommand { get; } // 記録開始コマンドを追加
         public ICommand SettingsCommand { get; } // 設定コマンドを追加
         public ICommand GoToMainPageCommand { get; } //表紙に戻る
+              
 
 
-        public RegisterModeView2ViewModel()
+        public RegisterModeView2ViewModel(MainViewModel parent)
         {
             _databaseManager.EnsureTablesCreated();
 
@@ -48,29 +49,11 @@ namespace WpfApp2.ViewModels
             ConfirmCommand = new RelayCommand(ExecuteConfirm, CanExecuteConfirm);
             StartRecordingCommand = new RelayCommand(ExecuteStartRecording); // 記録開始コマンド
             SettingsCommand = new RelayCommand(ExecuteSettings); // 設定コマンド
-            GoToMainPageCommand = new RelayCommand(ExecuteGoToMainPage);
+
+            GoToMainPageCommand = new RelayCommand(() => parent.NavigateToCover());
         }
 
         #region Properties
-
-        /// <summary>
-        /// 表紙画面かどうかのフラグ
-        /// </summary>
-        public bool IsMainPage
-        {
-            get => _isMainPage;
-            set
-            {
-                _isMainPage = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsRecordingPage)); // 逆の状態も通知
-            }
-        }
-
-        /// <summary>
-        /// 記録画面かどうかのフラグ（IsMainPageの逆）
-        /// </summary>
-        public bool IsRecordingPage => !_isMainPage;
 
         public int PanelNumber
         {
@@ -164,7 +147,6 @@ namespace WpfApp2.ViewModels
         /// </summary>
         private void ExecuteStartRecording()
         {
-            IsMainPage = false; // 表紙から記録画面に切り替え
             // 記録画面の初期状態に設定
             PanelNumber = 1;
             InputText = string.Empty;
@@ -190,7 +172,8 @@ namespace WpfApp2.ViewModels
         }
 
 
-        private void ExecuteNext()
+        private void 
+            ExecuteNext()
         {
             switch (PanelNumber)
             {
@@ -208,7 +191,7 @@ namespace WpfApp2.ViewModels
                 case 2:
                     if (decimal.TryParse(InputText, out decimal mass))
                     {
-                        // 質量を保存する処理をここに追加
+                        
                         AdvanceToUserPanel();
                     }
                     break;
@@ -235,7 +218,7 @@ namespace WpfApp2.ViewModels
             // 最初のステップで戻るボタンが押された場合は表紙に戻る
             if (PanelNumber == 1)
             {
-                IsMainPage = true;
+                //IsMainPage = true;
                 return;
             }
 
@@ -254,7 +237,8 @@ namespace WpfApp2.ViewModels
         private bool CanExecuteReturn()
         {
             // 記録画面の時のみ戻るボタンを有効化
-            return !IsMainPage;
+            //return !IsMainPage;
+            return true;
         }
 
         private void ExecuteConfirm()
@@ -270,7 +254,8 @@ namespace WpfApp2.ViewModels
 
         private void ExecuteGoToMainPage()
         {
-            IsMainPage = true;
+            //IsMainPage = true;
+            
         }
 
         #endregion
@@ -345,11 +330,18 @@ namespace WpfApp2.ViewModels
             OnPropertyChanged(nameof(PanelNumber));
         }
 
-        private void SaveTemporaryRecord(int userId)
+        private void SaveTemporaryRecord(decimal mass, int userId)
         {
+            if (userId == 0)
+            {
+                _usageRecord.MassAfter = mass;
+            } 
+            else if()
+            {
+                
             // 一時保存のロジックを実装
             // 実際のデータベース操作はここで行う
-        }
+            }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DrugManagerApp.Services
+namespace WpfApp2.Services
 {
     internal class SyncService
     {

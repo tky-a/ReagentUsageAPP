@@ -5,9 +5,8 @@ using WpfApp2.Models;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
 using System.IO;
-using WpfApp2.ViewModels;
 
-namespace WpfApp2.Models
+namespace WpfApp2.ViewModels
 {
     public class ChemicalViewModel : INotifyPropertyChanged 
     {

@@ -1,19 +1,16 @@
-﻿<Window x:Class="WpfApp2.Views.RegisterModeView2"
+﻿<UserControl x:Class="WpfApp2.Views.RegisterModeView2"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2.Views"
         mc:Ignorable="d"
-        Title="RegisterModeView2" Height="500" Width="650"
-        ResizeMode="NoResize"
-        SizeToContent="Manual"
+        Height="500" Width="650"
         FontFamily="Meiryo" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Style="{StaticResource MaterialDesignWindow}">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
-    <Window.Resources>
+    <UserControl.Resources>
         <!-- スタイル定義 -->
         <Style x:Key="ActiveHeaderStyle" TargetType="Ellipse">
             <Setter Property="Fill" Value="Lavender"/>
@@ -79,79 +76,9 @@
 
         <!-- コンバーター -->
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
-    </Window.Resources>
+    </UserControl.Resources>
 
-    <Grid>
-        <!-- 表紙画面 -->
-        <Grid x:Name="MainPagePanel" 
-              Visibility="{Binding IsMainPage, Converter={StaticResource BoolToVisConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- タイトル -->
-            <TextBlock Text="薬品管理システム"
-                       Grid.Row="0" 
-                       Grid.Column="1"
-                       FontSize="32"
-                       FontWeight="Bold"
-                       Foreground="Purple"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Bottom"
-                       Margin="0,0,0,20"/>
-
-            <!-- メインの記録開始ボタン -->
-            <Button Content="記録開始"
-                    Grid.Row="1" 
-                    Grid.Column="1"
-                    Width="200"
-                    Height="80"
-                    Style="{StaticResource MainPageButtonStyle}"
-                    Command="{Binding StartRecordingCommand}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
-
-            <!-- 設定ボタン（右端） -->
-            <Button Content="設定"
-                    Grid.Row="0" 
-                    Grid.Column="2"
-                    Width="80"
-                    Height="40"
-                    Style="{StaticResource SettingsButtonStyle}"
-                    Command="{Binding SettingsCommand}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Margin="0,20,20,0"/>
-
-            <!-- 装飾的な要素（オプション） -->
-            <!--<Ellipse Grid.Row="2" 
-                     Grid.Column="0"
-                     Width="50" 
-                     Height="50"
-                     Fill="Lavender"
-                     Stroke="Purple"
-                     StrokeThickness="2"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Margin="30,20,0,0"/>
-
-            <Ellipse Grid.Row="2" 
-                     Grid.Column="2"
-                     Width="30" 
-                     Height="30"
-                     Fill="Purple"
-                     HorizontalAlignment="Right"
-                     VerticalAlignment="Bottom"
-                     Margin="0,0,50,30"/>-->
-        </Grid>
-
+    <Grid Background ="White">
         <!-- 記録画面（既存のUI） -->
         <Grid x:Name="RecordingPagePanel" 
               Visibility="{Binding IsRecordingPage, Converter={StaticResource BoolToVisConverter}}">
@@ -173,7 +100,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- 戻るボタン -->
+                <!-- ホームボタン -->
                 <Button Content="&#xE80F;"
                     FontSize="25"
                     FontFamily="Segoe MDL2 Assets"
@@ -366,7 +293,7 @@
             </Grid>
 
             <!-- メインパネル -->
-            <Grid x:Name="RegisterModePanel" Visibility="Visible" Margin="0,70,0,0">
+            <Grid x:Name="RegisterModePanel" Margin="0,70,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="33"/>
                     <ColumnDefinition Width="*"/>
@@ -397,7 +324,12 @@
                          materialDesign:HintAssist.Hint="{Binding HintText}"
                          materialDesign:HintAssist.HintPaddingBrush="Purple"
                          materialDesign:HintAssist.HelperTextFontSize="12"                                                         
-                         materialDesign:HintAssist.HelperText="{Binding HelperText}"/>
+                         materialDesign:HintAssist.HelperText="{Binding HelperText}"
+                             AcceptsReturn="False">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding BtnNextContent}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
 
                     <!-- ナビゲーションボタン -->
                     <Grid Margin="0,10,0,0">
@@ -446,20 +378,32 @@
                         Visibility="{Binding SelectedChemical}">
                     <StackPanel Margin="0,0,10,0">
                         <TextBlock Text="薬品ID:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/> 
+                                   FontSize="16" Margin="0 10 0 0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/> 
                         <TextBlock Text="薬品名:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/>
+                                   FontSize="16" Margin="0 10 0 0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
                         <TextBlock Text="現在質量:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Right"/>
+                                   FontSize="16" Margin="0 10 0 0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="{Binding SelectedChemical.ChemicalId}" FontSize="16"/>
-                        <TextBlock Text="{Binding SelectedChemical.Name}"
+                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                            <TextBlock Text="{Binding SelectedChemical.ChemicalId}"
+                                       FontSize="16" Margin="0 10 0 0"/>
+                        </Border>
+                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                            <TextBlock Text="{Binding SelectedChemical.Name}"
                                    TextWrapping="NoWrap" Width="200"
-                                   TextTrimming="CharacterEllipsis" FontSize="16"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="16" Margin="0 10 0 0"
                                    ToolTip="{Binding SelectedChemical.Name}"
                                    />
-                        <TextBlock Text="{Binding SelectedChemical.CurrentMass, StringFormat={}{0:F2}g}" FontSize="16"/>
+                        </Border>
+                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                            <TextBlock Text="{Binding SelectedChemical.CurrentMass, StringFormat={}{0:F2}g}"
+                                   FontSize="16" Margin="0 10 0 0"/>
+                        </Border>
                     </StackPanel>
 
                     <StackPanel>
@@ -481,6 +425,7 @@
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
                                 BorderThickness="0.1"
+                                Margin="0 0 0 0"
                                 >
                                 <Label.Style>
                                     <Style TargetType="Label">
@@ -489,7 +434,7 @@
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsInUse}" Value="True">
                                                 <Setter Property="Foreground" Value="White"/>
-                                                <Setter Property="Background" Value="Red"/>
+                                                <Setter Property="Background" Value="Purple"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -503,7 +448,8 @@
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
-                                BorderThickness="0.1">
+                                BorderThickness="0.1"
+                                Margin="0 5 0 0">
                                 <Label.Style>
                                     <Style TargetType="Label">
                                         <Setter Property="Foreground" Value="DarkGray"/>
@@ -511,7 +457,7 @@
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsPoisonous}" Value="True">
                                                 <Setter Property="Foreground" Value="White"/>
-                                                <Setter Property="Background" Value="Purple"/>
+                                                <Setter Property="Background" Value="Red"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -525,7 +471,8 @@
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
-                                BorderThickness="0.1">
+                                BorderThickness="0.1"
+                                Margin="0 5 0 0">
                                 <Label.Style>
                                     <Style TargetType="Label">
                                         <Setter Property="Foreground" Value="DarkGray"/>
@@ -618,4 +565,4 @@
 
         </Grid>
     </Grid>
-</Window>
+</UserControl>
