@@ -191,7 +191,7 @@ namespace WpfApp2.ViewModels
                 case 2:
                     if (decimal.TryParse(InputText, out decimal mass))
                     {
-                        
+                        SaveTemporaryRecord(mass, 0);
                         AdvanceToUserPanel();
                     }
                     break;
@@ -199,7 +199,7 @@ namespace WpfApp2.ViewModels
                     if (int.TryParse(InputText, out int userId))
                     {
                         // 一時保存処理
-                        SaveTemporaryRecord(userId);
+                        SaveTemporaryRecord(0,userId);
                         AdvanceToNextReagent();
                     }
                     break;
@@ -335,13 +335,14 @@ namespace WpfApp2.ViewModels
             if (userId == 0)
             {
                 _usageRecord.MassAfter = mass;
-            } 
-            else if()
-            {
-                
-            // 一時保存のロジックを実装
-            // 実際のデータベース操作はここで行う
             }
+            else
+            {
+
+                // 一時保存のロジックを実装
+                // 実際のデータベース操作はここで行う
+            }
+        }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
