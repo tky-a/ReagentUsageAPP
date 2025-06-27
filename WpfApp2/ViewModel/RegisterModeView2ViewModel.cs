@@ -43,9 +43,9 @@ namespace WpfApp2.ViewModels
               
 
 
-        public RegisterModeView2ViewModel(, MainViewModel parent)
+        public RegisterModeView2ViewModel(ObservableCollection<InputSet> inputSets,DatabaseManager db, MainViewModel parent)
         {
-            _databaseManager.EnsureTablesCreated();
+            //_databaseManager.EnsureTablesCreated();
 
             _parent = parent;
 
