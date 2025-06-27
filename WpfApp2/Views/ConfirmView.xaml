@@ -12,7 +12,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="確認リスト" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-        <DataGrid Grid.Row="1">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding PendingUsages}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="管理番号" Binding="{Binding InputReagentId}" Width="*" />
                 <DataGridTextColumn Header="薬品名" Binding="{Binding InputReagentName}" Width="*" />

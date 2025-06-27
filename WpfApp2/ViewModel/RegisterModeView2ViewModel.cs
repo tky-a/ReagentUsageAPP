@@ -14,7 +14,7 @@ namespace WpfApp2.ViewModels
     public class RegisterModeView2ViewModel : INotifyPropertyChanged
     {
 
-        private readonly ObservableCollection<InputSet> _inputSets;
+        //private readonly ObservableCollection<InputSet> _inputSets;
         private readonly DatabaseManager _db;
         private readonly MainViewModel _parent;
         private InputSet _currentInputSet = new();
@@ -58,7 +58,7 @@ namespace WpfApp2.ViewModels
         {
             //_databaseManager.EnsureTablesCreated();
 
-            _inputSets = inputSets;
+            //_inputSets = inputSets;
             _db = db;
             _parent = parent;
 
@@ -213,9 +213,9 @@ namespace WpfApp2.ViewModels
                 case 1:
                     if (int.TryParse(InputText, out int chemicalId))
                     {
-                        _selectedChemical = _db.GetChemicalById(chemicalId);
+                        SelectedChemical = _db.GetChemicalById(chemicalId);
 
-                        if (_selectedChemical != null)
+                        if (SelectedChemical != null)
                         {
                             _currentInputSet.InputReagentId = SelectedChemical.ChemicalId;
                             _currentInputSet.InputReagentName = SelectedChemical.Name;
@@ -228,7 +228,7 @@ namespace WpfApp2.ViewModels
                     {
                         if(_selectedChemical.UseStatus == "貸出可能")
                         {
-                            _currentInputSet.MassBefore = mass;
+                            _currentInputSet.MassBefore = mass;  
                         }
                         else
                         {
@@ -241,6 +241,8 @@ namespace WpfApp2.ViewModels
                     if (int.TryParse(InputText, out int userId))
                     {
                         _currentInputSet.InputUserId = userId;
+                        _parent.AddInputSet(_currentInputSet);
+                        _currentInputSet = new InputSet();
                         AdvanceToNextReagent();
                     }
                     break;

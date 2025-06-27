@@ -10,12 +10,20 @@ namespace WpfApp2.ViewModels
     {
         public ObservableCollection<InputSet> PendingUsages { get; } = new ObservableCollection<InputSet>();
 
+
         [ObservableProperty]
         private InputSet selectedUsage;
 
         public ConfirmViewModel(ObservableCollection<InputSet> inputSets, MainViewModel parent)
         {
-
+            foreach(var inputSet in inputSets)
+            {
+                PendingUsages.Add(inputSet);
+                //if (inputSet != null && !PendingUsages.Contains(inputSet))
+                //{
+                //    PendingUsages.Add(inputSet);
+                //}
+            }
         }
         [RelayCommand(CanExecute = nameof(CanDelete))]
         private void DeleteSelected()
