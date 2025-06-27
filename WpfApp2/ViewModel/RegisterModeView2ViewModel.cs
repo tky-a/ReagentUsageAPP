@@ -47,6 +47,8 @@ namespace WpfApp2.ViewModels
         {
             //_databaseManager.EnsureTablesCreated();
 
+            InputSets = inputSets
+
             _parent = parent;
 
             // 初期設定
