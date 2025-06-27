@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="WpfApp2.Views.ConfirmView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
+
+    <Grid Margin="10" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="確認リスト" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="管理番号" Binding="{Binding InputReagentId}" Width="*" />
+            <DataGridTextColumn Header="薬品名" Binding="{Binding InputReagentName}" Width="*" />
+            <DataGridTextColumn Header="ユーザーID" Binding="{Binding InputUserId}" Width="*" />
+            <DataGridTextColumn Header="操作" Binding="{Binding ActionType}" Width="*" />
+            <DataGridTextColumn Header="使用前量" Binding="{Binding MassBefore}" Width="*" />
+            <DataGridTextColumn Header="使用後量" Binding="{Binding MassAfter}" Width="*" />
+            <DataGridTextColumn Header="備考" Binding="{Binding Notes}" Width="2*" />
+        </DataGrid.Columns>
+
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="削除" Command="{Binding DeleteSelectedCommand}" Margin="0,0,10,0"/>
+            <Button Content="全件確定" Command="{Binding ConfirmAllCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfApp2.Models;
@@ -9,7 +11,8 @@ namespace WpfApp2.ViewModels
 {
     public class RegisterModeView2ViewModel : INotifyPropertyChanged
     {
-        private readonly DatabaseManager _databaseManager = new();
+        //private readonly DatabaseManager _databaseManager = new();
+        private readonly MainViewModel _parent;
         private int _panelNumber = 1;
         private int _reagentCount = 0;
         private string _inputText = string.Empty;
@@ -23,6 +26,12 @@ namespace WpfApp2.ViewModels
         private bool _isInUse;
         private UsageRecord _usageRecord = new();
 
+        //public ObservableCollection<InputSet> inputSets { get; } = new();
+        //private InputSet _currentSet = new();
+        public string CurrentInput { get; set; }
+        
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand NextCommand { get; }
@@ -34,9 +43,11 @@ namespace WpfApp2.ViewModels
               
 
 
-        public RegisterModeView2ViewModel(MainViewModel parent)
+        public RegisterModeView2ViewModel(, MainViewModel parent)
         {
             _databaseManager.EnsureTablesCreated();
+
+            _parent = parent;
 
             // 初期設定
             HintText = "薬品IDをスキャン・入力";
@@ -50,7 +61,7 @@ namespace WpfApp2.ViewModels
             StartRecordingCommand = new RelayCommand(ExecuteStartRecording); // 記録開始コマンド
             SettingsCommand = new RelayCommand(ExecuteSettings); // 設定コマンド
 
-            GoToMainPageCommand = new RelayCommand(() => parent.NavigateToCover());
+            GoToMainPageCommand = new RelayCommand(() => _parent.NavigateToCover());
         }
 
         #region Properties
@@ -98,7 +109,15 @@ namespace WpfApp2.ViewModels
         public int ReagentCount
         {
             get => _reagentCount;
-            set { _reagentCount = value; OnPropertyChanged(); }
+            set
+            {
+                if(_reagentCount != value)
+                {
+                    _reagentCount = value;
+                    OnPropertyChanged();
+                    (ConfirmCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                }
+            }
         }
 
         public string BtnNextContent
@@ -172,8 +191,7 @@ namespace WpfApp2.ViewModels
         }
 
 
-        private void 
-            ExecuteNext()
+        private void ExecuteNext()
         {
             switch (PanelNumber)
             {
@@ -184,6 +202,7 @@ namespace WpfApp2.ViewModels
 
                         if (SelectedChemical != null)
                         {
+                            _currentSet.InputReagentId = CurrentInput;
                             AdvanceToWeighingPanel();
                         }
                     }
@@ -192,6 +211,7 @@ namespace WpfApp2.ViewModels
                     if (decimal.TryParse(InputText, out decimal mass))
                     {
                         SaveTemporaryRecord(mass, 0);
+
                         AdvanceToUserPanel();
                     }
                     break;
@@ -200,6 +220,7 @@ namespace WpfApp2.ViewModels
                     {
                         // 一時保存処理
                         SaveTemporaryRecord(0,userId);
+
                         AdvanceToNextReagent();
                     }
                     break;
@@ -218,7 +239,6 @@ namespace WpfApp2.ViewModels
             // 最初のステップで戻るボタンが押された場合は表紙に戻る
             if (PanelNumber == 1)
             {
-                //IsMainPage = true;
                 return;
             }
 
@@ -236,26 +256,18 @@ namespace WpfApp2.ViewModels
 
         private bool CanExecuteReturn()
         {
-            // 記録画面の時のみ戻るボタンを有効化
-            //return !IsMainPage;
             return true;
         }
 
         private void ExecuteConfirm()
         {
-            // 最終記録処理
-            // 実装は要件に応じて追加
+            _parent.NavigateToConfim();
+
         }
 
         private bool CanExecuteConfirm()
         {
             return ReagentCount > 0;
-        }
-
-        private void ExecuteGoToMainPage()
-        {
-            //IsMainPage = true;
-            
         }
 
         #endregion
@@ -334,13 +346,12 @@ namespace WpfApp2.ViewModels
         {
             if (userId == 0)
             {
-                _usageRecord.MassAfter = mass;
+                _currentSet.MassBefore = mass;
+                
             }
             else
             {
-
-                // 一時保存のロジックを実装
-                // 実際のデータベース操作はここで行う
+                _currentSet.InputUserId = _databaseManager.GetUserNameById(userId).ToString();
             }
         }
 
@@ -357,14 +368,13 @@ namespace WpfApp2.ViewModels
     {
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
+        public event EventHandler CanExecuteChanged;
 
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
-
-        public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {

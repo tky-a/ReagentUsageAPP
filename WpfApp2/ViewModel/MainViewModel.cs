@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using WpfApp2.Models;
 
 namespace WpfApp2.ViewModels
 {
@@ -17,10 +19,13 @@ namespace WpfApp2.ViewModels
             set { currentViewModel = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<InputSet> InputSets { get; } = new();
+        private readonly DatabaseManager Database = new();
+
+
         public MainViewModel()
         {
-            var coverVM = new CoverViewModel(this);
-            CurrentViewModel = coverVM;
+            CurrentViewModel = new CoverViewModel(this);
         }
         public void NavigateToInput()
         {
@@ -29,12 +34,17 @@ namespace WpfApp2.ViewModels
 
         public void NavigateToRegisterMode()
         {
-            CurrentViewModel = new RegisterModeView2ViewModel(this);
+            CurrentViewModel = new RegisterModeView2ViewModel(this.InputSets, this.Database, this);
         }
 
         public void NavigateToCover()
         {
             CurrentViewModel = new CoverViewModel(this);
+        }
+
+        public void NavigateToConfim()
+        {
+            CurrentViewModel = new ConfirmViewModel(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

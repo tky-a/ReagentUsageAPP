@@ -208,4 +208,17 @@ namespace WpfApp2.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+    public class InputSet
+    {
+        public string InputReagentId {  get; set; }
+        public string InputReagentName { get; set;}
+        public string InputUserId {  get; set;}
+        public string ActionType {  get; set; }
+        public decimal? MassBefore { get; set; }
+        public decimal? MassAfter { get; set; }
+        public decimal? MassChange => (MassBefore.HasValue && MassAfter.HasValue)
+            ? MassAfter - MassBefore : null;
+        public string Notes {  get; set;}
+    }
 }
