@@ -211,9 +211,9 @@ namespace WpfApp2.Models
 
     public class InputSet
     {
-        public string InputReagentId {  get; set; }
+        public int InputReagentId {  get; set; }
         public string InputReagentName { get; set;}
-        public string InputUserId {  get; set;}
+        public int InputUserId {  get; set;}
         public string ActionType {  get; set; }
         public decimal? MassBefore { get; set; }
         public decimal? MassAfter { get; set; }

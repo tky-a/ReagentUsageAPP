@@ -551,14 +551,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <DataGridTextColumn Header="薬品&#x0A;番号" Binding="{Binding ID}"  Width="auto" MinWidth="55" MaxWidth="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="薬品名" Binding="{Binding Name}" MinWidth="120" Width="0.1*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="毒劇危" Binding="{Binding Class}" Width="auto" MinWidth="75" MaxWidth="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="使用状況" Binding="{Binding UseStatus}" Width="auto" MinWidth="85" MaxWidth="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="現在質量" Binding="{Binding Mass}" Width="auto" MinWidth="85" MaxWidth="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="最終&#x0A;使用者" Binding="{Binding LastUserID}" Width="auto" MinWidth="80" MaxWidth="100" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="最終&#x0A;使用日" Binding="{Binding LastUseDate}" Width="auto" MinWidth="110" MaxWidth="200" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate}" Width="auto" MinWidth="110" MaxWidth="200" IsReadOnly="True"/>
+
 
                     <!-- ステータス表示エリア（必要に応じて追加） -->
                     <TextBlock Grid.Row="0" Text="{Binding StatusMessage}" 

@@ -34,7 +34,7 @@ namespace WpfApp2.ViewModels
 
         public void NavigateToRegisterMode()
         {
-            CurrentViewModel = new RegisterModeView2ViewModel(this.InputSets, this.Database, this);
+            CurrentViewModel = new RegisterModeView2ViewModel(InputSets, Database, this);
         }
 
         public void NavigateToCover()
@@ -44,7 +44,16 @@ namespace WpfApp2.ViewModels
 
         public void NavigateToConfim()
         {
-            CurrentViewModel = new ConfirmViewModel(this);
+            CurrentViewModel = new ConfirmViewModel(InputSets, this);
+        }
+
+        public void AddInputSet(InputSet inputSet)
+        {
+            if (inputSet != null && !InputSets.Contains(inputSet))
+            {
+                InputSets.Add(inputSet);
+                OnPropertyChanged(nameof(InputSets));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

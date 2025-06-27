@@ -6,13 +6,19 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfApp2.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace WpfApp2.ViewModels
 {
     public class RegisterModeView2ViewModel : INotifyPropertyChanged
     {
-        //private readonly DatabaseManager _databaseManager = new();
+
+        private readonly ObservableCollection<InputSet> _inputSets;
+        private readonly DatabaseManager _db;
         private readonly MainViewModel _parent;
+        private InputSet _currentInputSet = new();
+
         private int _panelNumber = 1;
         private int _reagentCount = 0;
         private string _inputText = string.Empty;
@@ -27,9 +33,11 @@ namespace WpfApp2.ViewModels
         private UsageRecord _usageRecord = new();
 
         //public ObservableCollection<InputSet> inputSets { get; } = new();
-        //private InputSet _currentSet = new();
-        public string CurrentInput { get; set; }
-        
+        //public string CurrentInput { get; set; }
+
+        //あとで、こっちにする
+        //[ObservableProperty]
+        //private string inputText = string.Empty;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,13 +51,18 @@ namespace WpfApp2.ViewModels
               
 
 
-        public RegisterModeView2ViewModel(ObservableCollection<InputSet> inputSets,DatabaseManager db, MainViewModel parent)
+        public RegisterModeView2ViewModel(
+            ObservableCollection<InputSet> inputSets,
+            DatabaseManager db, 
+            MainViewModel parent)
         {
             //_databaseManager.EnsureTablesCreated();
 
-            InputSets = inputSets
-
+            _inputSets = inputSets;
+            _db = db;
             _parent = parent;
+
+            db.EnsureTablesCreated();
 
             // 初期設定
             HintText = "薬品IDをスキャン・入力";
@@ -200,11 +213,12 @@ namespace WpfApp2.ViewModels
                 case 1:
                     if (int.TryParse(InputText, out int chemicalId))
                     {
-                        SelectedChemical = _databaseManager.GetChemicalById(chemicalId);
+                        _selectedChemical = _db.GetChemicalById(chemicalId);
 
-                        if (SelectedChemical != null)
+                        if (_selectedChemical != null)
                         {
-                            _currentSet.InputReagentId = CurrentInput;
+                            _currentInputSet.InputReagentId = SelectedChemical.ChemicalId;
+                            _currentInputSet.InputReagentName = SelectedChemical.Name;
                             AdvanceToWeighingPanel();
                         }
                     }
@@ -212,17 +226,21 @@ namespace WpfApp2.ViewModels
                 case 2:
                     if (decimal.TryParse(InputText, out decimal mass))
                     {
-                        SaveTemporaryRecord(mass, 0);
-
+                        if(_selectedChemical.UseStatus == "貸出可能")
+                        {
+                            _currentInputSet.MassBefore = mass;
+                        }
+                        else
+                        {
+                            _currentInputSet.MassAfter = mass;
+                        }
                         AdvanceToUserPanel();
                     }
                     break;
                 case 3:
                     if (int.TryParse(InputText, out int userId))
                     {
-                        // 一時保存処理
-                        SaveTemporaryRecord(0,userId);
-
+                        _currentInputSet.InputUserId = userId;
                         AdvanceToNextReagent();
                     }
                     break;
@@ -344,18 +362,6 @@ namespace WpfApp2.ViewModels
             OnPropertyChanged(nameof(PanelNumber));
         }
 
-        private void SaveTemporaryRecord(decimal mass, int userId)
-        {
-            if (userId == 0)
-            {
-                _currentSet.MassBefore = mass;
-                
-            }
-            else
-            {
-                _currentSet.InputUserId = _databaseManager.GetUserNameById(userId).ToString();
-            }
-        }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

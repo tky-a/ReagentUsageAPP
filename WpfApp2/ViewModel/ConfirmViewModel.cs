@@ -13,7 +13,7 @@ namespace WpfApp2.ViewModels
         [ObservableProperty]
         private InputSet selectedUsage;
 
-        public ConfirmViewModel(MainViewModel parent)
+        public ConfirmViewModel(ObservableCollection<InputSet> inputSets, MainViewModel parent)
         {
 
         }
