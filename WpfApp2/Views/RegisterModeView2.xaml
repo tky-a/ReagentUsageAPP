@@ -365,9 +365,7 @@
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center">
                     <Image Source="{Binding ImgPanel}"
-                       HorizontalAlignment="Right"                       
-                       Height="200" 
-                       Margin="50,0,0,0"/>
+                       HorizontalAlignment="Right"/>
                 </StackPanel>
 
                 <!-- 薬品情報表示 -->

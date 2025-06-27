@@ -60,10 +60,10 @@ namespace WpfApp2.Models
                                         HistoryId INTEGER PRIMARY KEY AUTOINCREMENT,
                                         ChemicalId INTEGER NOT NULL,
                                         UserId INTEGER NOT NULL,
-                                        ActionType TEXT NOT NULL,
+                                        ActionType TEXT NOT NULL CHECK(ActionType IN('Withdraw', 'Return')),
                                         MassBefore REAL,
                                         MassAfter REAL,
-                                        UsageAmount REAL,
+                                        MassChange REAL,
                                         Notes TEXT,
                                         ActionDate TEXT NOT NULL,
                                         FOREIGN KEY(ChemicalId) REFERENCES Chemicals(ChemicalId),
@@ -79,12 +79,12 @@ namespace WpfApp2.Models
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var query = @"
-                SELECT c.ChemicalId, c.Name, c.Class, c.CurrentMass, c.UseStatus, 
-                       c.StorageLocationId, sl.LocationName, c.LastUserId,
-                       u.UserName as LastUserName, c.LastUseDate, c.FirstDate
-                FROM Chemicals c
-                LEFT JOIN StorageLocations sl ON c.StorageLocationId = sl.LocationId
-                LEFT JOIN Users u ON c.LastUserId = u.UserId";
+                        SELECT c.ChemicalId, c.Name, c.Class, c.CurrentMass, c.UseStatus, 
+                               c.StorageLocationId, sl.LocationName, c.LastUserId,
+                               u.UserName as LastUserName, c.LastUseDate, c.FirstDate
+                        FROM Chemicals c
+                        LEFT JOIN StorageLocations sl ON c.StorageLocationId = sl.LocationId
+                        LEFT JOIN Users u ON c.LastUserId = u.UserId";
 
             using var command = new SqliteCommand(query, connection);
             using var reader = command.ExecuteReader();
@@ -179,6 +179,28 @@ namespace WpfApp2.Models
                     LastUserId = reader.IsDBNull(6) ? null : reader.GetInt32(6),
                     LastUseDate = reader.IsDBNull(7) ? null : reader.GetDateTime(7),
                     FirstDate = reader.GetDateTime(8)
+                };
+            }
+            return null;
+        }
+
+        public User? GetUserNameById(int id)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Users WHERE UserId = @id";
+            command.Parameters.AddWithValue("@id", id);
+
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new User
+                {
+                    UserId = reader.GetInt32(0),
+                    UserName = reader.GetString(1)
+
                 };
             }
             return null;
