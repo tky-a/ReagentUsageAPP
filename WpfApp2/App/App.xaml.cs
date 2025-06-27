@@ -21,7 +21,7 @@ namespace WpfApp2
                 InitializeApplication();
 
                 // メインウィンドウを表示
-                var mainWindow = new RegisterModeView2();
+                var mainWindow = new MainWindow();
                 mainWindow.Show();
             }
             catch (Exception ex)
