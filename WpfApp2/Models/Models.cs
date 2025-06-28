@@ -220,5 +220,6 @@ namespace WpfApp2.Models
         public decimal? MassChange => (MassBefore.HasValue && MassAfter.HasValue)
             ? MassAfter - MassBefore : null;
         public string Notes {  get; set;}
+        public string UserName { get; set;}
     }
 }

@@ -13,6 +13,8 @@ namespace WpfApp2.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private object currentViewModel;
+        public List<User> Users { get; set; }
+
         public object CurrentViewModel
         {
             get => currentViewModel;

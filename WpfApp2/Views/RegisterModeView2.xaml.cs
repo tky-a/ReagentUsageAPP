@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using WpfApp2.ViewModels;
 
 namespace WpfApp2.Views
@@ -10,13 +11,25 @@ namespace WpfApp2.Views
     /// </summary>
     public partial class RegisterModeView2 : UserControl
     {
+
         private readonly RegisterModeView2ViewModel _viewModel;
 
         public RegisterModeView2()
         {
             InitializeComponent();
+            InputBox.Focus();
 
         }
+
+        private void BtnNextContent()
+        {
+            // ViewModelのNextCommandを実行
+            if (_viewModel.NextCommand.CanExecuteNext(null))
+            {
+                _viewModel.NextCommand.ExecuteNext(null);
+            }
+        }
+
 
         /// <summary>
         /// 入力ボックスでEnterキーが押された時の処理

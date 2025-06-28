@@ -77,6 +77,7 @@ namespace WpfApp2.ViewModels
             SettingsCommand = new RelayCommand(ExecuteSettings); // 設定コマンド
 
             GoToMainPageCommand = new RelayCommand(() => _parent.NavigateToCover());
+
         }
 
         #region Properties
