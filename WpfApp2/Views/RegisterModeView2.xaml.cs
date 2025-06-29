@@ -21,14 +21,6 @@ namespace WpfApp2.Views
 
         }
 
-        private void BtnNextContent()
-        {
-            // ViewModelのNextCommandを実行
-            if (_viewModel.NextCommand.CanExecuteNext(null))
-            {
-                _viewModel.NextCommand.ExecuteNext(null);
-            }
-        }
 
 
         /// <summary>

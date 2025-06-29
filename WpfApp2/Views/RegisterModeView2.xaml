@@ -327,7 +327,7 @@
                          materialDesign:HintAssist.HelperText="{Binding HelperText}"
                              AcceptsReturn="False">
                         <TextBox.InputBindings>
-                            <KeyBinding Key="Return" Command="{Binding BtnNextContent}"/>
+                            <KeyBinding Key="Return" Command="{Binding NextCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
 
