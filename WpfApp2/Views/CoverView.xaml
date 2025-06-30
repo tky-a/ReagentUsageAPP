@@ -93,6 +93,8 @@
 
             <!-- メインの記録開始ボタン -->
             <Button Content="記録開始"
+                    x:Name="StartButton"
+                    IsDefault="True"
                     Grid.Row="1" 
                     Grid.Column="1"
                     Width="200"
@@ -100,7 +102,12 @@
                     Style="{StaticResource MainPageButtonStyle}"
                     Command="{Binding GoToRegisterModeCommand}"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                    VerticalAlignment="Center">
+                <Button.InputBindings>
+                    <KeyBinding Key="Enter" 
+                                Command="{Binding GoToRegisterModeCommand}"/>
+                </Button.InputBindings>
+            </Button>
 
             <!-- 設定ボタン（右端） -->
             <Button 

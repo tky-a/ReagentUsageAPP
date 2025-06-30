@@ -23,6 +23,7 @@ namespace WpfApp2.Views
         public CoverView()
         {
             InitializeComponent();
+            this.Loaded += (s, e) => StartButton.Focus();
         }
     }
 }

@@ -64,10 +64,6 @@ namespace WpfApp2.ViewModels
 
             db.EnsureTablesCreated();
 
-            // 初期設定
-            HintText = "薬品IDをスキャン・入力";
-            HelperText = "バーコードをスキャンするか入力します";
-            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/Slide1.jpg"));
 
             // コマンドの初期化
             NextCommand = new RelayCommand(ExecuteNext, CanExecuteNext);
@@ -75,9 +71,12 @@ namespace WpfApp2.ViewModels
             ConfirmCommand = new RelayCommand(ExecuteConfirm, CanExecuteConfirm);
             StartRecordingCommand = new RelayCommand(ExecuteStartRecording); // 記録開始コマンド
             SettingsCommand = new RelayCommand(ExecuteSettings); // 設定コマンド
-
             GoToMainPageCommand = new RelayCommand(() => _parent.NavigateToCover());
 
+            // 初期設定
+            HintText = "薬品IDをスキャン・入力";
+            HelperText = "バーコードをスキャンするか入力します";
+            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/Slide1.jpg"));
         }
 
         #region Properties
@@ -236,6 +235,7 @@ namespace WpfApp2.ViewModels
                             _currentInputSet.MassAfter = mass;
                         }
                         AdvanceToUserPanel();
+                        
                     }
                     break;
                 case 3:
@@ -248,7 +248,6 @@ namespace WpfApp2.ViewModels
                     }
                     break;
             }
-
             InputText = string.Empty;
         }
 

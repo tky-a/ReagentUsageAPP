@@ -12,7 +12,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="確認リスト" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding PendingUsages}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding PendingUsages}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="管理番号" Binding="{Binding InputReagentId}" Width="*" />
                 <DataGridTextColumn Header="薬品名" Binding="{Binding InputReagentName}" Width="*" />
@@ -21,6 +24,16 @@
                 <DataGridTextColumn Header="使用前量" Binding="{Binding MassBefore}" Width="*" />
                 <DataGridTextColumn Header="使用後量" Binding="{Binding MassAfter}" Width="*" />
                 <DataGridTextColumn Header="備考" Binding="{Binding Notes}" Width="2*" />
+                <DataGridTemplateColumn Header="  ">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="編集"
+                                    Command="{Binding DataContext EditCommand,
+                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 
