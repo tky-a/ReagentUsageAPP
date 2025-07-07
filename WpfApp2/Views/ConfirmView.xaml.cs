@@ -24,10 +24,5 @@ namespace WpfApp2.Views
         {
             InitializeComponent();
         }
-
-        private void DataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
-        {
-
-        }
     }
 }

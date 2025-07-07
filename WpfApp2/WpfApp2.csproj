@@ -19,6 +19,9 @@
     <Folder Include="App\" />
 	  <!-- App.xaml を App フォルダからビルド対象に -->
 	  <ApplicationDefinition Include="App\App.xaml" />
+	  <Folder Include="Converters\" />
+	  <Folder Include="Dialogs\" />
+	  <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +39,8 @@
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.5" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.6" />
+    <PackageReference Include="System.Management" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,21 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO.Ports;
+using System.Linq;
+using System.Management;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using WpfApp2.ViewModel;
+
+
 
 namespace WpfApp2.Models
 {
@@ -211,15 +226,16 @@ namespace WpfApp2.Models
 
     public class InputSet
     {
-        public int InputReagentId {  get; set; }
-        public string InputReagentName { get; set;}
-        public int InputUserId {  get; set;}
-        public string ActionType {  get; set; }
+        public int InputReagentId { get; set; }
+        public string InputReagentName { get; set; }
+        public int InputUserId { get; set; }
+        public string ActionType { get; set; }
         public decimal? MassBefore { get; set; }
         public decimal? MassAfter { get; set; }
         public decimal? MassChange => (MassBefore.HasValue && MassAfter.HasValue)
-            ? MassAfter - MassBefore : null;
-        public string Notes {  get; set;}
-        public string UserName { get; set;}
+            ? MassBefore - MassAfter : null;
+        public string Notes { get; set; }
+        public string UserName { get; set; }
     }
+
 }

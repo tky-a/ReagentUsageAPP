@@ -11,10 +11,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace WpfApp2.ViewModels
 {
-    public class RegisterModeView2ViewModel : INotifyPropertyChanged
+    public partial class RegisterModeView2ViewModel : ObservableObject, INotifyPropertyChanged 
     {
 
-        //private readonly ObservableCollection<InputSet> _inputSets;
         private readonly DatabaseManager _db;
         private readonly MainViewModel _parent;
         private InputSet _currentInputSet = new();
@@ -32,8 +31,6 @@ namespace WpfApp2.ViewModels
         private bool _isInUse;
         private UsageRecord _usageRecord = new();
 
-        //public ObservableCollection<InputSet> inputSets { get; } = new();
-        //public string CurrentInput { get; set; }
 
         //あとで、こっちにする
         //[ObservableProperty]
@@ -45,38 +42,30 @@ namespace WpfApp2.ViewModels
         public ICommand NextCommand { get; }
         public ICommand ReturnCommand { get; }
         public ICommand ConfirmCommand { get; }
-        public ICommand StartRecordingCommand { get; } // 記録開始コマンドを追加
-        public ICommand SettingsCommand { get; } // 設定コマンドを追加
         public ICommand GoToMainPageCommand { get; } //表紙に戻る
               
 
 
         public RegisterModeView2ViewModel(
-            ObservableCollection<InputSet> inputSets,
-            DatabaseManager db, 
-            MainViewModel parent)
+                ObservableCollection<InputSet> inputSets,
+                DatabaseManager db, 
+                MainViewModel parent)
         {
-            //_databaseManager.EnsureTablesCreated();
-
-            //_inputSets = inputSets;
             _db = db;
             _parent = parent;
 
             db.EnsureTablesCreated();
 
-
             // コマンドの初期化
             NextCommand = new RelayCommand(ExecuteNext, CanExecuteNext);
             ReturnCommand = new RelayCommand(ExecuteReturn, CanExecuteReturn);
             ConfirmCommand = new RelayCommand(ExecuteConfirm, CanExecuteConfirm);
-            StartRecordingCommand = new RelayCommand(ExecuteStartRecording); // 記録開始コマンド
-            SettingsCommand = new RelayCommand(ExecuteSettings); // 設定コマンド
             GoToMainPageCommand = new RelayCommand(() => _parent.NavigateToCover());
 
             // 初期設定
             HintText = "薬品IDをスキャン・入力";
             HelperText = "バーコードをスキャンするか入力します";
-            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/Slide1.jpg"));
+            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/scan.png"));
         }
 
         #region Properties
@@ -176,35 +165,6 @@ namespace WpfApp2.ViewModels
 
         #region Commands
 
-        /// <summary>
-        /// 記録開始コマンドの実行
-        /// </summary>
-        private void ExecuteStartRecording()
-        {
-            // 記録画面の初期状態に設定
-            PanelNumber = 1;
-            InputText = string.Empty;
-            ReagentCount = 0;
-            SelectedChemical = null;
-
-            // 初期画像とテキストを設定
-            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/Slide1.jpg"));
-            HintText = "薬品IDをスキャン・入力";
-            HelperText = "バーコードをスキャンするか入力します";
-            BtnNextContent = "次へ";
-        }
-
-        /// <summary>
-        /// 設定コマンドの実行
-        /// </summary>
-        private void ExecuteSettings()
-        {
-            // 設定画面を開く処理（必要に応じて実装）
-            // 例: 新しいウィンドウを開く、設定ダイアログを表示など
-            System.Windows.MessageBox.Show("設定画面を開きます", "設定",
-                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
-        }
-
 
         private void ExecuteNext()
         {
@@ -219,7 +179,7 @@ namespace WpfApp2.ViewModels
                         {
                             _currentInputSet.InputReagentId = SelectedChemical.ChemicalId;
                             _currentInputSet.InputReagentName = SelectedChemical.Name;
-                            AdvanceToWeighingPanel();
+                            AdvanceToWeighingPanel();                            
                         }
                     }
                     break;
@@ -228,10 +188,13 @@ namespace WpfApp2.ViewModels
                     {
                         if(_selectedChemical.UseStatus == "貸出可能")
                         {
+                            _currentInputSet.ActionType = "貸出";
                             _currentInputSet.MassBefore = mass;  
                         }
                         else
                         {
+                            _currentInputSet.ActionType = "返却";
+                            _currentInputSet.MassBefore = SelectedChemical.CurrentMass;
                             _currentInputSet.MassAfter = mass;
                         }
                         AdvanceToUserPanel();
@@ -258,22 +221,24 @@ namespace WpfApp2.ViewModels
 
         private void ExecuteReturn()
         {
-            // 最初のステップで戻るボタンが押された場合は表紙に戻る
-            if (PanelNumber == 1)
-            {
-                return;
-            }
-
             switch (PanelNumber)
             {
                 case 2:
                     ReturnToScanPanel();
+                    InputText = _currentInputSet.InputReagentId.ToString();
                     break;
                 case 3:
                     ReturnToWeighingPanel();
+                    if(_currentInputSet.ActionType == "貸出")
+                    {
+                        InputText = _currentInputSet.MassBefore.ToString();
+                    }
+                    else
+                    {
+                        InputText = _currentInputSet.MassAfter.ToString();
+                    }
                     break;
             }
-            InputText = string.Empty;
         }
 
         private bool CanExecuteReturn()
@@ -301,7 +266,7 @@ namespace WpfApp2.ViewModels
             ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/weighing2.png"));
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
-            PanelNumber = 2;
+            PanelNumber ++;
         }
 
         private void AdvanceToUserPanel()
@@ -310,7 +275,7 @@ namespace WpfApp2.ViewModels
             HintText = "ユーザーIDを入力";
             HelperText = "数値を入力";
             BtnNextContent = "一時保存";
-            PanelNumber = 3;
+            PanelNumber ++;
         }
 
         private void AdvanceToNextReagent()
@@ -319,6 +284,14 @@ namespace WpfApp2.ViewModels
             HintText = "続けて記録できます";
             HelperText = "バーコードをスキャンするか入力します";
             BtnNextContent = "次へ";
+            //if (PanelNumber < 4)
+            //{
+            //    PanelNumber++
+            //}
+            //else
+            //{
+            //    PanelNumber = 4;
+            //}
             PanelNumber = 1;
             ReagentCount++;
             SelectedChemical = null;
@@ -326,11 +299,11 @@ namespace WpfApp2.ViewModels
 
         private void ReturnToScanPanel()
         {
-            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/start.png"));
+            ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/scan.png"));            
             HintText = "薬品IDをスキャン・入力";
             HelperText = "バーコードをスキャンするか入力します";
             BtnNextContent = "次へ";
-            PanelNumber = 1;
+            PanelNumber--;
         }
 
         private void ReturnToWeighingPanel()
@@ -339,7 +312,7 @@ namespace WpfApp2.ViewModels
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
             BtnNextContent = "次へ";
-            PanelNumber = 2;
+            PanelNumber--;
         }
 
         private void UpdateChemicalStatus()

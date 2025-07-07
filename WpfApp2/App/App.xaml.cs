@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using WpfApp2.Views;
-using WpfApp2.Services;
 
 namespace WpfApp2
 {
@@ -50,7 +49,6 @@ namespace WpfApp2
         private void InitializeServices()
         {
             // 認証サービスの初期化
-            var authService = AuthenticationService.Instance;
 
             // その他のサービスの初期化が必要な場合はここで行う
         }

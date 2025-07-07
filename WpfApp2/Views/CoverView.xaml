@@ -92,7 +92,7 @@
                        Margin="0,0,0,20"/>
 
             <!-- メインの記録開始ボタン -->
-            <Button Content="記録開始"
+            <Button Content="{Binding ButtonText}"
                     x:Name="StartButton"
                     IsDefault="True"
                     Grid.Row="1" 

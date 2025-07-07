@@ -17,7 +17,7 @@ namespace WpfApp2.Views
         public RegisterModeView2()
         {
             InitializeComponent();
-            this.Loaded += (s,e) =>InputBox.Focus();
+            this.Loaded += (s,e) =>InputBox.Focus();            
         }
 
         /// <summary>
@@ -31,10 +31,14 @@ namespace WpfApp2.Views
                 if (_viewModel.NextCommand.CanExecute(null))
                 {
                     _viewModel.NextCommand.Execute(null);
-                    InputBox.Focus();
+                    InputBoxFocus(sender, null);
                 }
                 e.Handled = true;
             }
+        }
+        private void InputBoxFocus(object sender, RoutedEventArgs? e)
+        {
+            InputBox.Focus();
         }
     }
 }
