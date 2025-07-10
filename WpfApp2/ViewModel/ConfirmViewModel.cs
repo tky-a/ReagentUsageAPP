@@ -44,16 +44,6 @@ namespace WpfApp2.ViewModels
         private bool CanDelete() => SelectedUsage != null;
 
         [RelayCommand]
-        private void ConfirmAll()
-        {
-            // TODO: UsageHistory に書き込む処理をここに追加
-            this.PendingUsages.Clear();
-            _parent.InputSets.Clear();
-            _parent.CurrentViewModel = new CoverViewModel(_parent);
-        }
-
-
-        [RelayCommand]
         private void EditSelected(Object? parameter)
         {
             if (parameter is InputSet input)
@@ -70,6 +60,21 @@ namespace WpfApp2.ViewModels
             {
                 MessageBox.Show("データが取得できませんでした。", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        [RelayCommand]
+        private void ConfirmAll()
+        {
+            // データベースに書き込み
+            foreach (var usage in PendingUsages)
+            {
+                _parent.Database.SaveUsageHistory(usage);
+                _parent.Database.UpdateChemicalAfterUsage(usage);
+            }
+
+            this.PendingUsages.Clear();
+            _parent.InputSets.Clear();
+            _parent.CurrentViewModel = new CoverViewModel(_parent);
         }
     }
 }

@@ -205,5 +205,62 @@ namespace WpfApp2.Models
             }
             return null;
         }
+
+        public void SaveUsageHistory(InputSet inputSet)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            using var command = connection.CreateCommand();
+            command.CommandText = @"
+            INSERT INTO UsageHistory
+            (ChemicalId, UserId, ActionType, MassBefore, MassAfter, MassChange,Notes, ActionDate)
+            VALUES
+            (@ChemicalId, @UserId,@ActionType, @MassBefore, @MassAfter, @MassChange, @Notes, @ActionDate)";
+            command.Parameters.AddWithValue("@ChemicalId", inputSet.InputReagentId);
+            command.Parameters.AddWithValue("@UserId", inputSet.InputUserId);
+            command.Parameters.AddWithValue("@ActionType", inputSet.ActionType ?? "");
+            command.Parameters.AddWithValue("@MassBefore", inputSet.MassBefore ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@MassAfter", inputSet.MassAfter ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@MassChange", inputSet.MassChange ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Notes", inputSet.Notes ?? "");
+            command.Parameters.AddWithValue("@ActionDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            command.ExecuteNonQuery();
+        }
+
+        public void UpdateChemicalAfterUsage(InputSet inputSet)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            using var command = connection.CreateCommand();
+
+            string useStatus;
+            decimal? newMass;
+
+            if (inputSet.ActionType == "貸出")
+            {
+                useStatus = "貸出中";
+                newMass = inputSet.MassBefore;
+            }
+            else // 返却
+            {
+                useStatus = "貸出可能";
+                newMass = inputSet.MassAfter;
+            }
+
+            command.CommandText = @"
+                                UPDATE Chemicals
+                                SET CurrentMass = @CurrentMass,
+                                    UseStatus = @UseStatus,
+                                    LastUserId = @LastUserId,
+                                    LastUseDate = @LastUseDate
+                                WHERE ChemicalId = @ChemicalId";
+            command.Parameters.AddWithValue("@CurrentMass", newMass ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@UseStatus", useStatus);
+            command.Parameters.AddWithValue("@LastUserId", inputSet.InputUserId);
+            command.Parameters.AddWithValue("@LastUseDate", DateTime.Now);
+            command.Parameters.AddWithValue("@ChemicalId", inputSet.InputReagentId);
+
+            command.ExecuteNonQuery();
+        }
     }
 }

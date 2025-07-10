@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WpfApp2.Models;
+using WpfApp2.Services;
 
 namespace WpfApp2.ViewModels
 {
@@ -22,21 +23,19 @@ namespace WpfApp2.ViewModels
         }
 
         public ObservableCollection<InputSet> InputSets { get; } = new();
-        private readonly DatabaseManager Database = new();
+        public DatabaseManager Database = new();
+
+        public RS232CToUsbConnectionService rs232Service = new RS232CToUsbConnectionService();        
 
 
         public MainViewModel()
         {
-            CurrentViewModel = new CoverViewModel(this);
-        }
-        public void NavigateToInput()
-        {
-            CurrentViewModel = new SettingViewModel(this);
+            NavigateToCover();
         }
 
         public void NavigateToRegisterMode()
         {
-            CurrentViewModel = new RegisterModeView2ViewModel(InputSets, Database, this);
+            CurrentViewModel = new RegisterModeView2ViewModel(InputSets, Database, this, rs232Service);
         }
 
         public void NavigateToCover()
@@ -47,6 +46,11 @@ namespace WpfApp2.ViewModels
         public void NavigateToConfim()
         {
             CurrentViewModel = new ConfirmViewModel(InputSets, this);
+        }
+
+        public void NavigateToSettingMode()
+        {
+            CurrentViewModel = new SettingViewModel(this, Database);
         }
 
         public void AddInputSet(InputSet inputSet)

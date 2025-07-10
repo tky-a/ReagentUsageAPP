@@ -20,7 +20,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="管理番号" Binding="{Binding InputReagentId}" Width="auto" />
                 <DataGridTextColumn Header="薬品名" Binding="{Binding InputReagentName}" Width="2*" />
-                <DataGridTextColumn Header="ユーザーID" Binding="{Binding InputUserId}" Width="auto" />
+                <DataGridTextColumn Header="ユーザー名" Binding="{Binding UserName}" Width="auto" />
                 <DataGridTextColumn Header="操作" Binding="{Binding ActionType}" Width="auto" />
                 <DataGridTextColumn Header="使用前量" Binding="{Binding MassBefore}" Width="auto" />
                 <DataGridTextColumn Header="使用後量" Binding="{Binding MassAfter}" Width="auto" />

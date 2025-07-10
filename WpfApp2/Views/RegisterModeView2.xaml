@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2.Views"
         mc:Ignorable="d"
-        Height="500" Width="650"
+        MaxWidth="1200"
         FontFamily="Meiryo" FontSize="22"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
@@ -85,7 +85,8 @@
 
 
             <!-- ヘッダーパネル -->
-            <Grid VerticalAlignment="Top" x:Name="HedderPanel">
+            <Grid VerticalAlignment="Top" x:Name="HedderPanel" 
+                  SizeChanged="HedderPanel_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="20"/>
@@ -113,8 +114,18 @@
                     HorizontalAlignment="Center"
                     Command="{Binding GoToMainPageCommand}"/>
 
+                <Canvas x:Name="lineCanvas" Grid.Column="2" Grid.ColumnSpan="3"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        ClipToBounds="True"
+                        >
+                    <Line x:Name="firstLine" Stroke="Gray" StrokeThickness="2"
+                          />
+                    <Line x:Name="secondLine" Stroke="Gray" StrokeThickness="2"/>
+                </Canvas>
+                
                 <!-- ステップ1: 薬品スキャン -->
-                <Grid Width="20" Height="20" Grid.Column="2" HorizontalAlignment="Center">
+                <Grid Width="25" Height="25" Grid.Column="2" HorizontalAlignment="Center">
                     <Ellipse x:Name="HedderReagentIDEllipse">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
@@ -123,7 +134,7 @@
                                 <Setter Property="StrokeThickness" Value="2"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding PanelNumber}" Value="1">
-                                        <Setter Property="Fill" Value="Lavender"/>
+                                        <Setter Property="Fill" Value="Purple"/>
                                         <Setter Property="Stroke" Value="Purple"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -141,20 +152,21 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="FontWeight" Value="ExtraBold"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding PanelNumber}" Value="1">
-                                        <Setter Property="Foreground" Value="Purple"/>
+                                        <Setter Property="Foreground" Value="Black"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <TextBlock Text="薬品スキャン"
+                <TextBlock Text="薬品ID"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        TextAlignment="Center"
-                       FontSize="12"
+                       FontSize="16"
                        Grid.Row="1"
                        Grid.Column="2">
                     <TextBlock.Style>
@@ -170,14 +182,15 @@
                 </TextBlock>
 
                 <!-- ステップ間の線1 -->
-                <Canvas Width="80" Height="2"
+                <!--<Canvas
+                    Width="100" Height="2"
                     Grid.Column="2"
                     Grid.ColumnSpan="2"
                     Background="Gray" 
-                    x:Name="HedderFirstSecond"/>
+                    x:Name="HedderFirstSecond"/>-->
 
                 <!-- ステップ2: 質量測定 -->
-                <Grid Width="20" Height="20" Grid.Column="3" HorizontalAlignment="Center">
+                <Grid Width="25" Height="25" Grid.Column="3" HorizontalAlignment="Center">
                     <Ellipse x:Name="HedderMassEllipse">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
@@ -195,7 +208,7 @@
                     </Ellipse>
                     <TextBlock Text="&#xE73E;"
                            FontFamily="Segoe MDL2 Assets"
-                           FontSize="12"
+                           FontSize="18"
                            TextAlignment="Center"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center">
@@ -215,7 +228,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        TextAlignment="Center"
-                       FontSize="12"
+                       FontSize="16"
                        Grid.Row="1"
                        Grid.Column="3">
                     <TextBlock.Style>
@@ -231,14 +244,13 @@
                 </TextBlock>
 
                 <!-- ステップ間の線2 -->
-                <Canvas Width="80" Height="2"
+                <!--<Canvas Width="100" Height="2"
                     Background="Gray" 
-                    x:Name="HedderSecondThird"
                     Grid.Column="3" 
-                    Grid.ColumnSpan="2"/>
+                    Grid.ColumnSpan="2"/>-->
 
                 <!-- ステップ3: ユーザーIDスキャン -->
-                <Grid Width="20" Height="20" Grid.Column="4" HorizontalAlignment="Center">
+                <Grid Width="25" Height="25" Grid.Column="4" HorizontalAlignment="Center">
                     <Ellipse x:Name="HedderUserEllipse">
                         <Ellipse.Style>
                             <Style TargetType="Ellipse">
@@ -256,7 +268,7 @@
                     </Ellipse>
                     <TextBlock Text="&#xE73E;"
                            FontFamily="Segoe MDL2 Assets"
-                           FontSize="12"
+                           FontSize="18"
                            TextAlignment="Center"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center">
@@ -272,11 +284,11 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <TextBlock Text="使用者IDスキャン"
+                <TextBlock Text="使用者ID"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        TextAlignment="Center"
-                       FontSize="12"
+                       FontSize="16"
                        Grid.Row="1"
                        Grid.Column="4">
                     <TextBlock.Style>
@@ -290,7 +302,11 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
+
+
+
             </Grid>
+
 
             <!-- メインパネル -->
             <Grid x:Name="RegisterModePanel" Margin="0,70,0,0">

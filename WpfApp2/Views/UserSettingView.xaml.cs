@@ -12,17 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfApp2.Models;
+using WpfApp2.ViewModel;
 
-namespace WpfApp2.Resources.Styles
+namespace WpfApp2.Views
 {
     /// <summary>
-    /// App.xaml の相互作用ロジック
+    /// SettingMenuView.xaml の相互作用ロジック
     /// </summary>
-    public partial class App : UserControl
+    public partial class UserSettingView : UserControl
     {
-        public App()
+        public UserSettingView(DatabaseManager db)
         {
             InitializeComponent();
+            DataContext = new UserSettingViewModel(db);
         }
     }
 }

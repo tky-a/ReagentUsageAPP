@@ -16,6 +16,8 @@ namespace WpfApp2.ViewModels
     public partial class CoverViewModel : ObservableObject
     {
         private readonly MainViewModel _parent;
+        private readonly ScaleSettingModel _scaleSetting;
+
         [ObservableProperty]
         private string buttonText = "登録モードへ";
 
@@ -29,7 +31,13 @@ namespace WpfApp2.ViewModels
         {
             ButtonText = "読み込み中...";
             await Task.Delay(500);
+            
             _parent.NavigateToRegisterMode();
+        }
+        [RelayCommand]
+        private void GoToSettingMode()
+        {
+            _parent.NavigateToSettingMode();
         }
     }
 }

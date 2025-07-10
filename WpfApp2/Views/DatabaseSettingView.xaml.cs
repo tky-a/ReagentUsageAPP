@@ -10,18 +10,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfApp2.Models;
+using WpfApp2.ViewModel;
 
-namespace DrugManagerApp.Views
+namespace WpfApp2.Views
 {
     /// <summary>
-    /// AllDataBase.xaml の相互作用ロジック
+    /// DatabaseSettingView.xaml の相互作用ロジック
     /// </summary>
-    public partial class AllDataBase : Window
+    public partial class DatabaseSettingView : UserControl
     {
-        public AllDataBase()
+        public DatabaseSettingView(DatabaseManager db)
         {
             InitializeComponent();
+            DataContext = new DataBaseSettingViewModel(db);
         }
     }
 }

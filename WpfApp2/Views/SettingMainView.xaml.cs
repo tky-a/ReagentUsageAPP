@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WpfApp2.Views
 {
     /// <summary>
-    /// Setting.xaml の相互作用ロジック
+    /// SettingMainPage.xaml の相互作用ロジック
     /// </summary>
-    public partial class Setting : UserControl
+    public partial class SettingMainView : UserControl
     {
-        public Setting()
+        public SettingMainView()
         {
             InitializeComponent();
         }

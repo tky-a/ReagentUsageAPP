@@ -65,9 +65,8 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
-        <!-- 表紙画面 -->
         <Grid x:Name="MainPagePanel" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -80,7 +79,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- タイトル -->
             <TextBlock Text="薬品管理システム"
                        Grid.Row="0" 
                        Grid.Column="1"
@@ -91,7 +89,6 @@
                        VerticalAlignment="Bottom"
                        Margin="0,0,0,20"/>
 
-            <!-- メインの記録開始ボタン -->
             <Button Content="{Binding ButtonText}"
                     x:Name="StartButton"
                     IsDefault="True"
@@ -102,22 +99,23 @@
                     Style="{StaticResource MainPageButtonStyle}"
                     Command="{Binding GoToRegisterModeCommand}"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center" Margin="0,0,20,0">
                 <Button.InputBindings>
                     <KeyBinding Key="Enter" 
                                 Command="{Binding GoToRegisterModeCommand}"/>
                 </Button.InputBindings>
             </Button>
 
-            <!-- 設定ボタン（右端） -->
             <Button 
                     Grid.Row="1" 
                     Grid.Column="2"
-                    Width="40"
+                    Width="auto"
                     Height="40"
                     Style="{Binding }"
-
-                    Command="{Binding GoToSettingCommand}">
+                    Content="設定/初期設定"
+                    Command="{Binding GoToSettingModeCommand}"
+                    Margin="0 0 20 0"
+                >
             </Button>
 
             <!-- 装飾的な要素（オプション） -->

@@ -18,15 +18,16 @@
             <DataTemplate DataType="{x:Type vm:CoverViewModel}">
                 <views:CoverView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:SettingViewModel}">
-                <views:Setting/>
-            </DataTemplate>
             <DataTemplate DataType="{x:Type vm:RegisterModeView2ViewModel}">
                 <views:RegisterModeView2/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:ConfirmViewModel}">
                 <views:ConfirmView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingViewModel}">
+                <views:SettingMainView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

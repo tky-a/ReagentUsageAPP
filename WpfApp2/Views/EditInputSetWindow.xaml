@@ -5,21 +5,50 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp2.Views"
              mc:Ignorable="d" 
-             Height="200" Width="250"
+             Height="450" Width="250"
              >
     <Grid Background="White">
         <StackPanel>
-            <TextBlock Text="ID" Margin="0 10 0 0"/>
+            <TextBlock Text="手入力修正です。" TextAlignment="Right" Foreground="DarkGray"/>
+            <TextBlock Text="薬品ID" Margin="0 10 0 0"/>
             <TextBox Text="{Binding InputReagentId}"
                      Width="auto"
                      Background="WhiteSmoke"
                      Margin="10 0 0 0"/>
-            <TextBlock Text="Name" Margin="0 10 0 0"/>
+            <TextBlock Text="薬品名" Margin="0 10 0 0"/>
             <TextBox Text="{Binding InputReagentName}"
                      Width="auto"
                      Background="WhiteSmoke"
                      Margin="10 0 0 0"/>
-            <Button Content="Save" Margin="5" Click="Button_Click"/>
+            <TextBlock Text="貸出/返却ステータス" Margin="0 10 0 0"/>
+            <TextBox Text="{Binding ActionType}"
+                     Width="auto"
+                     Background="WhiteSmoke"
+                     Margin="10 0 0 0"/>
+            <TextBlock Text="貸出質量" Margin="0 10 0 0"/>
+            <TextBox Text="{Binding MassBefore}"
+                     Width="auto"
+                     Background="WhiteSmoke"
+                     Margin="10 0 0 0"/>
+            <TextBlock Text="返却質量" Margin="0 10 0 0"/>
+            <TextBox Text="{Binding MassBefore}"
+                     Width="auto"
+                     Background="WhiteSmoke"
+                     Margin="10 0 0 0"/>
+            <TextBlock Text="使用者名" Margin="0 10 0 0"/>
+            <TextBox Text="{Binding UserName}"
+                     Width="auto"
+                     Background="WhiteSmoke"
+                     Margin="10 0 0 0"/>
+
+
+            <Button Content="Save" Margin="35" Click="Button_Click"/>
+
+
+
+
+
+
         </StackPanel>
             
     </Grid>

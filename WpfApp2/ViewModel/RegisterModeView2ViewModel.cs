@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using WpfApp2.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using WpfApp2.Services;
 
 namespace WpfApp2.ViewModels
 {
@@ -17,6 +18,8 @@ namespace WpfApp2.ViewModels
         private readonly DatabaseManager _db;
         private readonly MainViewModel _parent;
         private InputSet _currentInputSet = new();
+
+        private readonly RS232CToUsbConnectionService _connectionService;
 
         private int _panelNumber = 1;
         private int _reagentCount = 0;
@@ -48,11 +51,13 @@ namespace WpfApp2.ViewModels
 
         public RegisterModeView2ViewModel(
                 ObservableCollection<InputSet> inputSets,
-                DatabaseManager db, 
-                MainViewModel parent)
+                DatabaseManager db,
+                MainViewModel parent,          
+                RS232CToUsbConnectionService connectionService)
         {
             _db = db;
             _parent = parent;
+            _connectionService = connectionService;
 
             db.EnsureTablesCreated();
 
@@ -66,6 +71,7 @@ namespace WpfApp2.ViewModels
             HintText = "薬品IDをスキャン・入力";
             HelperText = "バーコードをスキャンするか入力します";
             ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/scan.png"));
+
         }
 
         #region Properties
@@ -205,6 +211,10 @@ namespace WpfApp2.ViewModels
                     if (int.TryParse(InputText, out int userId))
                     {
                         _currentInputSet.InputUserId = userId;
+
+                        var user = _db.GetUserNameById(userId);
+                        _currentInputSet.UserName = user?.UserName ?? userId.ToString();
+
                         _parent.AddInputSet(_currentInputSet);
                         _currentInputSet = new InputSet();
                         AdvanceToNextReagent();
@@ -255,6 +265,20 @@ namespace WpfApp2.ViewModels
         private bool CanExecuteConfirm()
         {
             return ReagentCount > 0;
+        }
+
+        [RelayCommand]
+        public async Task LoadAndConnectAsync()
+        {
+            try
+            {
+                var config = await _settingService.LoadSettingsAsync();
+                _settingService.Connect(config);
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         #endregion

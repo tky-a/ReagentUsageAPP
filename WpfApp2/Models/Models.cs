@@ -238,4 +238,10 @@ namespace WpfApp2.Models
         public string UserName { get; set; }
     }
 
+    public class SettingItem
+    {
+        public string Name { get; set; }
+        public string Icon { get; set; }
+    }
+
 }
