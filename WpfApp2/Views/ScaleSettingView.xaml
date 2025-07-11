@@ -10,17 +10,17 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto" MinHeight="80"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="0.4*"/>
         </Grid.ColumnDefinitions>
 
@@ -38,7 +38,7 @@
         <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding StopBitsOptions}" SelectedItem="{Binding SelectedStopBits}" Width="250" Height="40"/>
         <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding HandshakeOptions}" SelectedItem="{Binding SelectedHandshake}" Width="250" Height="40"/>
 
-        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 40 20">
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 20 -80 20">
             <TextBlock Text="{Binding ConnectionStatus}" VerticalAlignment="Center" Margin="0,0,20,0" FontWeight="Bold"/>
             <!--<Button Content="接続" Command="{Binding ConnectCommand}" Width="100" Margin="5"/>
             <Button Content="切断" Command="{Binding DisconnectCommand}" Width="100" Margin="5"/>-->

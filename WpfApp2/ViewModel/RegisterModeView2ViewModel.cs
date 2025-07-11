@@ -9,6 +9,7 @@ using WpfApp2.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WpfApp2.Services;
+using System.Threading.Tasks;
 
 namespace WpfApp2.ViewModels
 {
@@ -272,8 +273,8 @@ namespace WpfApp2.ViewModels
         {
             try
             {
-                var config = await _settingService.LoadSettingsAsync();
-                _settingService.Connect(config);
+                var config = await _connectionService.LoadSettingsAsync();
+                _connectionService.Connect(config);
             }
             catch (Exception ex)
             {
@@ -281,16 +282,19 @@ namespace WpfApp2.ViewModels
             }
         }
 
+
+
         #endregion
 
         #region Private Methods
 
-        private void AdvanceToWeighingPanel()
+        private async Task AdvanceToWeighingPanel()
         {
             ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/weighing2.png"));
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
             PanelNumber ++;
+            await LoadAndConnectAsync();
         }
 
         private void AdvanceToUserPanel()
@@ -308,14 +312,6 @@ namespace WpfApp2.ViewModels
             HintText = "続けて記録できます";
             HelperText = "バーコードをスキャンするか入力します";
             BtnNextContent = "次へ";
-            //if (PanelNumber < 4)
-            //{
-            //    PanelNumber++
-            //}
-            //else
-            //{
-            //    PanelNumber = 4;
-            //}
             PanelNumber = 1;
             ReagentCount++;
             SelectedChemical = null;

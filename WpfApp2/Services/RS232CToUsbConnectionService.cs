@@ -11,6 +11,12 @@ using WpfApp2.Models;
 
 namespace WpfApp2.Services
 {
+    public enum ConnectionType
+    {
+        RS232C,
+        USB,
+        Unknown
+    }
     public class ScaleDataReceivedEventArgs : EventArgs
     {
         public string RawData { get; set; }
@@ -50,12 +56,148 @@ namespace WpfApp2.Services
         private Timer? _reconnectTimer;
         private readonly string _settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ScaleSettings.json");
         private ScaleSettingModel? _currentSettings;
+        private ConnectionType _detectedConnectionType = ConnectionType.Unknown;
+        private string? _detectedPortName;
 
         public bool IsConnected => _serialPort != null && _serialPort.IsOpen;
-        
+        public ConnectionType DetectedConnectionType => _detectedConnectionType;
+        public string? DetectedPortName => _detectedPortName;
+
         public event Action<bool>? ConnectionStatusChanged;
         public event EventHandler<ScaleDataReceivedEventArgs>? DataReceived;
         public event EventHandler<string>? ErrorOccurred;
+
+        /// <summary>
+        /// アプリ起動時の接続判別（エラーは出さない）
+        /// </summary>
+
+        public async Task<ConnectionType> DetectConnectionTypeAsync()
+        {
+            try
+            {
+                _detectedConnectionType = ConnectionType.Unknown;
+                _detectedPortName = null;
+                // USB接続のスケールデバイスを検索
+                if (await DetectUsbScaleAsync())
+                {
+                    _detectedConnectionType = ConnectionType.USB;
+                    return ConnectionType.USB;
+                }
+
+                // シリアル接続のスケールデバイスを検索
+                var serialPort = await DetectSerialScaleAsync();
+                if (!string.IsNullOrEmpty(serialPort))
+                {
+                    _detectedConnectionType = ConnectionType.RS232C;
+                    _detectedPortName = serialPort;
+                    return ConnectionType.RS232C;
+                }
+
+                return ConnectionType.Unknown;
+            }
+            catch
+            {
+                // アプリ起動時はエラーを出さない
+                return ConnectionType.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// USB接続のスケールデバイスを検出
+        /// </summary>
+        private async Task<bool> DetectUsbScaleAsync()
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name IS NOT NULL");
+
+                foreach (var obj in searcher.Get())
+                {
+                    var name = obj["Name"]?.ToString();
+                    if (name != null && IsScaleDevice(name))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// シリアル接続のスケールデバイスを検出
+        /// </summary>
+        private async Task<string?> DetectSerialScaleAsync()
+        {
+            try
+            {
+                var availablePorts = SerialPort.GetPortNames();
+
+                return availablePorts[0]; // 最初に見つかったポート名を返す
+
+                //foreach (var portName in availablePorts)
+                //{
+                //}
+                //return null;    
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 測定画面読み込み時の接続処理
+        /// </summary>
+        public async Task<bool> ConnectForMeasurementAsync()
+        {
+            try
+            {
+                // 再度接続判別
+                var connectionType = await DetectConnectionTypeAsync();
+
+                if (connectionType == ConnectionType.Unknown)
+                {
+                    ErrorOccurred?.Invoke(this, "スケールデバイスが検出されませんでした。");
+                    return false;
+                }
+
+                if (connectionType == ConnectionType.USB)
+                {
+                    // USB接続の場合は直接入力モードに移行
+                    ConnectionStatusChanged?.Invoke(true);
+                    return true;
+                }
+
+                if (connectionType == ConnectionType.RS232C && !string.IsNullOrEmpty(_detectedPortName))
+                {
+                    // シリアル接続の場合は接続を開始
+                    var settings = await LoadSettingsAsync();
+                    settings.PortName = _detectedPortName;
+
+                    return Connect(settings);
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ErrorOccurred?.Invoke(this, $"測定接続エラー: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// デバイス名からスケールデバイスかどうかを判定
+        /// </summary>
+        private bool IsScaleDevice(string deviceName)
+        {
+            var scaleKeywords = new[] { "METTLER", "A&D", "SHIMADZU", "Balance", "Scale", "Weight" };
+            return scaleKeywords.Any(keyword => deviceName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
 
         /// <summary>
         /// 設定をJSONファイルから読み込みます。ファイルがない場合はデフォルト値で作成します。
@@ -299,7 +441,11 @@ namespace WpfApp2.Services
         /// </summary>
         public void Dispose()
         {
-            Disconnect();
+            try
+            {
+                Disconnect();
+            }
+            catch { }
         }
     }
 }

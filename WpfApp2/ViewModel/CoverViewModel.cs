@@ -8,6 +8,8 @@ using System.IO;
 using System.Xml.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using WpfApp2.Services;
+using System.Windows;
 
 
 
@@ -17,6 +19,7 @@ namespace WpfApp2.ViewModels
     {
         private readonly MainViewModel _parent;
         private readonly ScaleSettingModel _scaleSetting;
+        private readonly RS232CToUsbConnectionService _scaleService;
 
         [ObservableProperty]
         private string buttonText = "登録モードへ";
@@ -24,14 +27,19 @@ namespace WpfApp2.ViewModels
         public CoverViewModel(MainViewModel parent)
         {
             _parent = parent;
+            _scaleService = new RS232CToUsbConnectionService();
         }
 
         [RelayCommand]
         private async void GoToRegisterMode()
         {
             ButtonText = "読み込み中...";
-            await Task.Delay(500);
             
+            await Task.Delay(500);
+
+            var connectionType = await _scaleService.DetectConnectionTypeAsync();
+            MessageBox.Show($"接続タイプ: {connectionType}");
+
             _parent.NavigateToRegisterMode();
         }
         [RelayCommand]

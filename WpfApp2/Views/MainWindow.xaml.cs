@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfApp2.Models;
+using WpfApp2.Services;
 
 namespace WpfApp2.Views
 {
