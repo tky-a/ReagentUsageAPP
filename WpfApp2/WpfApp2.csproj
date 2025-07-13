@@ -11,6 +11,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Converters\**" />
+    <Compile Remove="Dialogs\**" />
+    <Compile Remove="Resources\Styles\**" />
+    <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Dialogs\**" />
+    <EmbeddedResource Remove="Resources\Styles\**" />
+    <None Remove="Converters\**" />
+    <None Remove="Dialogs\**" />
+    <None Remove="Resources\Styles\**" />
+    <Page Remove="Converters\**" />
+    <Page Remove="Dialogs\**" />
+    <Page Remove="Resources\Styles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Images\scan.png" />
     <None Remove="Resources\Images\Slide1.jpg" />
     <None Remove="Resources\Images\user_scan.png" />
@@ -21,9 +36,6 @@
     <Folder Include="App\" />
 	  <!-- App.xaml を App フォルダからビルド対象に -->
 	  <ApplicationDefinition Include="App\App.xaml" />
-	  <Folder Include="Converters\" />
-	  <Folder Include="Dialogs\" />
-	  <Folder Include="Resources\Styles\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +50,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+    <PackageReference Include="MaterialDesignInXamlToolkitAddOns" Version="0.0.63" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.5" />

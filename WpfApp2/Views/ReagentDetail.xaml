@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="WpfApp2.Views.ReagentDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfApp2.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600">
+    <StackPanel Margin="20" Background="White">
+        <TextBlock Text="薬品の詳細" FontSize="20" Margin="0 0 0 10"/>
+        <TextBlock Text="{Binding SelectedChemical.ChemicalId}" />
+        <TextBlock Text="{Binding SelectedChemical.Class}" />
+        <TextBlock Text="{Binding SelectedChemical.UseStatus}" />
+        <TextBlock Text="{Binding SelectedChemical.CurrentMass}" />
+        <TextBlock Text="{Binding SelectedChemical.LastUserId}" />
+    </StackPanel>
+</UserControl>

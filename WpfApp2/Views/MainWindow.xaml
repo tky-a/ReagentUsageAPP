@@ -18,7 +18,11 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    <Grid>
-        <ContentControl Content="{Binding CurrentViewModel}"/>
-    </Grid>
+
+    <materialDesign:DialogHost CloseOnClickAway="True" DialogTheme="Inherit" Identifier="MainDialog">
+        <Grid>
+            <ContentControl Content="{Binding CurrentViewModel}"/>
+        </Grid>
+        
+    </materialDesign:DialogHost>
 </Window>

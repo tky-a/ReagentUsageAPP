@@ -10,6 +10,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WpfApp2.Services;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using WpfApp2.Views;
 
 namespace WpfApp2.ViewModels
 {
@@ -284,20 +286,27 @@ namespace WpfApp2.ViewModels
         }
 
         [RelayCommand]
-        private void ShowChemicalDetail()
+        private async Task ShowChemicalDetail(Chemical selectedChemical)
         {
-            if(SelectedChemical != null)
+            if(selectedChemical != null)
             {
-                MessageBox.Show($"{SelectedChemical.Name}\n" +
-                                $"ID: {SelectedChemical.ChemicalId}\n" +
-                                $"質量: {SelectedChemical.CurrentMass} g\n" +
-                                $"クラス: {SelectedChemical.Class}\n" +
-                                $"使用状況: {SelectedChemical.UseStatus}\n" +
-                                $"保管場所: {SelectedChemical.LocationName}\n" +
-                                $"最終使用者: {SelectedChemical.LastUserName ?? "なし"}\n" +
-                                $"最終使用日: {SelectedChemical.LastUseDate?.ToShortDateString() ?? "なし"}\n",
-                                "薬品詳細");
+                //MessageBox.Show($"{SelectedChemical.Name}\n" +
+                //                $"ID: {SelectedChemical.ChemicalId}\n" +
+                //                $"質量: {SelectedChemical.CurrentMass} g\n" +
+                //                $"クラス: {SelectedChemical.Class}\n" +
+                //                $"使用状況: {SelectedChemical.UseStatus}\n" +
+                //                $"保管場所: {SelectedChemical.LocationName}\n" +
+                //                $"最終使用者: {SelectedChemical.LastUserName ?? "なし"}\n" +
+                //                $"最終使用日: {SelectedChemical.LastUseDate?.ToShortDateString() ?? "なし"}\n",
+                //                "薬品詳細");
+                var dialogcontent = new ReagentDetail { DataContext = selectedChemical };
+                await ShowTestDialog(dialogcontent);
             }
+        }
+
+        public async Task ShowTestDialog(UserControl dialogContent)
+        {
+            var result = await MaterialDesignThemes.Wpf.DialogHost.Show(dialogContent, "MainDialog");
         }
 
         #endregion

@@ -398,8 +398,8 @@
                                    >
                                 <TextBlock.InputBindings>
                                     <MouseBinding MouseAction="LeftClick"
-                                                  Command="{Binding ShowChemicalDetailCommand}"
-                                                  CommandParameter="{Binding SelectedChemical}"/>
+                                                  Command="{Binding DataContext.ShowChemicalDetailCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                  CommandParameter="{Binding}"/>
                                 </TextBlock.InputBindings>
                             </TextBlock>
                         </Border>
