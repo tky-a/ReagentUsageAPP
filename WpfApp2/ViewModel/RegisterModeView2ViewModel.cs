@@ -39,6 +39,8 @@ namespace WpfApp2.ViewModels
         //あとで、こっちにする
         //[ObservableProperty]
         //private string inputText = string.Empty;
+        //[ObservableProperty]
+        //private Chemical _selectedChemical;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -172,7 +174,6 @@ namespace WpfApp2.ViewModels
 
         #region Commands
 
-
         private void ExecuteNext()
         {
             switch (PanelNumber)
@@ -282,9 +283,26 @@ namespace WpfApp2.ViewModels
             }
         }
 
-
+        [RelayCommand]
+        private void ShowChemicalDetail()
+        {
+            if(SelectedChemical != null)
+            {
+                MessageBox.Show($"{SelectedChemical.Name}\n" +
+                                $"ID: {SelectedChemical.ChemicalId}\n" +
+                                $"質量: {SelectedChemical.CurrentMass} g\n" +
+                                $"クラス: {SelectedChemical.Class}\n" +
+                                $"使用状況: {SelectedChemical.UseStatus}\n" +
+                                $"保管場所: {SelectedChemical.LocationName}\n" +
+                                $"最終使用者: {SelectedChemical.LastUserName ?? "なし"}\n" +
+                                $"最終使用日: {SelectedChemical.LastUseDate?.ToShortDateString() ?? "なし"}\n",
+                                "薬品詳細");
+            }
+        }
 
         #endregion
+
+
 
         #region Private Methods
 

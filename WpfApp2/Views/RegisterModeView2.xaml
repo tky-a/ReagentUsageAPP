@@ -394,7 +394,14 @@
                                        
                                    FontSize="16" Margin="0 10 0 0"
                                    ToolTip="{Binding SelectedChemical.Name}"
-                                   />
+                                   Cursor="Hand"                                   
+                                   >
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick"
+                                                  Command="{Binding ShowChemicalDetailCommand}"
+                                                  CommandParameter="{Binding SelectedChemical}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
                         </Border>
                         <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
                             <TextBlock Text="{Binding SelectedChemical.CurrentMass, StringFormat={}{0:F2}g}"
@@ -420,7 +427,7 @@
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
                                 BorderThickness="0.1"
-                                Margin="0 0 0 0"
+                                Margin="0 0 0 10"
                                 Padding="5 1"
                                 >
                                 <Label.Style>
@@ -445,7 +452,7 @@
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
                                 BorderThickness="0.1"
-                                Margin="0 5 0 0"
+                                Margin="0 0 0 10"
                                 Padding="5 1"
                                    >
                                 <Label.Style>
@@ -469,7 +476,7 @@
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
                                 BorderThickness="0.1"
-                                Margin="0 5 0 0"
+                                Margin="0 0 0 10"
                                 Padding="5 1"
                                    >
                                 <Label.Style>
@@ -523,10 +530,12 @@
                            FontSize="20"
                            TextAlignment="Center"
                            VerticalAlignment="Bottom"
-                           HorizontalAlignment="Right"
-                           Grid.Row="0" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Grid.Row="0" 
+                           Grid.Column="1"
                            Grid.RowSpan="2"
-                           Margin="25 0 0 0"/>
+                           Grid.ColumnSpan="2"
+                           Margin="35 0 0 0"/>
 
                     <Button Grid.Row="0" 
                         Grid.Column="2" 
