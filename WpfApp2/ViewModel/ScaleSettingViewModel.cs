@@ -25,7 +25,7 @@ namespace WpfApp2.ViewModel
                 IsConnected = isConnected;
                 ConnectCommand.NotifyCanExecuteChanged();
                 DisconnectCommand.NotifyCanExecuteChanged();
-                ConnectionStatus = IsConnected ? $"接続中: {SelectedComPort}" : "切断";
+                ConnectionStatus = IsConnected ? $"接続ステータス : 接続中({SelectedComPort})" : "接続ステータス : 切断";
             };
 
             // 設定の選択肢を初期化
@@ -45,7 +45,7 @@ namespace WpfApp2.ViewModel
         private bool _isConnected;
 
         [ObservableProperty]
-        private string _connectionStatus = "切断";
+        private string _connectionStatus = "接続ステータス : 切断";
 
         [ObservableProperty]
         private string? _selectedComPort;

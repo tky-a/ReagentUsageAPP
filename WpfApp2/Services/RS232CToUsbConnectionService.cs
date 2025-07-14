@@ -3,11 +3,14 @@ using System.Configuration;
 using System.IO;
 using System.IO.Ports;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Threading;
 using WpfApp2.Models;
+
 
 namespace WpfApp2.Services
 {
@@ -17,6 +20,7 @@ namespace WpfApp2.Services
         USB,
         Unknown
     }
+
     public class ScaleDataReceivedEventArgs : EventArgs
     {
         public string RawData { get; set; }
@@ -36,7 +40,7 @@ namespace WpfApp2.Services
             try
             {
                 var cleanData = data.Trim();
-                if(decimal.TryParse(cleanData.Replace("g", "").Replace("kg","").Trim(), out decimal weight))
+                if (decimal.TryParse(cleanData.Replace("g", "").Replace("kg", "").Trim(), out decimal weight))
                 {
                     Weight = weight;
                     Unit = cleanData.Contains("kg") ? "kg" : "g";
@@ -49,7 +53,6 @@ namespace WpfApp2.Services
         }
     }
 
-
     public class RS232CToUsbConnectionService
     {
         private SerialPort? _serialPort;
@@ -59,18 +62,38 @@ namespace WpfApp2.Services
         private ConnectionType _detectedConnectionType = ConnectionType.Unknown;
         private string? _detectedPortName;
 
+        // キーボード入力の有効/無効を制御
+        private bool _keyboardInputEnabled = false;
+
         public bool IsConnected => _serialPort != null && _serialPort.IsOpen;
         public ConnectionType DetectedConnectionType => _detectedConnectionType;
         public string? DetectedPortName => _detectedPortName;
+        public bool KeyboardInputEnabled
+        {
+            get => _keyboardInputEnabled;
+            set => _keyboardInputEnabled = value;
+        }
 
         public event Action<bool>? ConnectionStatusChanged;
         public event EventHandler<ScaleDataReceivedEventArgs>? DataReceived;
         public event EventHandler<string>? ErrorOccurred;
 
+        // Windows API for keyboard input simulation
+        [DllImport("user32.dll")]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
+        [DllImport("user32.dll")]
+        private static extern short VkKeyScan(char ch);
+
+        private const int KEYEVENTF_KEYUP = 0x0002;
+        private const int KEYEVENTF_UNICODE = 0x0004;
+
         /// <summary>
         /// アプリ起動時の接続判別（エラーは出さない）
         /// </summary>
-
         public async Task<ConnectionType> DetectConnectionTypeAsync()
         {
             try
@@ -135,13 +158,7 @@ namespace WpfApp2.Services
             try
             {
                 var availablePorts = SerialPort.GetPortNames();
-
-                return availablePorts[0]; // 最初に見つかったポート名を返す
-
-                //foreach (var portName in availablePorts)
-                //{
-                //}
-                //return null;    
+                return availablePorts.Length > 0 ? availablePorts[0] : null;
             }
             catch
             {
@@ -293,13 +310,85 @@ namespace WpfApp2.Services
                 var data = _serialPort.ReadExisting();
                 if (!string.IsNullOrEmpty(data))
                 {
+                    var eventArgs = new ScaleDataReceivedEventArgs(data);
+
                     // データ受信イベントを発火
-                    DataReceived?.Invoke(this, new ScaleDataReceivedEventArgs(data));
+                    DataReceived?.Invoke(this, eventArgs);
+
+                    // キーボード入力が有効な場合、データを入力として送信
+                    if (_keyboardInputEnabled && eventArgs.Weight.HasValue)
+                    {
+                        var inputText = $"{eventArgs.Weight.Value}{eventArgs.Unit}";
+                        SendKeyboardInput(inputText);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ErrorOccurred?.Invoke(this, $"データ受信エラー: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// テキストをキーボード入力として送信
+        /// </summary>
+        private void SendKeyboardInput(string text)
+        {
+            try
+            {
+                // 各文字を順番に送信
+                foreach (char c in text)
+                {
+                    SendChar(c);
+                    Thread.Sleep(10); // 文字間の遅延
+                }
+
+                // Enterキーを送信（必要に応じて）
+                SendEnterKey();
+            }
+            catch (Exception ex)
+            {
+                ErrorOccurred?.Invoke(this, $"キーボード入力エラー: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 1文字をキーボード入力として送信
+        /// </summary>
+        private void SendChar(char c)
+        {
+            short vkCode = VkKeyScan(c);
+            byte virtualKey = (byte)(vkCode & 0xFF);
+            byte scanCode = (byte)MapVirtualKey(virtualKey, 0);
+
+            // キーダウン
+            keybd_event(virtualKey, scanCode, 0, UIntPtr.Zero);
+            // キーアップ
+            keybd_event(virtualKey, scanCode, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Enterキーを送信
+        /// </summary>
+        private void SendEnterKey()
+        {
+            const byte VK_RETURN = 0x0D;
+            byte scanCode = (byte)MapVirtualKey(VK_RETURN, 0);
+
+            // キーダウン
+            keybd_event(VK_RETURN, scanCode, 0, UIntPtr.Zero);
+            // キーアップ
+            keybd_event(VK_RETURN, scanCode, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        }
+
+        /// <summary>
+        /// 手動でキーボード入力を送信（テスト用）
+        /// </summary>
+        public void SendManualKeyboardInput(string text)
+        {
+            if (_keyboardInputEnabled)
+            {
+                SendKeyboardInput(text);
             }
         }
 
@@ -334,7 +423,7 @@ namespace WpfApp2.Services
         {
             try
             {
-                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(" + portName + ")%'");
+                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%'");
 
                 foreach (var obj in searcher.Get())
                 {
@@ -380,10 +469,8 @@ namespace WpfApp2.Services
             }
             catch { }
 
-
             return null;
         }
-
 
         /// <summary>
         /// シリアルポートから切断します。

@@ -64,6 +64,8 @@ namespace WpfApp2.ViewModels
             _parent = parent;
             _connectionService = connectionService;
 
+            connectionService.KeyboardInputEnabled = true;
+
             db.EnsureTablesCreated();
 
             // コマンドの初期化
@@ -290,15 +292,6 @@ namespace WpfApp2.ViewModels
         {
             if(selectedChemical != null)
             {
-                //MessageBox.Show($"{SelectedChemical.Name}\n" +
-                //                $"ID: {SelectedChemical.ChemicalId}\n" +
-                //                $"質量: {SelectedChemical.CurrentMass} g\n" +
-                //                $"クラス: {SelectedChemical.Class}\n" +
-                //                $"使用状況: {SelectedChemical.UseStatus}\n" +
-                //                $"保管場所: {SelectedChemical.LocationName}\n" +
-                //                $"最終使用者: {SelectedChemical.LastUserName ?? "なし"}\n" +
-                //                $"最終使用日: {SelectedChemical.LastUseDate?.ToShortDateString() ?? "なし"}\n",
-                //                "薬品詳細");
                 var dialogcontent = new ReagentDetail { DataContext = selectedChemical };
                 await ShowTestDialog(dialogcontent);
             }
@@ -321,7 +314,9 @@ namespace WpfApp2.ViewModels
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
             PanelNumber ++;
-            await LoadAndConnectAsync();
+            //await _connectionService.ConnectForMeasurementAsync();
+            var test = new ConnectionTEST();
+            test.TEST();
         }
 
         private void AdvanceToUserPanel()
