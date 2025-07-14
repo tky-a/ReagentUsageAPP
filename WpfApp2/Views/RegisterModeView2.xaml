@@ -291,7 +291,7 @@
             </Grid>
             
             <!-- メインパネル -->
-            <Grid x:Name="RegisterModePanel" Margin="0,70,0,0">
+            <Grid x:Name="RegisterModePanel" Margin="0 70 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="33"/>
                     <ColumnDefinition Width="*"/>
@@ -302,6 +302,17 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="0.5*"/>
                 </Grid.RowDefinitions>
+
+                    <!--囲う線-->
+                <Border BorderThickness="2"
+                        BorderBrush="DarkGray"
+                        Background="WhiteSmoke"
+                        Grid.Row="2" Grid.Column="1"
+                        CornerRadius="9"
+                        VerticalAlignment="Top"
+                        MinHeight="120"
+                        Margin="-10 5 10 0"
+                        />
 
                 <!-- 入力パネル -->
                 <StackPanel Grid.Row="1" Grid.Column="1"
@@ -318,7 +329,7 @@
                          FontSize="25" 
                          BorderBrush="Black"
                          Background="GhostWhite"
-                         Margin="0,50,0,10"
+                         Margin="0,70,0,10"
                          materialDesign:HintAssist.Hint="{Binding HintText}"
                          materialDesign:HintAssist.HintPaddingBrush="Purple"
                          materialDesign:HintAssist.HelperTextFontSize="12"                                                         
@@ -361,55 +372,76 @@
                 <!-- 画像パネル -->
                 <StackPanel Grid.Row="1" Grid.Column="2"
                         HorizontalAlignment="Left" 
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Top"
+                            Margin="0 0 0 0">
                     <Image Source="{Binding ImgPanel}"
-                       HorizontalAlignment="Right"/>
+                            HorizontalAlignment="Right"
+                            MaxHeight="300"/>
                 </StackPanel>
 
                 <!-- 薬品情報表示 -->
-                <StackPanel Grid.Row="2" Grid.Column="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Left"                        
-                        Visibility="{Binding SelectedChemical}">
-                    <StackPanel Margin="0,0,10,0">
-                        <TextBlock Text="薬品ID:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/> 
-                        <TextBlock Text="薬品名:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-                        <TextBlock Text="現在質量:" FontWeight="SemiBold" Foreground="Gray"
-                                   FontSize="16" Margin="0 10 0 0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                <Grid Grid.Row="2" Grid.Column="1" Margin="0 10 20 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="薬品ID:" FontWeight="SemiBold" Foreground="Gray"
+                                       FontSize="16" Margin="0 10 0 0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                       />
+                            <TextBlock Text="薬品名:" FontWeight="SemiBold" Foreground="Gray"
+                                       FontSize="16" Margin="0 10 0 0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                            <TextBlock Text="現在質量:" FontWeight="SemiBold" Foreground="Gray"
+                                       FontSize="16" Margin="0 10 0 0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+
+
+                        <Grid Margin="0 0 10 0"
+                            Grid.Column="1"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Stretch"
+                            MinWidth="200"
+                            MaxWidth="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=ActualWidth}"
+                          >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Row="0" HorizontalAlignment="Stretch" BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
                             <TextBlock Text="{Binding SelectedChemical.ChemicalId}" 
-                                       FontSize="16" Margin="0 10 0 0"/>
+                                        FontSize="16" Margin="0 10 0 0" HorizontalAlignment="Stretch"/>
                         </Border>
-                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                        <Border Grid.Row="1" BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
                             <TextBlock Text="{Binding SelectedChemical.Name}"
-                                   TextWrapping="NoWrap" MinWidth="200" MaxWidth="300"
-                                   TextTrimming="CharacterEllipsis"
-                                       
-                                   FontSize="16" Margin="0 10 0 0"
-                                   ToolTip="{Binding SelectedChemical.Name}"
-                                   Cursor="Hand"                                   
-                                   >
+                                        TextWrapping="NoWrap"
+                                        TextTrimming="CharacterEllipsis"                                       
+                                        FontSize="16" Margin="0 10 0 0"
+                                        ToolTip="{Binding SelectedChemical.Name}"
+                                        Cursor="Hand"                                   
+                                        >
                                 <TextBlock.InputBindings>
                                     <MouseBinding MouseAction="LeftClick"
-                                                  Command="{Binding DataContext.ShowChemicalDetailCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                  CommandParameter="{Binding}"/>
+                                                Command="{Binding DataContext.ShowChemicalDetailCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding}"/>
                                 </TextBlock.InputBindings>
                             </TextBlock>
                         </Border>
-                        <Border BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
+                        <Border Grid.Row="2" BorderThickness="0 0 0 0.5" BorderBrush="MediumPurple" Margin="0 0 3 0">
                             <TextBlock Text="{Binding SelectedChemical.CurrentMass, StringFormat={}{0:F2}g}"
-                                   FontSize="16" Margin="0 10 0 0"/>
+                                        FontSize="16" Margin="0 10 0 0"/>
                         </Border>
-                    </StackPanel>
-
-                    <StackPanel>
+                    </Grid>
+                    <StackPanel Grid.Column="2">
                         <!-- 薬品ステータスラベル -->
                         <Grid Margin="0,10,0,0" >
                             <Grid.RowDefinitions>
@@ -427,7 +459,7 @@
                                 HorizontalAlignment="Left"
                                 BorderBrush="Gray" 
                                 BorderThickness="0.1"
-                                Margin="0 0 0 10"
+                                Margin="5 5 0 10"
                                 Padding="5 1"
                                 >
                                 <Label.Style>
@@ -446,15 +478,15 @@
                             </Label>
 
                             <Label Content="毒　物" 
-                                FontSize="13" 
-                                Grid.Row="2"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                BorderBrush="Gray" 
-                                BorderThickness="0.1"
-                                Margin="0 0 0 10"
-                                Padding="5 1"
-                                   >
+                                    FontSize="13" 
+                                    Grid.Row="2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    BorderBrush="Gray" 
+                                    BorderThickness="0.1"
+                                    Margin="5 0 0 10"
+                                    Padding="5 1"
+                                    >
                                 <Label.Style>
                                     <Style TargetType="Label">
                                         <Setter Property="Foreground" Value="DarkGray"/>
@@ -470,15 +502,15 @@
                             </Label>
 
                             <Label Content="劇　物" 
-                                FontSize="13" 
-                                Grid.Row="4" 
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                BorderBrush="Gray" 
-                                BorderThickness="0.1"
-                                Margin="0 0 0 10"
-                                Padding="5 1"
-                                   >
+                                    FontSize="13" 
+                                    Grid.Row="3"                                    
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    BorderBrush="Gray" 
+                                    BorderThickness="0.1"
+                                    Margin="5 3 0 10"
+                                    Padding="5 1"
+                                    >
                                 <Label.Style>
                                     <Style TargetType="Label">
                                         <Setter Property="Foreground" Value="DarkGray"/>
@@ -494,7 +526,8 @@
                             </Label>
                         </Grid>
                     </StackPanel>
-                </StackPanel>
+                    <!--</StackPanel>-->
+                </Grid>
 
                 <!-- 結果パネル -->
                 <Grid Grid.Row="2" Grid.Column="2" x:Name="ResultPanel">
@@ -570,6 +603,29 @@
                            VerticalAlignment="Center"
                            Foreground="DarkGray"/>
                 </Grid>
+
+                <!--スキャンデータ囲み-->
+                <Border 
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    BorderThickness="3"
+                    BorderBrush="WhiteSmoke"
+                    Width="115"
+                    Height="10"
+                    Background="WhiteSmoke"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="0 4 0 0"/>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           Text="読み取り結果"
+                           FontSize="15"
+                           FontWeight="Normal"
+                           Foreground="Gray"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Margin="10,-3,0,0"
+                           Background="Transparent"/>
+
             </Grid>
 
         </Grid>
