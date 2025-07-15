@@ -1,17 +1,21 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfApp2.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using WpfApp2.Services;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using WpfApp2.Views;
+using System.IO;
+
+
 
 namespace WpfApp2.ViewModels
 {
@@ -37,12 +41,64 @@ namespace WpfApp2.ViewModels
         private bool _isInUse;
         private UsageRecord _usageRecord = new();
 
+        private readonly SerialPortManager _spManager;
+        [ObservableProperty]
+        private string receivedData;
+        [ObservableProperty]
+        private string selectedPortName;
+        [ObservableProperty]
+        private int selectedBaudRateIndex;
+        public RS232C MySerialCOM => _spManager.MySerialCOM;
+        private void OnDataReceived(object sender, string data)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ReceivedData += data;
+            });
+        }
+        [RelayCommand]
+        private void Connect()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(SelectedPortName))
+                {
+                    MessageBox.Show("ポートが選択されていません。");
+                    return;
+                }
+
+                int baudRate = 9600; //MySerialCOM.baudRateItems[SelectedBaudRateIndex].rateValue;
+
+                _spManager.Initialize(SelectedPortName, baudRate);
+                _spManager.Open();
+                _spManager.StartListening();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"接続失敗: {ex.Message}");
+            }
+        }
+
+        [RelayCommand]
+        private void Disconnect()
+        {
+            try
+            {
+                _spManager.StopListening();
+                _spManager.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"切断失敗: {ex.Message}");
+            }
+        }
 
         //あとで、こっちにする
         //[ObservableProperty]
         //private string inputText = string.Empty;
         //[ObservableProperty]
         //private Chemical _selectedChemical;
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -78,6 +134,9 @@ namespace WpfApp2.ViewModels
             HintText = "薬品IDをスキャン・入力";
             HelperText = "バーコードをスキャンするか入力します";
             ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/scan.png"));
+
+            _spManager = SerialPortManager.Instance;
+            _spManager.DataReceived += OnDataReceived;
 
         }
 
@@ -306,7 +365,41 @@ namespace WpfApp2.ViewModels
 
 
 
+
         #region Private Methods
+
+        //はかりのアプリを直接起動
+        //public void StartExternalApp(string relativePath, string? arguments = null)
+        //{
+        //    try
+        //    {
+        //        // WPFアプリの実行フォルダを基準に絶対パスを作成
+        //        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        //        string exePath = Path.Combine(baseDir, relativePath);
+
+        //        if (!File.Exists(exePath))
+        //        {
+        //            MessageBox.Show($"指定されたファイルが見つかりません:\n{exePath}");
+        //            return;
+        //        }
+
+        //        ProcessStartInfo psi = new ProcessStartInfo
+        //        {
+        //            FileName = exePath,
+        //            Arguments = arguments ?? string.Empty,
+        //            UseShellExecute = true,  // 通常はtrueでOK
+        //        };
+
+        //        Process.Start(psi);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"起動時に例外が発生しました:\n{ex.Message}");
+        //    }
+        //}
+
+
+
 
         private async Task AdvanceToWeighingPanel()
         {
@@ -314,9 +407,12 @@ namespace WpfApp2.ViewModels
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
             PanelNumber ++;
-            //await _connectionService.ConnectForMeasurementAsync();
-            var test = new ConnectionTEST();
-            test.TEST();
+
+            //StartExternalApp(@"ScaleApp.exe");
+
+            this.selectedPortName = "COM7";
+            Connect();
+
         }
 
         private void AdvanceToUserPanel()
@@ -326,6 +422,8 @@ namespace WpfApp2.ViewModels
             HelperText = "数値を入力";
             BtnNextContent = "一時保存";
             PanelNumber ++;
+
+            Disconnect();
         }
 
         private void AdvanceToNextReagent()
