@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,7 +16,6 @@ using System.Windows.Media.Imaging;
 using WpfApp2.Models;
 using WpfApp2.Services;
 using WpfApp2.Views;
-using System.IO;
 
 
 
@@ -39,7 +41,7 @@ namespace WpfApp2.ViewModels
         private bool _isPoisonous;
         private bool _isDeleterious;
         private bool _isInUse;
-        private UsageRecord _usageRecord = new();
+        //private UsageRecord _usageRecord = new();
 
         private readonly SerialPortManager _spManager;
         [ObservableProperty]
@@ -48,6 +50,7 @@ namespace WpfApp2.ViewModels
         private string selectedPortName;
         [ObservableProperty]
         private int selectedBaudRateIndex;
+
         public RS232C MySerialCOM => _spManager.MySerialCOM;
         private void OnDataReceived(object sender, string data)
         {
@@ -61,21 +64,34 @@ namespace WpfApp2.ViewModels
         {
             try
             {
-                if (string.IsNullOrEmpty(SelectedPortName))
+
+                selectedPortName = _spManager.ComPortScan();
+                if (selectedPortName != "USBorNOT")
                 {
-                    MessageBox.Show("ポートが選択されていません。");
-                    return;
+                    try
+                    {
+                        if (string.IsNullOrEmpty(SelectedPortName))
+                        {
+                            return;
+                        }
+
+                        int baudRate = MySerialCOM.baudRateItems[0].rateValue;
+
+                        _spManager.Initialize(SelectedPortName, baudRate);
+                        _spManager.Open();
+                        _spManager.StartListening();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"接続失敗: {ex.Message}");
+                    }
                 }
-
-                int baudRate = 9600; //MySerialCOM.baudRateItems[SelectedBaudRateIndex].rateValue;
-
-                _spManager.Initialize(SelectedPortName, baudRate);
-                _spManager.Open();
-                _spManager.StartListening();
+                else
+                {  }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                MessageBox.Show($"接続失敗: {ex.Message}");
+                MessageBox.Show($"接続でエラーが発生しました。{ex}");
             }
         }
 
@@ -91,7 +107,13 @@ namespace WpfApp2.ViewModels
             {
                 MessageBox.Show($"切断失敗: {ex.Message}");
             }
+            finally
+            {
+                _spManager.Dispose();
+                selectedPortName = null;
+            }
         }
+
 
         //あとで、こっちにする
         //[ObservableProperty]
@@ -138,6 +160,8 @@ namespace WpfApp2.ViewModels
             _spManager = SerialPortManager.Instance;
             _spManager.DataReceived += OnDataReceived;
 
+            Connect();
+            
         }
 
         #region Properties
@@ -250,7 +274,7 @@ namespace WpfApp2.ViewModels
                         {
                             _currentInputSet.InputReagentId = SelectedChemical.ChemicalId;
                             _currentInputSet.InputReagentName = SelectedChemical.Name;
-                            AdvanceToWeighingPanel();                            
+                            AdvanceToWeighingPanel();
                         }
                     }
                     break;
@@ -268,8 +292,7 @@ namespace WpfApp2.ViewModels
                             _currentInputSet.MassBefore = SelectedChemical.CurrentMass;
                             _currentInputSet.MassAfter = mass;
                         }
-                        AdvanceToUserPanel();
-                        
+                        AdvanceToUserPanel();                        
                     }
                     break;
                 case 3:
@@ -318,13 +341,13 @@ namespace WpfApp2.ViewModels
 
         private bool CanExecuteReturn()
         {
-            return true;
+            return PanelNumber >= 2;
         }
 
         private void ExecuteConfirm()
         {
+            Disconnect();
             _parent.NavigateToConfim();
-
         }
 
         private bool CanExecuteConfirm()
@@ -347,18 +370,46 @@ namespace WpfApp2.ViewModels
         }
 
         [RelayCommand]
-        private async Task ShowChemicalDetail(Chemical selectedChemical)
+        private async Task ShowChemicalDetail()
         {
-            if(selectedChemical != null)
+
+            if (SelectedChemical != null)
             {
-                var dialogcontent = new ReagentDetail { DataContext = selectedChemical };
-                await ShowTestDialog(dialogcontent);
+                try
+                {
+                    var dialogContent = new ReagentDetail
+                    {
+                        DataContext = SelectedChemical
+                    };
+
+                    await ShowDialog(dialogContent);
+                }
+                catch (Exception ex)
+                {
+                    // エラーハンドリング
+                    System.Diagnostics.Debug.WriteLine($"ダイアログ表示エラー: {ex.Message}");
+                }
             }
         }
 
-        public async Task ShowTestDialog(UserControl dialogContent)
+        private async Task ShowDialog(UserControl dialogContent)
         {
-            var result = await MaterialDesignThemes.Wpf.DialogHost.Show(dialogContent, "MainDialog");
+            try
+            {
+                // DialogHostのIdentifierを指定してダイアログを表示
+                var result = await DialogHost.Show(dialogContent, "MainDialog");
+
+                // 必要に応じて結果を処理
+                // if (result is bool boolResult && boolResult)
+                // {
+                //     // OK がクリックされた場合の処理
+                // }
+            }
+            catch (Exception ex)
+            {
+                // DialogHost関連のエラーハンドリング
+                System.Diagnostics.Debug.WriteLine($"DialogHost エラー: {ex.Message}");
+            }
         }
 
         #endregion
@@ -368,51 +419,12 @@ namespace WpfApp2.ViewModels
 
         #region Private Methods
 
-        //はかりのアプリを直接起動
-        //public void StartExternalApp(string relativePath, string? arguments = null)
-        //{
-        //    try
-        //    {
-        //        // WPFアプリの実行フォルダを基準に絶対パスを作成
-        //        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        //        string exePath = Path.Combine(baseDir, relativePath);
-
-        //        if (!File.Exists(exePath))
-        //        {
-        //            MessageBox.Show($"指定されたファイルが見つかりません:\n{exePath}");
-        //            return;
-        //        }
-
-        //        ProcessStartInfo psi = new ProcessStartInfo
-        //        {
-        //            FileName = exePath,
-        //            Arguments = arguments ?? string.Empty,
-        //            UseShellExecute = true,  // 通常はtrueでOK
-        //        };
-
-        //        Process.Start(psi);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"起動時に例外が発生しました:\n{ex.Message}");
-        //    }
-        //}
-
-
-
-
         private async Task AdvanceToWeighingPanel()
         {
             ImgPanel = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/weighing2.png"));
             HintText = "質量を送信・入力";
             HelperText = "はかりにより送信ボタンを押す必要があります";
-            PanelNumber ++;
-
-            //StartExternalApp(@"ScaleApp.exe");
-
-            this.selectedPortName = "COM7";
-            Connect();
-
+            PanelNumber++;
         }
 
         private void AdvanceToUserPanel()
@@ -422,8 +434,6 @@ namespace WpfApp2.ViewModels
             HelperText = "数値を入力";
             BtnNextContent = "一時保存";
             PanelNumber ++;
-
-            Disconnect();
         }
 
         private void AdvanceToNextReagent()
@@ -483,8 +493,8 @@ namespace WpfApp2.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
     }
+        #endregion
 
     // RelayCommand実装
     public class RelayCommand : ICommand

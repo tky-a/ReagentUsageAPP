@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WpfApp2"
              xmlns:ui="http://schemas.modernwpf.com/2019"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:vm="clr-namespace:WpfApp2.ViewModels"
             xmlns:views="clr-namespace:WpfApp2.Views">
     <Application.Resources>
@@ -11,7 +11,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- MaterialDesign テーマ -->
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
 
             <!-- ViewModel→View のマッピング -->

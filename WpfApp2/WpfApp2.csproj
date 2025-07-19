@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
 	  <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
 	  <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <!--<PlatformTarget>AnyCPU</PlatformTarget>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,12 +51,12 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
-    <PackageReference Include="MaterialDesignInXamlToolkitAddOns" Version="0.0.63" />
+    <PackageReference Include="MaterialDesignInXamlToolkitAddOns" Version="0.0.6" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.5" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
-    <PackageReference Include="System.Management" Version="9.0.6" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

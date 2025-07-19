@@ -19,10 +19,12 @@
         <vm:MainViewModel/>
     </Window.DataContext>
 
-    <materialDesign:DialogHost CloseOnClickAway="True" DialogTheme="Inherit" Identifier="MainDialog">
+    <materialDesign:DialogHost x:Name="MainDialogHost" 
+                               CloseOnClickAway="True" 
+                               DialogTheme="Inherit" 
+                               Identifier="MainDialog">
         <Grid>
             <ContentControl Content="{Binding CurrentViewModel}"/>
         </Grid>
-        
     </materialDesign:DialogHost>
 </Window>

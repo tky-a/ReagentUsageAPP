@@ -37,9 +37,6 @@ namespace WpfApp2.ViewModels
             
             await Task.Delay(500);
 
-            var connectionType = await _scaleService.DetectConnectionTypeAsync();
-            MessageBox.Show($"接続タイプ: {connectionType}");
-
             _parent.NavigateToRegisterMode();
         }
         [RelayCommand]

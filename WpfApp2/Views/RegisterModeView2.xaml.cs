@@ -47,6 +47,8 @@ namespace WpfApp2.Views
             UpdatelinePositions();
         }
 
+
+        //ヘッダーパネルの丸と丸の間の線
         private void UpdatelinePositions()
         {
             if(!HedderReagentIDEllipse.IsLoaded 

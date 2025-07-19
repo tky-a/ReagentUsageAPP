@@ -1,8 +1,12 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Management;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,6 +114,11 @@ namespace WpfApp2.Services
             }
         }
 
+        public void Dispose()
+        {
+            _serialPort.Dispose();
+        }
+
         public void WriteData(string data)
         {
             if (_serialPort.IsOpen)
@@ -156,13 +165,101 @@ namespace WpfApp2.Services
             }
             catch (Exception ex)
             {
-                // UIスレッドに戻してログ出力（エラー通知）
-                //Application.Current.Dispatcher.Invoke(() =>
-                //{
-                //    Debug.WriteLine("受信エラー: " + ex.Message);
-                //});
             }
         }
 
+        public string ComPortScan()
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher(
+                    "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM%)'");
+
+                foreach (var obj in searcher.Get())
+                {
+                    var manufacturer = obj["Manufacturer"]?.ToString();
+
+                    if (manufacturer == null) continue;
+
+                    string portType = null;
+
+                    if (manufacturer.Contains("Prolific"))
+                    {
+                        portType = "prolific";
+                    }
+                    else if (manufacturer.Contains("FTDI", StringComparison.OrdinalIgnoreCase))
+                    {
+                        portType = "ftdi";
+                    }
+                    else if (manufacturer.Contains("CH340", StringComparison.OrdinalIgnoreCase))
+                    {
+                        portType = "ch340";
+                    }
+
+                    if (portType != null)
+                    {
+                        // COMポート名を抽出（例: "USB-SERIAL CH340 (COM3)" → "COM3"）
+                        string name = obj["Name"].ToString();
+                        string portName = null;
+                        var match = Regex.Match(name ?? "", @"\((COM\d+)\)");
+                        if (match.Success)
+                        {
+                            portName = match.Groups[1].Value;
+                        }
+                        // 接続テスト（受信のみ）
+                                                
+                        using var serialPort = new SerialPort(portName)
+                        {
+                            BaudRate = 9600, // デバイス仕様に合わせて設定
+                            Parity = Parity.None,
+                            DataBits = 8,
+                            StopBits = StopBits.One,
+                            //ReadTimeout = 1000,
+                            //WriteTimeout = 1000
+                        };
+                        try
+                        {
+                            serialPort.Open();
+                            serialPort.Close();
+                            return portName;
+                        }
+                        catch
+                        {
+                        // 開けなかった or タイムアウト
+                        }
+                    }
+
+                }
+                //var usbSearchar = new ManagementObjectSearcher(
+                //    "SELECT * FROM Win32_PnPEntity WHERE Name IS NOT NULL");
+                //foreach (var obj in usbSearchar.Get())
+                //{
+                //    var name = obj["Name"]?.ToString();
+                //    var deviceId = obj["DeviceID"]?.ToString();
+
+                //    MessageBox.Show(name);
+
+                //    if (name != null &&
+                //        (
+                //        name.Contains("METTLER") ||
+                //        name.Contains("A&D") ||
+                //        name.Contains("SHIMADZU") ||
+                //        name.Contains("Balance") ||
+                //        name.Contains("Scale")
+                //        ))
+                //    {
+                //        return "USB";
+                //    }
+                //    else
+                //    {
+                //        return "unknown"; // 既知のデバイスではない場合
+                //    }
+                //}
+            }
+            catch { }
+
+            
+            return "USBorNOT";
+        }
     }
 }

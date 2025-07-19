@@ -18,6 +18,13 @@
                   GridLinesVisibility="All"
                   >
             <DataGrid.Columns>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="管理番号" Binding="{Binding InputReagentId}" Width="auto" />
                 <DataGridTextColumn Header="薬品名" Binding="{Binding InputReagentName}" Width="2*" />
                 <DataGridTextColumn Header="ユーザー名" Binding="{Binding UserName}" Width="auto" />

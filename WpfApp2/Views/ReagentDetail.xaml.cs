@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace WpfApp2.Views
         public ReagentDetail()
         {
             InitializeComponent();
+        }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            // DialogHostを閉じる
+            DialogHost.CloseDialogCommand.Execute(null, this);
         }
     }
 }

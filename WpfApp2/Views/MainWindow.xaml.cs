@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +24,40 @@ namespace WpfApp2.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SerialPort _serialPort;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // COMポートを安全に閉じる
+            if (_serialPort != null)
+            {
+                try
+                {
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.DiscardInBuffer();
+                        _serialPort.DiscardOutBuffer();
+                        _serialPort.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"COMポートのクローズに失敗しました: {ex.Message}");
+                }
+                finally
+                {
+                    _serialPort.Dispose();
+                    _serialPort = null;
+                }
+            }
+
+            base.OnClosing(e); // 必ず最後に呼ぶ
         }
     }
 }

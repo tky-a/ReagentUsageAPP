@@ -32,6 +32,8 @@ namespace WpfApp2.Models
         private string _lastUserName;
         private DateTime? _lastUseDate;
         private DateTime _firstDate;
+        private string _note;
+
 
         public int ChemicalId
         {
@@ -97,6 +99,11 @@ namespace WpfApp2.Models
         {
             get => _firstDate;
             set { _firstDate = value; OnPropertyChanged(); }
+        }
+        public string Note
+        {
+            get => _note;
+            set { _note = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
