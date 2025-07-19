@@ -20,7 +20,7 @@
     </Window.DataContext>
 
     <materialDesign:DialogHost x:Name="MainDialogHost" 
-                               CloseOnClickAway="True" 
+                               CloseOnClickAway="False" 
                                DialogTheme="Inherit" 
                                Identifier="MainDialog">
         <Grid>

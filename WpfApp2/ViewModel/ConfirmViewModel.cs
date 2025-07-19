@@ -12,7 +12,7 @@ using WpfApp2.Views;
 
 namespace WpfApp2.ViewModels
 {
-    public partial class ConfirmViewModel : ObservableObject
+    public partial class ConfirmViewModel : ObservableObject, INotifyPropertyChanged
     {
         private readonly MainViewModel _parent;
 
@@ -33,15 +33,28 @@ namespace WpfApp2.ViewModels
                 }
             }
         }
-        [RelayCommand(CanExecute = nameof(CanDelete))]
-        private void DeleteSelected()
+
+        [RelayCommand]
+        private void GoToMainPage()
         {
-            if (SelectedUsage != null)
-                PendingUsages.Remove(SelectedUsage);
+            _parent.NavigateToCover();
+        }
+
+        [RelayCommand()]//CanExecute = nameof(CanDelete))]
+        private void DeleteChecked()
+        {
+            var toDelete = PendingUsages.Where(x => x.IsChecked).ToList();
+            foreach (var item in toDelete)
+            {
+                PendingUsages.Remove(item);
+            }
+
+            DeleteCheckedCommand.NotifyCanExecuteChanged();
+            MessageBox.Show("選択されたデータを削除しました。", "削除完了", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
 
-        private bool CanDelete() => SelectedUsage != null;
+        private bool CanDelete() => true;
 
         [RelayCommand]
         private void EditSelected(Object? parameter)

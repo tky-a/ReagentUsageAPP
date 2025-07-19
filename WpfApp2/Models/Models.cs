@@ -231,7 +231,7 @@ namespace WpfApp2.Models
         }
     }
 
-    public class InputSet
+    public partial class InputSet : ObservableObject
     {
         public int InputReagentId { get; set; }
         public string InputReagentName { get; set; }
@@ -243,6 +243,9 @@ namespace WpfApp2.Models
             ? MassBefore - MassAfter : null;
         public string Notes { get; set; }
         public string UserName { get; set; }
+
+        [ObservableProperty]
+        private bool isChecked;
     }
 
     public class SettingItem

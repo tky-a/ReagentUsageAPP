@@ -4,14 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
 
-    <Grid Margin="10" Background="White">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="一時保存一覧" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="&#xE80F;"
+                    FontSize="25"
+                    FontFamily="Segoe MDL2 Assets"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Foreground="Black"
+                    Margin="10 0 0 0"
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
+                    HorizontalAlignment="Center"
+                    Command="{Binding GoToMainPageCommand}"/>
+            <TextBlock Text="一時保存一覧" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+        </StackPanel>
+        
+        
         <DataGrid Grid.Row="1" ItemsSource="{Binding PendingUsages}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
@@ -21,7 +36,7 @@
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                            <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -53,8 +68,8 @@
 
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="削除" Command="{Binding DeleteSelectedCommand}" Margin="0,0,10,0"/>
-            <Button Content="全件確定" Command="{Binding ConfirmAllCommand}" />
+            <Button Content="削除" Command="{Binding DeleteCheckedCommand}" Margin="0,0,10,0"/>
+            <Button Content="全件確定" Command="{Binding ConfirmAllCommand}" Margin="0,0,10,0" />
         </StackPanel>
     </Grid>
 </UserControl>
