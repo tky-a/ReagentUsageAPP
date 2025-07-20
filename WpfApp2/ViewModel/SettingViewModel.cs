@@ -10,7 +10,9 @@ namespace WpfApp2.ViewModels
     public partial class SettingViewModel : ObservableObject, INotifyPropertyChanged
     {
         private readonly DatabaseManager _dataBaseManager;
+        private readonly MainViewModel _parent;
 
+        private string _homeReturnName = "ホームに戻る";
         private string _generalSettingName = "一般設定";
         private string _userSettingName = "使用者設定";
         private string _reagentSettingName = "薬品一覧編集";
@@ -23,22 +25,29 @@ namespace WpfApp2.ViewModels
         [ObservableProperty] private SettingItem currentSetting;
         [ObservableProperty] private object currentSettingView;
 
+        [ObservableProperty] private bool _isMenuExpanded = true;
+
         public ICommand GoBackCommand { get; }
+        public ICommand ToggleMenuExpandedCommand { get; }
+
 
         public SettingViewModel(MainViewModel parent, DatabaseManager databaseManager)
         {
             _dataBaseManager = databaseManager;
+            _parent = parent;
             Settings = new ObservableCollection<SettingItem>
             {
+                new SettingItem { Name = " ", Icon = "\uE700" },
+                new SettingItem { Name = _homeReturnName, Icon = "\uE80F" },
                 new SettingItem { Name = _generalSettingName, Icon = "\uF78C" },
                 new SettingItem { Name = _userSettingName, Icon = "\uE716" },
                 new SettingItem { Name = _reagentSettingName, Icon = "\uE71D" },
                 new SettingItem { Name = _scaleSettingName, Icon = "\uEE6F" }
             };
-            GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
-            currentSetting = Settings[0];
+            //GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
+            ToggleMenuExpandedCommand = new RelayCommand(() => IsMenuExpanded = !IsMenuExpanded);
+            CurrentSetting = Settings[2];
             UpdateCurrentSettingView();
-
         }
 
         partial void OnCurrentSettingChanged(SettingItem value)
@@ -68,6 +77,11 @@ namespace WpfApp2.ViewModels
             {
                 CurrentSettingView = new ScaleSettingView();
 
+            }
+            else if(CurrentSetting?.Name == _homeReturnName)
+            {
+                _parent.NavigateToCover();
+                CurrentSettingView = null;
             }
             else
             {

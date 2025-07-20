@@ -3,42 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WpfApp2.Views"
+             xmlns:local="clr-namespace:WpfApp2.Converters"
+             xmlns:vm="clr-namespace:WpfApp2.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel>
-            <Button 
-                Content="&#xE700;"
-                FontFamily="Segoe MDL2 Assets"
-                Background="Transparent"
-                BorderBrush="Transparent"
-                Foreground="Black"
-                FontSize="25"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Right"
-                Margin="10"
-                Command="{Binding PanelCloseCommand}"
-                />
-            <Button Content="&#xE80F;"
-                        FontSize="25"
+        <StackPanel >
+                <!--<Button 
+                    Content="&#xE700;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Foreground="Black"
+                    FontSize="25"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Right"
+                    Margin="0"
+                    Click="HamburgerButton_Click"
+                    />-->
+            <!--<StackPanel Orientation="Horizontal">
+                <Button Content="&#xE80F;"
+                        FontSize="28"
                         FontFamily="Segoe MDL2 Assets"
                         Background="Transparent"
                         BorderBrush="Transparent"
                         Foreground="Black"
-                        Margin="10"                        
+                        Margin="0 0 0 0"                        
                         Grid.Column="0"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"                            
+                        HorizontalContentAlignment="Left"                            
                         Command="{Binding GoBackCommand}"
-                    />
+                />
+                <TextBlock Text="表紙に戻る"
+                           FontSize="20"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+            </StackPanel>-->
             <StackPanel Orientation="Horizontal">
                 <ListBox
                         Grid.Column="0"
@@ -46,13 +58,16 @@
                         SelectedItem="{Binding CurrentSetting, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="4">
+                            <StackPanel Orientation="Horizontal" Margin="6">
                                 <TextBlock Text="{Binding Icon}" 
                                            FontFamily="Segoe MDL2 Assets" 
                                            FontSize="24"
                                            VerticalAlignment="Center"
                                            Margin="0,0,8,0"/>
                                 <TextBlock Text="{Binding Name}" 
+                                            Visibility="{Binding IsMenuExpanded, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, 
+                                                Converter={StaticResource BooleanToVisibilityConverter}}"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </DataTemplate>
@@ -60,6 +75,7 @@
                 </ListBox>
             </StackPanel>
         </StackPanel>
+        
 
         <ContentControl
         Grid.Column="1"
