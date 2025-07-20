@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using WpfApp2.Models;
-using WpfApp2.Helpers;
 using System.Text.Json;
-using System.Collections.ObjectModel;
+using WpfApp2.Helpers;
+using WpfApp2.Models;
 
 namespace WpfApp2.Models
 {
@@ -262,5 +263,70 @@ namespace WpfApp2.Models
 
             command.ExecuteNonQuery();
         }
+
+        public void ImportChemicalsFromCsv(string filePath)
+        {
+            using var parser = new TextFieldParser(filePath)
+            {
+                TextFieldType = FieldType.Delimited
+            };
+            parser.SetDelimiters(",");
+
+            // ヘッダ行をスキップ
+            if (!parser.EndOfData)
+            {
+                parser.ReadLine();
+            }
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            while (!parser.EndOfData)
+            {
+                string[] fields = parser.ReadFields();
+
+                if (fields.Length < 8)
+                    continue; // 不完全な行はスキップ
+
+                var chemical = new Chemical
+                {
+                    Name = fields[0],
+                    Class = fields[1],
+                    CurrentMass = decimal.TryParse(fields[2], out var mass) ? mass : 0,
+                    UseStatus = fields[3],
+                    StorageLocationId = int.TryParse(fields[4], out var locId) ? locId : 0,
+                    LastUserId = string.IsNullOrWhiteSpace(fields[5]) ? null : int.Parse(fields[5]),
+                    LastUseDate = string.IsNullOrWhiteSpace(fields[6]) ? null : DateTime.Parse(fields[6]),
+                    FirstDate = DateTime.Parse(fields[7])
+                };
+
+                AddChemical(chemical); // 既存の追加処理
+            }
+        }
+
+        public void AddChemical(Chemical chemical)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var query = @"
+                        INSERT INTO Chemicals 
+                        (Name, Class, CurrentMass, UseStatus, StorageLocationId, LastUserId, LastUseDate, FirstDate) 
+                        VALUES 
+                        (@Name, @Class, @CurrentMass, @UseStatus, @StorageLocationId, @LastUserId, @LastUseDate, @FirstDate)";
+
+            using var command = new SqliteCommand(query, connection);
+            command.Parameters.AddWithValue("@Name", chemical.Name);
+            command.Parameters.AddWithValue("@Class", chemical.Class);
+            command.Parameters.AddWithValue("@CurrentMass", chemical.CurrentMass);
+            command.Parameters.AddWithValue("@UseStatus", chemical.UseStatus);
+            command.Parameters.AddWithValue("@LocationName", chemical.LocationName);
+            command.Parameters.AddWithValue("@LastUserId", chemical.LastUserId ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@LastUseDate", chemical.LastUseDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@FirstDate", chemical.FirstDate.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            command.ExecuteNonQuery();
+        }
+
     }
 }

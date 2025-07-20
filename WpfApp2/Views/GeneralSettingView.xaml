@@ -15,6 +15,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel VerticalAlignment="Center">
+            <ComboBox/>
             <Button 
                 Grid.Column="0"
                 Content="薬品一覧のテンプレートCSV出力"

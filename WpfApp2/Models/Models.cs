@@ -10,6 +10,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Management;
 using System.Runtime.CompilerServices;
+using System.Security.Permissions;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -252,6 +253,18 @@ namespace WpfApp2.Models
     {
         public string Name { get; set; }
         public string Icon { get; set; }
+    }
+
+    public enum ThemeMode
+    {
+        Light,
+        Dark,
+        System
+    }
+    public class  ThemeOption
+    {
+        public ThemeMode Mode { get; set; }
+        public string DisplayName { get; set; }
     }
 
 }
