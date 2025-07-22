@@ -19,7 +19,6 @@ namespace WpfApp2.ViewModels
     {
         private readonly MainViewModel _parent;
         private readonly ScaleSettingModel _scaleSetting;
-        private readonly RS232CToUsbConnectionService _scaleService;
 
         [ObservableProperty]
         private string buttonText = "登録モードへ";
@@ -27,7 +26,6 @@ namespace WpfApp2.ViewModels
         public CoverViewModel(MainViewModel parent)
         {
             _parent = parent;
-            _scaleService = new RS232CToUsbConnectionService();
         }
 
         [RelayCommand]

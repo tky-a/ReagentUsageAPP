@@ -1,9 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using WpfApp2.Views;
 using WpfApp2.Models;
+using CommunityToolkit.Mvvm.Input;
 
 namespace WpfApp2.ViewModels
 {
@@ -25,7 +27,7 @@ namespace WpfApp2.ViewModels
         [ObservableProperty] private SettingItem currentSetting;
         [ObservableProperty] private object currentSettingView;
 
-        [ObservableProperty] private bool _isMenuExpanded = true;
+        [ObservableProperty] private bool _isMenuExpanded = false;
 
         public ICommand GoBackCommand { get; }
         public ICommand ToggleMenuExpandedCommand { get; }
@@ -37,18 +39,18 @@ namespace WpfApp2.ViewModels
             _parent = parent;
             Settings = new ObservableCollection<SettingItem>
             {
-                new SettingItem { Name = " ", Icon = "\uE700" },
+                new SettingItem { Name = " " },//, Icon = "\uE700" },
                 new SettingItem { Name = _homeReturnName, Icon = "\uE80F" },
-                new SettingItem { Name = _generalSettingName, Icon = "\uF78C" },
-                new SettingItem { Name = _userSettingName, Icon = "\uE716" },
-                new SettingItem { Name = _reagentSettingName, Icon = "\uE71D" },
-                new SettingItem { Name = _scaleSettingName, Icon = "\uEE6F" }
+                //new SettingItem { Name = _generalSettingName, Icon = "\uF78C" },//一般設定
+                new SettingItem { Name = _userSettingName, Icon = "\uE716" },//使用者設定
+                new SettingItem { Name = _reagentSettingName, Icon = "\uE71D" },//薬品一覧
+                new SettingItem { Name = _scaleSettingName, Icon = "\uEE6F" }//RS232C設定
             };
-            //GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
-            ToggleMenuExpandedCommand = new RelayCommand(() => IsMenuExpanded = !IsMenuExpanded);
+            GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
             CurrentSetting = Settings[2];
             UpdateCurrentSettingView();
         }
+
 
         partial void OnCurrentSettingChanged(SettingItem value)
         {

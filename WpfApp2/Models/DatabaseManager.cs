@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Globalization;
 using WpfApp2.Helpers;
 using WpfApp2.Models;
 
@@ -272,35 +273,61 @@ namespace WpfApp2.Models
             };
             parser.SetDelimiters(",");
 
-            // ヘッダ行をスキップ
-            if (!parser.EndOfData)
-            {
-                parser.ReadLine();
-            }
+            // ヘッダ処理
+            string[] headers = parser.EndOfData ? Array.Empty<string>() : parser.ReadFields();
+            if (headers.Length == 0) return;
 
+            var headerToPropertyMap = new Dictionary<string, string>
+            {
+                { "薬品番号", "ChemicalId" },
+                { "薬品名", "Name" },
+                { "毒劇危", "Class" },
+                { "使用状況", "UseStatus" },
+                { "現在質量", "CurrentMass" },
+                { "保管場所", "StorageLocationId" },
+                { "使用者名", "LastUserId" },
+                { "登録日", "FirstDate" },
+                { "使用日", "LastUseDate" },
+            };
+           
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
             while (!parser.EndOfData)
             {
                 string[] fields = parser.ReadFields();
+                if (fields.Length == 0) continue;
 
-                if (fields.Length < 8)
-                    continue; // 不完全な行はスキップ
+                var row = new Dictionary<string, string>();
+                for (int i = 0; i < headers.Length && i < fields.Length; i++)
+                {
+                    row[headers[i]] = fields[i];
+                }
+
+                string GetValue(string column) => row.TryGetValue(column, out var value) ? value : string.Empty;
+
+                string locationName = GetValue("保管場所");
+                //string lastUserName = GetValue("使用者名");
+
+                int storageLocationId = GetOrInsertStorageLocationId(locationName, connection);
+                //int? lastUserId = string.IsNullOrWhiteSpace(lastUserName) ? null : GetOrInsertUserId(lastUserName, connection);
 
                 var chemical = new Chemical
                 {
-                    Name = fields[0],
-                    Class = fields[1],
-                    CurrentMass = decimal.TryParse(fields[2], out var mass) ? mass : 0,
-                    UseStatus = fields[3],
-                    StorageLocationId = int.TryParse(fields[4], out var locId) ? locId : 0,
-                    LastUserId = string.IsNullOrWhiteSpace(fields[5]) ? null : int.Parse(fields[5]),
-                    LastUseDate = string.IsNullOrWhiteSpace(fields[6]) ? null : DateTime.Parse(fields[6]),
-                    FirstDate = DateTime.Parse(fields[7])
+                    ChemicalId = int.TryParse(GetValue("薬品番号"), out var id) ? id : 0,
+                    Name = GetValue("薬品名"),
+                    Class = GetValue("毒劇危"),
+                    UseStatus = GetValue("使用状況"),
+                    CurrentMass = decimal.TryParse(GetValue("現在質量"), out var mass) ? mass : 0,
+                    StorageLocationId = storageLocationId,
+                    LocationName = locationName,
+                    //LastUserId = lastUserId,
+                    //LastUserName = lastUserName,
+                    LastUseDate = DateTime.TryParse(GetValue("最終使用日"), out var lastUseDate) ? lastUseDate : null,
+                    FirstDate = DateTime.TryParse(GetValue("登録日"), out var firstDate) ? firstDate : DateTime.Now,
                 };
 
-                AddChemical(chemical); // 既存の追加処理
+                AddChemical(chemical);
             }
         }
 
@@ -310,22 +337,66 @@ namespace WpfApp2.Models
             connection.Open();
 
             var query = @"
-                        INSERT INTO Chemicals 
-                        (Name, Class, CurrentMass, UseStatus, StorageLocationId, LastUserId, LastUseDate, FirstDate) 
-                        VALUES 
-                        (@Name, @Class, @CurrentMass, @UseStatus, @StorageLocationId, @LastUserId, @LastUseDate, @FirstDate)";
+                        INSERT OR REPLACE INTO Chemicals (
+                            ChemicalId, Name, Class, UseStatus, CurrentMass,
+                            StorageLocationId, LastUserId,
+                            LastUseDate, FirstDate
+                        )
+                        VALUES (
+                            @chemicalId, @name, @class, @useStatus, @currentMass,
+                            @storageLocationId,  @lastUserId,
+                            @lastUseDate, @firstDate
+                        );";
 
             using var command = new SqliteCommand(query, connection);
-            command.Parameters.AddWithValue("@Name", chemical.Name);
-            command.Parameters.AddWithValue("@Class", chemical.Class);
-            command.Parameters.AddWithValue("@CurrentMass", chemical.CurrentMass);
-            command.Parameters.AddWithValue("@UseStatus", chemical.UseStatus);
-            command.Parameters.AddWithValue("@LocationName", chemical.LocationName);
-            command.Parameters.AddWithValue("@LastUserId", chemical.LastUserId ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@LastUseDate", chemical.LastUseDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@FirstDate", chemical.FirstDate.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            command.Parameters.AddWithValue("@chemicalId", chemical.ChemicalId);
+            command.Parameters.AddWithValue("@name", chemical.Name ?? "");
+            command.Parameters.AddWithValue("@class", chemical.Class ?? "");
+            command.Parameters.AddWithValue("@currentMass", chemical.CurrentMass);
+            command.Parameters.AddWithValue("@useStatus", chemical.UseStatus ?? "");
+            command.Parameters.AddWithValue("@storageLocationId", chemical.StorageLocationId);
+            command.Parameters.AddWithValue("@lastUserId", (object?)chemical.LastUserId ?? DBNull.Value);
+            command.Parameters.AddWithValue("@lastUseDate", (object?)chemical.LastUseDate ?? DBNull.Value);
+            command.Parameters.AddWithValue("@firstDate", chemical.FirstDate);
 
             command.ExecuteNonQuery();
+        }
+
+        private int GetOrInsertStorageLocationId(string locationName, SqliteConnection connection)
+        {
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT LocationId FROM StorageLocations WHERE LocationName = @locationName;";
+            cmd.Parameters.AddWithValue("@locationName", locationName);
+            var result = cmd.ExecuteScalar();
+            if (result != null) return Convert.ToInt32(result);
+
+            using var insertCmd = connection.CreateCommand();
+            insertCmd.CommandText = "INSERT INTO StorageLocations (LocationName) VALUES (@locationName);";
+            insertCmd.Parameters.AddWithValue("@locationName", locationName);
+            insertCmd.ExecuteNonQuery();
+            //return (int)connection.LastInsertRowId;
+            using var getIdCmd = connection.CreateCommand();
+            getIdCmd.CommandText = "SELECT last_insert_rowid();";
+            return Convert.ToInt32(getIdCmd.ExecuteScalar() ?? 0);
+        }
+
+        private int GetOrInsertUserId(string userName, SqliteConnection connection)
+        {
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT UserId FROM Users WHERE UserName = @userName;";
+            cmd.Parameters.AddWithValue("@name", userName);
+            var result = cmd.ExecuteScalar();
+            if (result != null) return Convert.ToInt32(result);
+
+            using var insertCmd = connection.CreateCommand();
+            insertCmd.CommandText = "INSERT INTO Users (UserName) VALUES (@userName);";
+            insertCmd.Parameters.AddWithValue("@userName", userName);
+            insertCmd.ExecuteNonQuery();
+            //return (int)connection.LastInsertRowId;
+            using var getIdCmd = connection.CreateCommand();
+            getIdCmd.CommandText = "SELECT last_insert_rowid();";
+            return Convert.ToInt32(getIdCmd.ExecuteScalar() ?? 0);
         }
 
     }

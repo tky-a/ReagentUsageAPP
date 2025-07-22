@@ -28,8 +28,6 @@ namespace WpfApp2.ViewModels
         private readonly MainViewModel _parent;
         private InputSet _currentInputSet = new();
 
-        private readonly RS232CToUsbConnectionService _connectionService;
-
         private int _panelNumber = 1;
         private int _reagentCount = 0;
         private string _inputText = string.Empty;
@@ -135,14 +133,11 @@ namespace WpfApp2.ViewModels
         public RegisterModeView2ViewModel(
                 ObservableCollection<InputSet> inputSets,
                 DatabaseManager db,
-                MainViewModel parent,          
-                RS232CToUsbConnectionService connectionService)
+                MainViewModel parent          
+                )
         {
             _db = db;
             _parent = parent;
-            _connectionService = connectionService;
-
-            connectionService.KeyboardInputEnabled = true;
 
             db.EnsureTablesCreated();
 
@@ -360,8 +355,7 @@ namespace WpfApp2.ViewModels
         {
             try
             {
-                var config = await _connectionService.LoadSettingsAsync();
-                _connectionService.Connect(config);
+
             }
             catch (Exception ex)
             {

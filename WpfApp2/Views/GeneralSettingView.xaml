@@ -15,23 +15,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel VerticalAlignment="Center">
-            <ComboBox/>
-            <Button 
-                Grid.Column="0"
-                Content="薬品一覧のテンプレートCSV出力"
-                Width="auto"
-                MaxWidth="300"
-                Height="40"
-                Margin="0 0 0 30"
-                />
-            <Button 
-                Grid.Column="0"
-                Content="薬品一覧CSVのインポート"
-                Width="auto"
-                MaxWidth="300"
-                Height="40"
-                Margin="0 0 0 30"
-                />
+            
+
 
         </StackPanel>
     </Grid>

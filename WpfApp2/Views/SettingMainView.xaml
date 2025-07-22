@@ -19,38 +19,6 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel >
-                <!--<Button 
-                    Content="&#xE700;"
-                    FontFamily="Segoe MDL2 Assets"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    Foreground="Black"
-                    FontSize="25"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Right"
-                    Margin="0"
-                    Click="HamburgerButton_Click"
-                    />-->
-            <!--<StackPanel Orientation="Horizontal">
-                <Button Content="&#xE80F;"
-                        FontSize="28"
-                        FontFamily="Segoe MDL2 Assets"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        Foreground="Black"
-                        Margin="0 0 0 0"                        
-                        Grid.Column="0"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Left"                            
-                        Command="{Binding GoBackCommand}"
-                />
-                <TextBlock Text="表紙に戻る"
-                           FontSize="20"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-            </StackPanel>-->
             <StackPanel Orientation="Horizontal">
                 <ListBox
                         Grid.Column="0"

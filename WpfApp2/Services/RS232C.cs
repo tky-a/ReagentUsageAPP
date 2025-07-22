@@ -6,18 +6,24 @@ using System.IO.Ports;
 using System.Linq;
 using System.Management;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WpfApp2.Models;
 using WpfApp2.ViewModels;
+using System.IO;
+using WpfApp2.Services;
 
 namespace WpfApp2.Services
 {
     public class RS232C
     {
         private RegisterModeView2ViewModel _viewModel;
+
 
         public byte[] readBuffer;
         public const int rxBufSizeMax = 1000;
@@ -37,6 +43,7 @@ namespace WpfApp2.Services
         }
 
         public RS232C()
+
         {
 
             readBuffer = new byte[rxBufSizeMax];
@@ -48,6 +55,7 @@ namespace WpfApp2.Services
             {
                 baudRateItems[i] = new BaudRateItem(baudRateNames[i], baudRateValues[i]);
             }
+
         }
     }
 
@@ -57,7 +65,10 @@ namespace WpfApp2.Services
         private SerialPort _serialPort;
         private RS232C _mySerialCOM;
 
-        public static SerialPortManager Instance
+        private readonly string _settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ScaleSettings.json");
+
+
+    public static SerialPortManager Instance
         {
             get
             {
@@ -87,7 +98,6 @@ namespace WpfApp2.Services
             {
                 _serialPort.Close();
             }
-
             _serialPort.PortName = portName;
             _serialPort.BaudRate = baudRate;
             _serialPort.DataBits = 8;
@@ -98,6 +108,33 @@ namespace WpfApp2.Services
             _serialPort.ReceivedBytesThreshold = 1;
         }
 
+        public async Task Open2()
+        {    
+            try
+            {
+                var settings = await LoadSettingsAsync();
+
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+
+                _serialPort.PortName = ComPortScan();
+                _serialPort.BaudRate = settings.BaudRate;
+                _serialPort.DataBits = settings.DataBits;
+                _serialPort.Parity = settings.Parity;
+                _serialPort.StopBits = settings.StopBits;
+                _serialPort.Handshake = settings.Handshake;
+                _serialPort.Encoding = Encoding.ASCII;
+                _serialPort.ReceivedBytesThreshold = 1;
+
+                _serialPort.Open();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"シリアルポートのオープンに失敗しました。\n{ex.Message}", "接続エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         public void Open()
         {
             if (!_serialPort.IsOpen)
@@ -214,8 +251,6 @@ namespace WpfApp2.Services
                             Parity = Parity.None,
                             DataBits = 8,
                             StopBits = StopBits.One,
-                            //ReadTimeout = 1000,
-                            //WriteTimeout = 1000
                         };
                         try
                         {
@@ -230,36 +265,53 @@ namespace WpfApp2.Services
                     }
 
                 }
-                //var usbSearchar = new ManagementObjectSearcher(
-                //    "SELECT * FROM Win32_PnPEntity WHERE Name IS NOT NULL");
-                //foreach (var obj in usbSearchar.Get())
-                //{
-                //    var name = obj["Name"]?.ToString();
-                //    var deviceId = obj["DeviceID"]?.ToString();
 
-                //    MessageBox.Show(name);
+                //USB接続のときはココ
 
-                //    if (name != null &&
-                //        (
-                //        name.Contains("METTLER") ||
-                //        name.Contains("A&D") ||
-                //        name.Contains("SHIMADZU") ||
-                //        name.Contains("Balance") ||
-                //        name.Contains("Scale")
-                //        ))
-                //    {
-                //        return "USB";
-                //    }
-                //    else
-                //    {
-                //        return "unknown"; // 既知のデバイスではない場合
-                //    }
-                //}
             }
             catch { }
 
             
-            return "USBorNOT";
+            return null;
         }
+
+        /// <summary>
+        /// 設定をJSONファイルから読み込みます。ファイルがない場合はデフォルト値で作成します。
+        /// </summary>
+        public async Task<ScaleSettingModel> LoadSettingsAsync()
+        {
+            if (!File.Exists(_settingsFilePath))
+            {
+                var defaultSettings = new ScaleSettingModel();
+                await SaveSettingsAsync(defaultSettings);
+                return defaultSettings;
+            }
+
+            try
+            {
+                var json = await File.ReadAllTextAsync(_settingsFilePath);
+                var options = new JsonSerializerOptions { Converters = { new JsonStringEnumConverter() } };
+                return JsonSerializer.Deserialize<ScaleSettingModel>(json, options) ?? new ScaleSettingModel();
+            }
+            catch (Exception) // 例外処理（ファイルの破損など）
+            {
+                return new ScaleSettingModel(); // デフォルト値を返す
+            }
+        }
+        /// <summary>
+        /// 設定をJSONファイルに保存します。
+        /// </summary>
+        public async Task SaveSettingsAsync(ScaleSettingModel settings)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters = { new JsonStringEnumConverter() }
+            };
+            var json = JsonSerializer.Serialize(settings, options);
+            await File.WriteAllTextAsync(_settingsFilePath, json);
+        }
+
     }
+
 }

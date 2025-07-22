@@ -25,7 +25,6 @@ namespace WpfApp2.ViewModels
         public ObservableCollection<InputSet> InputSets { get; } = new();
         public DatabaseManager Database = new();
 
-        public RS232CToUsbConnectionService rs232Service = new RS232CToUsbConnectionService();        
 
 
         public MainViewModel()
@@ -35,7 +34,8 @@ namespace WpfApp2.ViewModels
 
         public void NavigateToRegisterMode()
         {
-            CurrentViewModel = new RegisterModeView2ViewModel(InputSets, Database, this, rs232Service);
+            
+            CurrentViewModel = new RegisterModeView2ViewModel(InputSets, Database, this);
         }
 
         public void NavigateToCover()
