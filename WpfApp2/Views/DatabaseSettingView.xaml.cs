@@ -26,6 +26,7 @@ namespace WpfApp2.Views
         {
             InitializeComponent();
             DataContext = new DataBaseSettingViewModel(db);
+
         }
 
         private void ChemicalDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

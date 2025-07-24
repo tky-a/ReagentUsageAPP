@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfApp2.Models;
 using WpfApp2.Services;
+using WpfApp2.ViewModel;
 using WpfApp2.Views;
 
 
@@ -48,6 +49,8 @@ namespace WpfApp2.ViewModels
         private string selectedPortName;
         [ObservableProperty]
         private int selectedBaudRateIndex;
+
+
 
         public RS232C MySerialCOM => _spManager.MySerialCOM;
         private void OnDataReceived(object sender, string data)
@@ -363,6 +366,7 @@ namespace WpfApp2.ViewModels
             }
         }
 
+
         [RelayCommand]
         private async Task ShowChemicalDetail()
         {
@@ -371,12 +375,28 @@ namespace WpfApp2.ViewModels
             {
                 try
                 {
-                    var dialogContent = new ReagentDetail
+                    var db = new DatabaseManager();
+
+                    string title = "薬品詳細";
+
+                    var vm = new ReagentDetailViewModel(SelectedChemical, title, isReadOnly: true);
+
+                    vm.StorageLocations = new ObservableCollection<StorageLocation>(
+                        await db.GetAllStorageLocationsAsync());
+                    vm.Users = new ObservableCollection<User>(
+                        await db.GetAllUsersAsync());
+
+                    vm.SelectedStorageLocation = vm.StorageLocations.FirstOrDefault(
+                        loc => loc.LocationId == SelectedChemical.StorageLocationId);
+                    vm.SelectedUser = vm.Users.FirstOrDefault(
+                        user => user.UserId == SelectedChemical.LastUserId);
+
+                    var dialogcontent = new ReagentDetail
                     {
-                        DataContext = SelectedChemical
+                        DataContext = vm
                     };
 
-                    await ShowDialog(dialogContent);
+                    await ShowDialog(dialogcontent);
                 }
                 catch (Exception ex)
                 {
@@ -391,13 +411,7 @@ namespace WpfApp2.ViewModels
             try
             {
                 // DialogHostのIdentifierを指定してダイアログを表示
-                var result = await DialogHost.Show(dialogContent, "MainDialog");
-
-                // 必要に応じて結果を処理
-                // if (result is bool boolResult && boolResult)
-                // {
-                //     // OK がクリックされた場合の処理
-                // }
+                var result = await DialogHost.Show(dialogContent, "MainDialog");          
             }
             catch (Exception ex)
             {

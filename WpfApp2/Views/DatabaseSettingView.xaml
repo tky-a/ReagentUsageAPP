@@ -65,7 +65,7 @@
           Grid.ColumnSpan="2"
           Background="WhiteSmoke"
           AutoGenerateColumns="False"
-          CanUserAddRows="False"
+          CanUserAddRows="False"                  
           Margin="0"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
@@ -74,8 +74,10 @@
           GridLinesVisibility="All"
           Padding="0 0 0 0"                      
           CanUserReorderColumns="False"
+          IsReadOnly="True"                  
           HeadersVisibility="Column"
-          ItemsSource="{Binding Chemicals}" SelectionChanged="ChemicalDataGrid_SelectionChanged"
+          ItemsSource="{Binding Chemicals}"
+            SelectionChanged="ChemicalDataGrid_SelectionChanged"
       >
 
             <DataGrid.Columns>
@@ -86,8 +88,8 @@
                 <DataGridTextColumn Header="使用状況" Binding="{Binding UseStatus}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="保管場所" Binding="{Binding StorageLocationId}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="最終使用者" Binding="{Binding LastUserName}" Width="auto" IsReadOnly="True"/>
-                <DataGridTextColumn Header="最終使用日" Binding="{Binding LastUseDate}" Width="auto" IsReadOnly="True"/>
-                <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate}" Width="auto" MinWidth="110" IsReadOnly="True"/>
+                <DataGridTextColumn Header="最終使用日" Binding="{Binding LastUseDate, StringFormat='yyyy/MM/dd'}" Width="auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate, StringFormat='yyyy/MM/dd'}" Width="auto" MinWidth="110" IsReadOnly="True"/>
 
                 <!-- 編集ボタン列 -->
                 <DataGridTemplateColumn Header="編集" MinWidth="60" Width="auto" MaxWidth="60">
@@ -97,6 +99,8 @@
                                     FontFamily="Segoe MDL2 Assets"
                                     Content="&#xE70F;" 
                                     CommandParameter="{Binding}"
+                                    Command="{Binding DataContext.EditCommand,
+                                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                     Background="Transparent"
                                     BorderBrush="Transparent"
                                     Foreground="Black"
@@ -111,12 +115,14 @@
                 </DataGridTemplateColumn>
 
                 <!-- 削除ボタン列 -->
-                <DataGridTemplateColumn Header="削除" MinWidth="60" Width="auto" MaxWidth="60">
+                <!--<DataGridTemplateColumn Header="削除" MinWidth="60" Width="auto" MaxWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button FontFamily="Segoe MDL2 Assets"
                                     Content="&#xE74D;"       
                                     CommandParameter="{Binding}"
+                                    Command="{Binding DataContext.DeleteCommand,
+                                                    RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                     Background="Transparent"
                                     BorderBrush="Transparent"
                                     Foreground="Black"
@@ -128,7 +134,7 @@
                             />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

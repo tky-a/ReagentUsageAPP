@@ -25,10 +25,10 @@ namespace WpfApp2.Views
         {
             InitializeComponent();
         }
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            // DialogHostを閉じる
-            DialogHost.CloseDialogCommand.Execute(null, this);
-        }
+        //private void CloseButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // DialogHostを閉じる
+        //    DialogHost.CloseDialogCommand.Execute(null, this);
+        //}
     }
 }

@@ -1,17 +1,21 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WpfApp2.Models;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
-using System.Windows.Input;
-using Microsoft.Win32;
-using System.IO;
 using System.Windows.Controls;
+using System.Windows.Input;
+using WpfApp2.Models;
+using WpfApp2.Views;
+using WpfApp2.ViewModel;
 
 namespace WpfApp2.ViewModel
 {
@@ -19,6 +23,10 @@ namespace WpfApp2.ViewModel
     {
 
         private readonly string[] headerList = { "薬品番号", "薬品名", "毒劇危", "現在質量", "保管場所", "登録日" };
+
+        private readonly DatabaseManager databaseManager = new();
+
+        public Action<string>? ShowSnackbarAction { get; set; }
 
 
         [ObservableProperty]
@@ -43,6 +51,74 @@ namespace WpfApp2.ViewModel
                 Mouse.OverrideCursor = null;
             }
         }
+
+        [RelayCommand]
+        private async Task Edit(Chemical chemical)
+        {
+            try
+            {
+                var db = new DatabaseManager();
+
+                string title = "編集画面（閉じるで保存します）";
+
+                var vm = new ReagentDetailViewModel(chemical,title,isReadOnly:false);
+
+                vm.StorageLocations = new ObservableCollection<StorageLocation>(
+                    await db.GetAllStorageLocationsAsync());
+                vm.Users = new ObservableCollection<User>(
+                    await db.GetAllUsersAsync());
+
+                vm.SelectedStorageLocation = vm.StorageLocations.FirstOrDefault(
+                    loc => loc.LocationId == chemical.StorageLocationId);
+                vm.SelectedUser = vm.Users.FirstOrDefault(
+                    user => user.UserId == chemical.LastUserId);
+
+
+                var dialogcontent = new ReagentDetail
+                {
+                    DataContext = vm
+                };
+
+                await ShowDialog(dialogcontent);
+
+                ShowSnackbarAction?.Invoke("薬品情報を更新しました。");
+                LoadChemicalsAsync(db);
+            }
+            catch (Exception ex)
+            {
+                // エラーハンドリング
+                System.Diagnostics.Debug.WriteLine($"ダイアログ表示エラー: {ex.Message}");
+            }
+
+
+        }
+
+        private async Task ShowDialog(UserControl dialogContent)
+        {
+            try
+            {
+                
+                // DialogHostのIdentifierを指定してダイアログを表示
+                var result = await DialogHost.Show(dialogContent, "MainDialog");
+            }
+            catch (Exception ex)
+            {
+                // DialogHost関連のエラーハンドリング
+                System.Diagnostics.Debug.WriteLine($"DialogHost エラー: {ex.Message}");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         [RelayCommand]
         private void Export(DataGrid dataGrid)
@@ -117,7 +193,9 @@ namespace WpfApp2.ViewModel
                 {
                     var manager = new DatabaseManager();
                     manager.ImportChemicalsFromCsv(openFileDialog.FileName);
-                    ImportLogs.Add("インポートが完了しました。");
+                    LoadChemicalsAsync(manager);
+                    ImportLogs.Add("インポートが" +
+                        "完了しました。");
                 }
                 catch (Exception ex)
                 {
@@ -125,5 +203,9 @@ namespace WpfApp2.ViewModel
                 }
             }
         }
+
+
+
+
     }
 }

@@ -208,6 +208,52 @@ namespace WpfApp2.Models
             return null;
         }
 
+        public async Task<List<StorageLocation>> GetAllStorageLocationsAsync()
+        {
+            var list = new List<StorageLocation>();
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT LocationId, LocationName FROM StorageLocations";
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                list.Add(new StorageLocation
+                {
+                    LocationId = reader.GetInt32(0),
+                    LocationName = reader.GetString(1)
+                });
+            }
+
+            return list;
+        }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            var list = new List<User>();
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT UserId, UserName FROM Users";
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                list.Add(new User
+                {
+                    UserId = reader.GetInt32(0),
+                    UserName = reader.GetString(1)
+                });
+            }
+
+            return list;
+        }
+
+
+
         public void SaveUsageHistory(InputSet inputSet)
         {
             using var connection = new SqliteConnection(_connectionString);
@@ -263,6 +309,40 @@ namespace WpfApp2.Models
             command.Parameters.AddWithValue("@ChemicalId", inputSet.InputReagentId);
 
             command.ExecuteNonQuery();
+        }
+
+        public async Task UpdateChemicalDataBase(Chemical chemical)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+            UPDATE Chemicals
+            SET 
+                Name = @Name,
+                Class = @Class,
+                CurrentMass = @CurrentMass,
+                UseStatus = @UseStatus,
+                StorageLocationId = @StorageLocationId,
+                LastUserId = @LastUserId,
+                LastUseDate = @LastUseDate,
+                FirstDate = @FirstDate
+            WHERE ChemicalId = @ChemicalId;
+        ";
+
+            command.Parameters.AddWithValue("@Name", chemical.Name ?? "");
+            command.Parameters.AddWithValue("@Class", chemical.Class ?? "");
+            command.Parameters.AddWithValue("@CurrentMass", chemical.CurrentMass);
+            command.Parameters.AddWithValue("@UseStatus", chemical.UseStatus ?? "");
+            command.Parameters.AddWithValue("@StorageLocationId", chemical.StorageLocationId);
+            command.Parameters.AddWithValue("@LastUserId", chemical.LastUserId ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@LastUseDate", chemical.LastUseDate?.ToString("yyyy-MM-dd") ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@FirstDate", chemical.FirstDate.ToString("yyyy-MM-dd"));
+            //command.Parameters.AddWithValue("@Note", chemical.Note ?? "");
+            command.Parameters.AddWithValue("@ChemicalId", chemical.ChemicalId);
+
+            await command.ExecuteNonQueryAsync();
         }
 
         public void ImportChemicalsFromCsv(string filePath)
@@ -354,7 +434,7 @@ namespace WpfApp2.Models
             command.Parameters.AddWithValue("@name", chemical.Name ?? "");
             command.Parameters.AddWithValue("@class", chemical.Class ?? "");
             command.Parameters.AddWithValue("@currentMass", chemical.CurrentMass);
-            command.Parameters.AddWithValue("@useStatus", chemical.UseStatus ?? "");
+            command.Parameters.AddWithValue("@useStatus", chemical.UseStatus = null ?? "貸出可能");
             command.Parameters.AddWithValue("@storageLocationId", chemical.StorageLocationId);
             command.Parameters.AddWithValue("@lastUserId", (object?)chemical.LastUserId ?? DBNull.Value);
             command.Parameters.AddWithValue("@lastUseDate", (object?)chemical.LastUseDate ?? DBNull.Value);
@@ -398,6 +478,7 @@ namespace WpfApp2.Models
             getIdCmd.CommandText = "SELECT last_insert_rowid();";
             return Convert.ToInt32(getIdCmd.ExecuteScalar() ?? 0);
         }
+
 
     }
 }

@@ -23,8 +23,18 @@
                                CloseOnClickAway="False" 
                                DialogTheme="Inherit" 
                                Identifier="MainDialog">
+
         <Grid>
             <ContentControl Content="{Binding CurrentViewModel}"/>
+            
+            <materialDesign:Snackbar x:Name="MainSnackbar"
+                        MessageQueue="{materialDesign:MessageQueue}" 
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,20" />
+            
         </Grid>
     </materialDesign:DialogHost>
+
+
 </Window>
