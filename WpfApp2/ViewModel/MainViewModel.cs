@@ -25,7 +25,7 @@ namespace WpfApp2.ViewModels
         public ObservableCollection<InputSet> InputSets { get; } = new();
         public DatabaseManager Database = new();
 
-
+        
 
         public MainViewModel()
         {

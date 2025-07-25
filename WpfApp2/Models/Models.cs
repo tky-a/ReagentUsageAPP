@@ -280,5 +280,5 @@ namespace WpfApp2.Models
         public ThemeMode Mode { get; set; }
         public string DisplayName { get; set; }
     }
-
+    
 }

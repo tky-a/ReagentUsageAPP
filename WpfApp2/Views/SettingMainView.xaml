@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    
+
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>

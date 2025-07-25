@@ -29,7 +29,7 @@ namespace WpfApp2.ViewModels
         [ObservableProperty] private object currentSettingView;
 
         [ObservableProperty] private bool _isMenuExpanded = false;
-
+        
         public ICommand GoBackCommand { get; }
         public ICommand ToggleMenuExpandedCommand { get; }
 

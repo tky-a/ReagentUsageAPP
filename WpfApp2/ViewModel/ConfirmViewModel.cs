@@ -22,7 +22,7 @@ namespace WpfApp2.ViewModels
         private InputSet selectedUsage;
 
         public ObservableCollection<InputSet> PendingUsages { get; } = new();
-
+        
         public ConfirmViewModel(ObservableCollection<InputSet> inputSets,
                MainViewModel parent)
         {

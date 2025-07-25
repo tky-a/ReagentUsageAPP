@@ -8,7 +8,7 @@ using System.IO;
 
 namespace WpfApp2.ViewModels
 {
-    public class ChemicalViewModel : INotifyPropertyChanged 
+    public class ChemicalViewModel : INotifyPropertyChanged
     {
         private readonly DatabaseManager _db = new();
 

@@ -28,7 +28,7 @@ namespace WpfApp2.ViewModel
         [ObservableProperty] private bool isReadOnly;
         [ObservableProperty] private StorageLocation? selectedStorageLocation;
         [ObservableProperty] private User? selectedUser;
-
+        
 
         public Action? CloseDialogAction { get; set; }
 
