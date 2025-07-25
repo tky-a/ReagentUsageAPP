@@ -1,13 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MaterialDesignThemes.Wpf;
 using WpfApp2.Models;
+using WpfApp2.ViewModel;
 using WpfApp2.Views;
 
 namespace WpfApp2.ViewModels
@@ -44,6 +46,11 @@ namespace WpfApp2.ViewModels
         private void DeleteChecked()
         {
             var toDelete = PendingUsages.Where(x => x.IsChecked).ToList();
+            if (toDelete.Count == 0)
+            {
+                MessageBox.Show("チェックを入れたデータが削除されます。", "削除エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             foreach (var item in toDelete)
             {
                 PendingUsages.Remove(item);
@@ -67,7 +74,8 @@ namespace WpfApp2.ViewModels
 
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-                window.ShowDialog();                
+                window.ShowDialog();
+
             }
             else
             {
@@ -89,5 +97,60 @@ namespace WpfApp2.ViewModels
             _parent.InputSets.Clear();
             _parent.CurrentViewModel = new CoverViewModel(_parent);
         }
+
+        //[RelayCommand]
+        //private async Task EditSelected(InputSet inputSet)
+        //{
+        //    try
+        //    {
+        //        var db = new DatabaseManager();
+
+        //        string title = "編集画面（自動保存）";
+
+        //        var vm = new ReagentDetailViewModel(inputset.chemical, title, isReadOnly: false);
+
+        //        vm.StorageLocations = new ObservableCollection<StorageLocation>(
+        //            await db.GetAllStorageLocationsAsync());
+        //        vm.Users = new ObservableCollection<User>(
+        //            await db.GetAllUsersAsync());
+
+        //        vm.SelectedStorageLocation = vm.StorageLocations.FirstOrDefault(
+        //            loc => loc.LocationId == chemical.StorageLocationId);
+        //        vm.SelectedUser = vm.Users.FirstOrDefault(
+        //            user => user.UserId == chemical.LastUserId);
+
+
+        //        var dialogcontent = new ReagentDetail
+        //        {
+        //            DataContext = vm
+        //        };
+
+        //        await ShowDialog(dialogcontent);
+
+        //        //ShowSnackbarAction?.Invoke("薬品情報を更新しました。");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // エラーハンドリング
+        //        System.Diagnostics.Debug.WriteLine($"ダイアログ表示エラー: {ex.Message}");
+        //    }
+
+
+        //}
+
+        //private async Task ShowDialog(UserControl dialogContent)
+        //{
+        //    try
+        //    {
+
+        //        // DialogHostのIdentifierを指定してダイアログを表示
+        //        var result = await DialogHost.Show(dialogContent, "MainDialog");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // DialogHost関連のエラーハンドリング
+        //        System.Diagnostics.Debug.WriteLine($"DialogHost エラー: {ex.Message}");
+        //    }
+        //}
     }
 }

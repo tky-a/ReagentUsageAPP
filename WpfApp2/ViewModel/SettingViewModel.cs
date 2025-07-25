@@ -17,6 +17,7 @@ namespace WpfApp2.ViewModels
         private string _homeReturnName = "ホームに戻る";
         private string _generalSettingName = "一般設定";
         private string _userSettingName = "使用者設定";
+        private string _locationSettingName = "場所設定";
         private string _reagentSettingName = "薬品一覧編集";
         private string _scaleSettingName = "はかり設定";
 
@@ -36,6 +37,9 @@ namespace WpfApp2.ViewModels
         public SettingViewModel(MainViewModel parent, DatabaseManager databaseManager)
         {
             _dataBaseManager = databaseManager;
+            
+            _dataBaseManager.EnsureTablesCreated();
+
             _parent = parent;
             Settings = new ObservableCollection<SettingItem>
             {
@@ -43,11 +47,12 @@ namespace WpfApp2.ViewModels
                 new SettingItem { Name = _homeReturnName, Icon = "\uE80F" },
                 //new SettingItem { Name = _generalSettingName, Icon = "\uF78C" },//一般設定
                 new SettingItem { Name = _userSettingName, Icon = "\uE716" },//使用者設定
+                //new SettingItem { Name = _locationSettingName, Icon = "\uE716" },//場所設定
                 new SettingItem { Name = _reagentSettingName, Icon = "\uE71D" },//薬品一覧
                 new SettingItem { Name = _scaleSettingName, Icon = "\uEE6F" }//RS232C設定
             };
             GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
-            CurrentSetting = Settings[2];
+            CurrentSetting = Settings[0];
             UpdateCurrentSettingView();
         }
 

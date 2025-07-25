@@ -339,7 +339,7 @@ namespace WpfApp2.ViewModels
 
         private bool CanExecuteReturn()
         {
-            return PanelNumber >= 2;
+            return PanelNumber >= 1;
         }
 
         private void ExecuteConfirm()

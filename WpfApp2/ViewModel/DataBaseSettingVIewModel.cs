@@ -59,7 +59,7 @@ namespace WpfApp2.ViewModel
             {
                 var db = new DatabaseManager();
 
-                string title = "編集画面（閉じるで保存します）";
+                string title = "編集画面（自動保存）";
 
                 var vm = new ReagentDetailViewModel(chemical,title,isReadOnly:false);
 
@@ -107,17 +107,6 @@ namespace WpfApp2.ViewModel
                 System.Diagnostics.Debug.WriteLine($"DialogHost エラー: {ex.Message}");
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         [RelayCommand]

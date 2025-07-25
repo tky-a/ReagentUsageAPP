@@ -235,18 +235,32 @@ namespace WpfApp2.Models
     public partial class InputSet : ObservableObject
     {
         public int InputReagentId { get; set; }
-        public string InputReagentName { get; set; }
-        public int InputUserId { get; set; }
-        public string ActionType { get; set; }
-        public decimal? MassBefore { get; set; }
-        public decimal? MassAfter { get; set; }
-        public decimal? MassChange => (MassBefore.HasValue && MassAfter.HasValue)
-            ? MassBefore - MassAfter : null;
-        public string Notes { get; set; }
-        public string UserName { get; set; }
+        [ObservableProperty] private string inputReagentName;
 
-        [ObservableProperty]
-        private bool isChecked;
+        [ObservableProperty] private int inputUserId;
+
+        [ObservableProperty] private string actionType;
+
+        [ObservableProperty] private decimal? massBefore;
+
+        [ObservableProperty] private decimal? massAfter;
+        public decimal? MassChange => (MassBefore.HasValue && MassAfter.HasValue) ? MassBefore - MassAfter : null;
+
+        partial void OnMassBeforeChanged(decimal? oldValue, decimal? newValue)
+        {
+            OnPropertyChanged(nameof(MassChange));
+        }
+
+        partial void OnMassAfterChanged(decimal? oldValue, decimal? newValue)
+        {
+            OnPropertyChanged(nameof(MassChange));
+        }
+
+        [ObservableProperty] private string notes;
+
+        [ObservableProperty] private string userName;
+
+        [ObservableProperty] private bool isChecked;
     }
 
     public class SettingItem
