@@ -9,6 +9,8 @@ using System.Text.Json;
 using System.Globalization;
 using WpfApp2.Helpers;
 using WpfApp2.Models;
+using WpfApp2.Views;
+using System.Windows;
 
 namespace WpfApp2.Models
 {
@@ -81,9 +83,16 @@ namespace WpfApp2.Models
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var query = @"
-                        SELECT c.ChemicalId, c.Name, c.Class, c.CurrentMass, c.UseStatus, 
-                               c.StorageLocationId, sl.LocationName, c.LastUserId,
-                               u.UserName as LastUserName, c.LastUseDate, c.FirstDate
+                        SELECT  c.ChemicalId,
+                                c.Name,
+                                c.Class,
+                                c.CurrentMass,
+                                c.UseStatus, 
+                                c.StorageLocationId,
+                                sl.LocationName,
+                                c.LastUserId,
+                                u.UserName as LastUserName,
+                                c.LastUseDate, c.FirstDate
                         FROM Chemicals c
                         LEFT JOIN StorageLocations sl ON c.StorageLocationId = sl.LocationId
                         LEFT JOIN Users u ON c.LastUserId = u.UserId";
@@ -157,6 +166,64 @@ namespace WpfApp2.Models
             }
             return list;
         }
+
+        public ObservableCollection<UsageHistory> GetAllUsageHistory()
+        {
+            var list = new ObservableCollection<UsageHistory>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var query = @"
+                        SELECT 
+                            h.ActionDate,
+                            h.ActionType,
+                            h.MassBefore,
+                            h.MassAfter,
+                            h.MassChange,
+                            h.Notes,
+                            u.UserName,
+                            c.Name AS ChemicalName,
+                            h.ChemicalId
+                        FROM UsageHistory h
+                        INNER JOIN Users u ON h.UserId = u.UserId
+                        INNER JOIN Chemicals c ON h.ChemicalId = c.ChemicalId
+                        ORDER BY h.ActionDate DESC
+                        ";
+
+            using var command = new SqliteCommand(query, connection);
+            try
+            {
+                using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                    //list.Add(new UsageHistory
+                    //{
+                    //    ActionDate = reader.GetDateTime(0),
+                    //    ActionType = reader.GetString(1)
+                    //});
+                    var history = new UsageHistory
+                    {
+                        ActionDate = DateTime.Parse(reader.GetString(0)),
+                        ActionType = reader.GetString(1),
+                        MassBefore = reader.IsDBNull(2) ? 0 : (decimal)reader.GetDouble(2),
+                        MassAfter = reader.IsDBNull(3) ? 0 : (decimal)reader.GetDouble(3),
+                        MassChange = reader.IsDBNull(4) ? 0 : (decimal)reader.GetDouble(4),
+                        Notes = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                        UserName = reader.GetString(6),
+                        ChemicalName = reader.GetString(7),
+                        ChemicalId = reader.GetInt32(8)
+                    };
+
+                    list.Add(history);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+
+            return list;
+        }
+
 
         public Chemical? GetChemicalById(int id)
         {
@@ -251,8 +318,6 @@ namespace WpfApp2.Models
 
             return list;
         }
-
-
 
         public void SaveUsageHistory(InputSet inputSet)
         {
@@ -369,7 +434,7 @@ namespace WpfApp2.Models
                 { "登録日", "FirstDate" },
                 { "使用日", "LastUseDate" },
             };
-           
+
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
@@ -479,6 +544,23 @@ namespace WpfApp2.Models
             return Convert.ToInt32(getIdCmd.ExecuteScalar() ?? 0);
         }
 
+        public void AddUser(User user)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
 
+            var query = @"
+                        INSERT INTO Users (UserId, UserName)
+                        VALUES (@userId, @userName)
+                        ON CONFLICT(UserId)
+                        DO UPDATE SET UserName = @userName;
+                        ";
+
+            using var command = new SqliteCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", user.UserId);
+            command.Parameters.AddWithValue("@userName", user.UserName ?? "");
+
+            command.ExecuteNonQuery();
+        }
     }
 }

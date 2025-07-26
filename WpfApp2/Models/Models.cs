@@ -165,72 +165,36 @@ namespace WpfApp2.Models
         }
     }
 
-    public class UsageRecord : INotifyPropertyChanged
+    public partial class UsageHistory : ObservableObject
     {
-        private DateTime _actionDate;
-        private string _actionType;
-        private decimal _massBefore;
-        private decimal _massAfter;
-        private decimal _usageAmount;
-        private string _notes;
-        private string _userName;
-        private string _chemicalName;
+        [ObservableProperty]
+        private DateTime actionDate;
 
-        public DateTime ActionDate
-        {
-            get => _actionDate;
-            set { _actionDate = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private string actionType = string.Empty;
 
-        public string ActionType
-        {
-            get => _actionType;
-            set { _actionType = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private decimal massBefore;
 
-        public decimal MassBefore
-        {
-            get => _massBefore;
-            set { _massBefore = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private decimal massAfter;
 
-        public decimal MassAfter
-        {
-            get => _massAfter;
-            set { _massAfter = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private decimal massChange;
 
-        public decimal UsageAmount
-        {
-            get => _usageAmount;
-            set { _usageAmount = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private string notes = string.Empty;
 
-        public string Notes
-        {
-            get => _notes;
-            set { _notes = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private string userName = string.Empty;
 
-        public string UserName
-        {
-            get => _userName;
-            set { _userName = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private string chemicalName = string.Empty;
 
-        public string ChemicalName
-        {
-            get => _chemicalName;
-            set { _chemicalName = value; OnPropertyChanged(); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        [ObservableProperty]
+        private int chemicalId;
     }
+
 
     public partial class InputSet : ObservableObject
     {

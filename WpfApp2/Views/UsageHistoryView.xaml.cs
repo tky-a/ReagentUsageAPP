@@ -18,22 +18,14 @@ using WpfApp2.ViewModel;
 namespace WpfApp2.Views
 {
     /// <summary>
-    /// SettingMenuView.xaml の相互作用ロジック
+    /// UsageHist ory.xaml の相互作用ロジック
     /// </summary>
-    public partial class UserSettingView : UserControl
+    public partial class UsageHistoryView : UserControl
     {
-        public UserSettingView(DatabaseManager db)
+        public UsageHistoryView(DatabaseManager db)
         {
             InitializeComponent();
-            DataContext = new UserSettingViewModel(db);
-        }
-
-        private void UserControlUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is UserSettingViewModel vm)
-            {
-                vm.SaveAllUsersToDatabase();
-            }
+            DataContext = new UsageHistoryViewModel(db);
         }
     }
 }

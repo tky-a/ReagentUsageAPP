@@ -47,7 +47,7 @@ namespace WpfApp2.ViewModel
             }
             finally
             {
-                Task.Delay(500).Wait();
+                Task.Delay(100).Wait();
                 Mouse.OverrideCursor = null;
             }
         }

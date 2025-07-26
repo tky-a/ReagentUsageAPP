@@ -1,11 +1,12 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
-using WpfApp2.Views;
 using WpfApp2.Models;
-using CommunityToolkit.Mvvm.Input;
+using WpfApp2.ViewModel;
+using WpfApp2.Views;
 
 namespace WpfApp2.ViewModels
 {
@@ -19,6 +20,7 @@ namespace WpfApp2.ViewModels
         private string _userSettingName = "使用者設定";
         private string _locationSettingName = "場所設定";
         private string _reagentSettingName = "薬品一覧編集";
+        private string _usageHistoryName = "使用履歴閲覧";
         private string _scaleSettingName = "はかり設定";
 
         public ObservableCollection<SettingItem> Settings { get; }
@@ -49,6 +51,7 @@ namespace WpfApp2.ViewModels
                 new SettingItem { Name = _userSettingName, Icon = "\uE716" },//使用者設定
                 //new SettingItem { Name = _locationSettingName, Icon = "\uE716" },//場所設定
                 new SettingItem { Name = _reagentSettingName, Icon = "\uE71D" },//薬品一覧
+                new SettingItem { Name = _usageHistoryName, Icon = "\uE8A7" },//使用履歴閲覧
                 new SettingItem { Name = _scaleSettingName, Icon = "\uEE6F" }//RS232C設定
             };
             GoBackCommand = new RelayCommand(() => parent.NavigateToCover());
@@ -85,10 +88,18 @@ namespace WpfApp2.ViewModels
                 CurrentSettingView = new ScaleSettingView();
 
             }
+            //else if(CurrentSetting?.Name == _locationSettingName)
+            //{
+            //    CurrentSettingView = new LocationSettingView(_dataBaseManager);
+            //}
             else if(CurrentSetting?.Name == _homeReturnName)
             {
                 _parent.NavigateToCover();
                 CurrentSettingView = null;
+            }
+            else if(CurrentSetting?.Name == _usageHistoryName)
+            {
+                CurrentSettingView = new UsageHistoryView(_dataBaseManager);
             }
             else
             {

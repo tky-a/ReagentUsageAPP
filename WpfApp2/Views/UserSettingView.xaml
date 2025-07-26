@@ -9,6 +9,7 @@
              FontFamily="Segoe UI" FontSize="22"
             xmlns:ui="http://schemas.modernwpf.com/2019"
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Unloaded="UserControlUnloaded"
              >
     
     <Grid Background="White">
@@ -26,7 +27,7 @@
                  Grid.RowSpan="2"
                  Background="WhiteSmoke"
                  AutoGenerateColumns="False"
-                 CanUserAddRows="False"
+                 CanUserAddRows="True"
                  Margin="0 60 0 0"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
@@ -34,15 +35,20 @@
                  RowHeight="40"
                  GridLinesVisibility="All"
                  Padding="0 0 0 0"                      
-                 CanUserReorderColumns="False"
+                 CanUserReorderColumns="false"
                  HeadersVisibility="Column"
                  ItemsSource="{Binding AllUsers}"
+                  IsReadOnly="False"
                 >
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="使用者ID" Binding="{Binding UserId}"  Width="auto" IsReadOnly="True"/>
-                <DataGridTextColumn Header="使用者名" Binding="{Binding UserName}" Width="auto" IsReadOnly="True"/>
 
+                <DataGridTextColumn Header="ユーザー名"
+                                    Binding="{Binding UserName, Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"/>
+
+                
                 <!-- 編集ボタン列 -->
                 <!--<DataGridTemplateColumn Header="編集" MinWidth="60" Width="auto" MaxWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
@@ -66,7 +72,7 @@
                 </DataGridTemplateColumn>-->
 
                 <!-- 削除ボタン列 -->
-                <DataGridTemplateColumn Header="削除" MinWidth="60" Width="auto" MaxWidth="60">
+                <!--<DataGridTemplateColumn Header="削除" MinWidth="60" Width="auto" MaxWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button FontFamily="Segoe MDL2 Assets"
@@ -84,7 +90,7 @@
                        />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
