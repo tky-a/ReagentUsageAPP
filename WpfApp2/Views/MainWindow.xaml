@@ -16,7 +16,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Style="{StaticResource MaterialDesignWindow}"
         SizeToContent="Manual"
-        xmlns:vm="clr-namespace:WpfApp2.ViewModels">
+        xmlns:vm="clr-namespace:WpfApp2.ViewModels"
+        Icon="pack://application:,,,/Resources/Images/appIcon.ico">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>

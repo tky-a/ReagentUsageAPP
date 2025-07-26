@@ -47,7 +47,7 @@ namespace WpfApp2.ViewModel
             }
             finally
             {
-                Task.Delay(100).Wait();
+                //Task.Delay(100).Wait();
                 Mouse.OverrideCursor = null;
             }
         }
@@ -122,7 +122,7 @@ namespace WpfApp2.ViewModel
                 foreach (var column in dataGrid.Columns)
                 {
                     var headerString = column.Header as string;
-                    //List<string> headerList = new List<string> { "使用状況","編集","最終使用者","最終使用日","削除" };
+                    List<string> headerList = new List<string> { "毒劇危","使用状況","編集","最終使用者","最終使用日","削除" };
 
                     if (!headerList.Contains(headerString))
                     {

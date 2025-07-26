@@ -40,7 +40,7 @@ namespace WpfApp2.ViewModels
 
         public void NavigateToCover()
         {
-            CurrentViewModel = new CoverViewModel(this);
+            CurrentViewModel = new CoverViewModel(this, Database);
         }
 
         public void NavigateToConfim()

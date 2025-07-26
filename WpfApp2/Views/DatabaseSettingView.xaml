@@ -86,7 +86,7 @@
                 <DataGridTextColumn Header="毒劇危" Binding="{Binding Class}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="現在質量" Binding="{Binding CurrentMass}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="使用状況" Binding="{Binding UseStatus}" Width="auto" IsReadOnly="True"/>
-                <DataGridTextColumn Header="保管場所" Binding="{Binding StorageLocationId}" Width="auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="保管場所" Binding="{Binding LocationName}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="最終使用者" Binding="{Binding LastUserName}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="最終使用日" Binding="{Binding LastUseDate, StringFormat='yyyy/MM/dd'}" Width="auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="登録日" Binding="{Binding FirstDate, StringFormat='yyyy/MM/dd'}" Width="auto" MinWidth="110" IsReadOnly="True"/>

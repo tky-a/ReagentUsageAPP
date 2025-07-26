@@ -9,6 +9,8 @@
 	  <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
 	  <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <!--<PlatformTarget>AnyCPU</PlatformTarget>-->
+	  <ApplicationIcon>Resources/Images/appIcon.ico</ApplicationIcon>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appIcon.ico" />
+    <None Remove="Resources\Images\appIcon.ico" />
     <None Remove="Resources\Images\scan.png" />
     <None Remove="Resources\Images\Slide1.jpg" />
     <None Remove="Resources\Images\user_scan.png" />
@@ -40,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\appIcon.ico" />
     <Resource Include="Resources\Images\scan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

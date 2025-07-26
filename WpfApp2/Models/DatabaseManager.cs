@@ -64,7 +64,7 @@ namespace WpfApp2.Models
                                         HistoryId INTEGER PRIMARY KEY AUTOINCREMENT,
                                         ChemicalId INTEGER NOT NULL,
                                         UserId INTEGER NOT NULL,
-                                        ActionType TEXT NOT NULL CHECK(ActionType IN('Withdraw', 'Return')),
+                                        ActionType TEXT NOT NULL ,
                                         MassBefore REAL,
                                         MassAfter REAL,
                                         MassChange REAL,
@@ -74,6 +74,7 @@ namespace WpfApp2.Models
                                         FOREIGN KEY(UserId) REFERENCES Users(UserId)
                                     );
                                 ";
+                                                            //ActionTypeの後ろにつけてた。→CHECK(ActionType IN('貸出', '返却')),
             command.ExecuteNonQuery();
         }
 
@@ -89,10 +90,11 @@ namespace WpfApp2.Models
                                 c.CurrentMass,
                                 c.UseStatus, 
                                 c.StorageLocationId,
-                                sl.LocationName,
+                                sl.LocationName AS LocationName,
                                 c.LastUserId,
                                 u.UserName as LastUserName,
-                                c.LastUseDate, c.FirstDate
+                                c.LastUseDate, 
+                                c.FirstDate
                         FROM Chemicals c
                         LEFT JOIN StorageLocations sl ON c.StorageLocationId = sl.LocationId
                         LEFT JOIN Users u ON c.LastUserId = u.UserId";
@@ -429,7 +431,7 @@ namespace WpfApp2.Models
                 { "毒劇危", "Class" },
                 { "使用状況", "UseStatus" },
                 { "現在質量", "CurrentMass" },
-                { "保管場所", "StorageLocationId" },
+                { "保管場所", "LocationName" },
                 { "使用者名", "LastUserId" },
                 { "登録日", "FirstDate" },
                 { "使用日", "LastUseDate" },
@@ -462,7 +464,7 @@ namespace WpfApp2.Models
                     ChemicalId = int.TryParse(GetValue("薬品番号"), out var id) ? id : 0,
                     Name = GetValue("薬品名"),
                     Class = GetValue("毒劇危"),
-                    UseStatus = GetValue("使用状況"),
+                    UseStatus = GetValue("使用状況"),//string.IsNullOrWhiteSpace(GetValue("使用状況")) ? "貸出可能" : GetValue("使用状況"),
                     CurrentMass = decimal.TryParse(GetValue("現在質量"), out var mass) ? mass : 0,
                     StorageLocationId = storageLocationId,
                     LocationName = locationName,
@@ -526,8 +528,11 @@ namespace WpfApp2.Models
             return Convert.ToInt32(getIdCmd.ExecuteScalar() ?? 0);
         }
 
-        private int GetOrInsertUserId(string userName, SqliteConnection connection)
+        public int GetOrInsertUserId(string userName)//, SqliteConnection connection)
         {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
             using var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT UserId FROM Users WHERE UserName = @userName;";
             cmd.Parameters.AddWithValue("@name", userName);

@@ -89,13 +89,14 @@ namespace WpfApp2.ViewModels
             // データベースに書き込み
             foreach (var usage in PendingUsages)
             {
+                _parent.Database.
                 _parent.Database.SaveUsageHistory(usage);
                 _parent.Database.UpdateChemicalAfterUsage(usage);
             }
 
             this.PendingUsages.Clear();
             _parent.InputSets.Clear();
-            _parent.CurrentViewModel = new CoverViewModel(_parent);
+            _parent.NavigateToCover();
         }
 
         //[RelayCommand]

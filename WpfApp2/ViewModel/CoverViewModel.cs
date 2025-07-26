@@ -19,21 +19,40 @@ namespace WpfApp2.ViewModels
     {
         private readonly MainViewModel _parent;
         private readonly ScaleSettingModel _scaleSetting;
+        private readonly DatabaseManager _databaseManager;
 
         [ObservableProperty]
         private string buttonText = "登録モードへ";
 
-        public CoverViewModel(MainViewModel parent)
+        public CoverViewModel(MainViewModel parent, DatabaseManager db)
         {
             _parent = parent;
+            _databaseManager = db;
         }
 
         [RelayCommand]
         private async void GoToRegisterMode()
         {
             ButtonText = "読み込み中...";
-            
-            await Task.Delay(500);
+
+            _databaseManager.EnsureTablesCreated();
+
+            var chemicals = _databaseManager.GetAllChemicals();
+            var users = _databaseManager.GetAllUsers();
+
+            if(chemicals == null || chemicals.Count == 0) 
+            {
+                MessageBox.Show("初期設定をお願いします。薬品一覧からCSVの出力、入力によりデータベースを作成してください。");
+                _parent.NavigateToSettingMode();
+                return;
+            }else if(users == null || users.Count == 0)
+            {
+                MessageBox.Show("使用者を1人以上入力お願いします。");
+                _parent.NavigateToSettingMode();
+                return;
+            }
+
+                await Task.Delay(500);
 
             _parent.NavigateToRegisterMode();
         }
