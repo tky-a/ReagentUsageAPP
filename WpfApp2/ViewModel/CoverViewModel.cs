@@ -45,12 +45,13 @@ namespace WpfApp2.ViewModels
                 MessageBox.Show("初期設定をお願いします。薬品一覧からCSVの出力、入力によりデータベースを作成してください。");
                 _parent.NavigateToSettingMode();
                 return;
-            }else if(users == null || users.Count == 0)
-            {
-                MessageBox.Show("使用者を1人以上入力お願いします。");
-                _parent.NavigateToSettingMode();
-                return;
             }
+            //else if(users == null || users.Count == 0)
+            //{
+            //    MessageBox.Show("使用者を1人以上入力お願いします。");
+            //    _parent.NavigateToSettingMode();
+            //    return;
+            //}
 
                 await Task.Delay(500);
 

@@ -89,7 +89,7 @@ namespace WpfApp2.ViewModels
             // データベースに書き込み
             foreach (var usage in PendingUsages)
             {
-                _parent.Database.
+                _parent.Database.GetOrInsertUserId(usage.UserName);
                 _parent.Database.SaveUsageHistory(usage);
                 _parent.Database.UpdateChemicalAfterUsage(usage);
             }

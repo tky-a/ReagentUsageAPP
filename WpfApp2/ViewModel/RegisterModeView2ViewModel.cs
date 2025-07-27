@@ -305,7 +305,15 @@ namespace WpfApp2.ViewModels
                         _currentInputSet = new InputSet();
                         AdvanceToNextReagent();
                     }
-                    break;
+                    else
+                    {
+                        _currentInputSet.UserName = InputText;
+                        _currentInputSet.InputUserId = _db.GetOrInsertUserId(InputText);
+                        _parent.AddInputSet(_currentInputSet);
+                        _currentInputSet = new InputSet();
+                        AdvanceToNextReagent();
+                    }
+                        break;
             }
             InputText = string.Empty;
         }

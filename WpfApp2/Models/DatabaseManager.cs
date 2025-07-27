@@ -38,7 +38,7 @@ namespace WpfApp2.Models
             command.CommandText = @"
                                     CREATE TABLE IF NOT EXISTS Users (
                                         UserId INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        UserName TEXT NOT NULL
+                                        UserName TEXT NOT NULL UNIQUE
                                     );
 
                                     CREATE TABLE IF NOT EXISTS StorageLocations (
@@ -535,7 +535,7 @@ namespace WpfApp2.Models
 
             using var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT UserId FROM Users WHERE UserName = @userName;";
-            cmd.Parameters.AddWithValue("@name", userName);
+            cmd.Parameters.AddWithValue("@userName", userName);
             var result = cmd.ExecuteScalar();
             if (result != null) return Convert.ToInt32(result);
 
