@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:WpfApp2.Views"
-             mc:Ignorable="d">
+             mc:Ignorable="d" Cursor="">
     <!--d:DesignHeight="600" d:DesignWidth="800">-->
 
     <Grid Background="Lavender">
@@ -42,34 +42,39 @@
         <Border Grid.ColumnSpan="2" Grid.Row="8" Grid.Column="0" BorderBrush="Transparent" BorderThickness="1" Margin="3" Background="White" CornerRadius="5"/>
         <Border Grid.ColumnSpan="2" Grid.Row="9" Grid.Column="0" BorderBrush="Transparent" BorderThickness="1" Margin="3" Background="White" CornerRadius="5"/>
 
-        <Label Grid.Row="1" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="薬品番号 :"/>
-        <Label Grid.Row="2" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="薬品名 :"/>
-        <Label Grid.Row="3" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="毒・劇・危 :"/>
-        <Label Grid.Row="4" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="現在質量 :"/>
-        <Label Grid.Row="5" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="使用状況 :"/>
-        <Label Grid.Row="6" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="保管場所 :"/>
-        <Label Grid.Row="7" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="最終賃借者 :"/>
-        <Label Grid.Row="8" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="最終使用月日 :"/>
-        <Label Grid.Row="9" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" Content="登録日 :"/>
+        <Label Grid.Row="1" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="薬品番号 :"/>
+        <Label Grid.Row="2" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="薬品名 :"/>
+        <Label Grid.Row="3" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="毒・劇・危 :"/>
+        <Label Grid.Row="4" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="現在質量 :"/>
+        <Label Grid.Row="5" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="使用状況 :"/>
+        <Label Grid.Row="6" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="保管場所 :"/>
+        <Label Grid.Row="7" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="最終賃借者 :"/>
+        <Label Grid.Row="8" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="最終使用月日 :"/>
+        <Label Grid.Row="9" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Content="登録日 :"/>
 
 
-        <TextBlock Grid.Row="1" MinWidth="40" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" Text="{Binding Chemical.ChemicalId}" />
-        <TextBox   Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.Name}"/>
-        <TextBox   Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.Class}"/>
-        <TextBox   Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.CurrentMass}"/>
-        <TextBox   Grid.Row="5" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.UseStatus}"/>
-        <ComboBox  Grid.Row="6" Grid.Column="1" FontSize="18"
+        <TextBlock Grid.Row="1" MinWidth="40" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Left" Margin="5" Text="{Binding Chemical.ChemicalId}" />
+        <TextBox   Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.Name}"/>
+        <TextBox   Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.Class}"/>
+        <TextBox   Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.CurrentMass}"/>
+        <TextBox   Grid.Row="5" Grid.Column="1" VerticalAlignment="Bottom" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.UseStatus}"/>
+        <ComboBox  Grid.Row="6" Grid.Column="1" FontSize="15"
                    ItemsSource="{Binding StorageLocations}"
                    DisplayMemberPath="LocationName"
                    SelectedItem="{Binding SelectedStorageLocation, Mode=TwoWay}"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
                    />
-        <ComboBox  Grid.Row="7" Grid.Column="1" FontSize="18" 
+        <ComboBox  Grid.Row="7" Grid.Column="1" FontSize="15" 
                    ItemsSource="{Binding Users}" 
                    DisplayMemberPath="UserName" 
                    SelectedValue="{Binding SelectedUser, Mode=TwoWay}"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   MinWidth="50"
                     />
-        <TextBox   Grid.Row="8" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.LastUseDate, StringFormat='yyyy/MM/dd'}"/>
-        <TextBox   Grid.Row="9" Grid.Column="1" VerticalAlignment="Bottom" FontSize="18" HorizontalAlignment="Center" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.FirstDate, StringFormat='yyyy/MM/dd'}"/>
+        <TextBox   Grid.Row="8" Grid.Column="1" MinWidth="50" VerticalAlignment="Center" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.LastUseDate, StringFormat='yyyy/MM/dd'}"/>
+        <TextBox   Grid.Row="9" Grid.Column="1" MinWidth="50" VerticalAlignment="Center" FontSize="15" HorizontalAlignment="Left" Margin="5" IsReadOnly="{Binding IsReadOnly}" Text="{Binding Chemical.FirstDate, StringFormat='yyyy/MM/dd'}"/>
         
         <TextBlock Grid.Row="1" Grid.Column="2" Grid.RowSpan="8" VerticalAlignment="Bottom" Text="{Binding Note}" FontSize="25" HorizontalAlignment="Left" Margin="5"/>
 
